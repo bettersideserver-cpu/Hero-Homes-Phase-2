@@ -1,0 +1,6 @@
+Hero Homes visitor/hold integration fixed.
+
+Visitor form inserts into public.visitors and stores the visitor in localStorage so the form is not requested again.
+Hold requests include tower, floor, unit and apartment_detail and appear in Admin > Hold Requests.
+
+Run the previously supplied hero_homes_leads_setup.sql if the visitors/hold_requests policies and grants are not already present.

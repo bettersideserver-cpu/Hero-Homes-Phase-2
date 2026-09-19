@@ -1,0 +1,219 @@
+/* ══════════════════════════════════════════════════════════════════
+   MAP-ROTATE — vertical (portrait) map for mobile
+   ══════════════════════════════════════════════════════════════════
+
+   WHAT THIS DOES
+   The map is a landscape 8192 x 4175 image. On a portrait phone that
+   leaves it tiny and letterboxed. This rotates the ENTIRE map unit
+   90deg so it fills the tall screen:
+
+       #mainImage  (the Map.jpg)
+       #dotPinLayer (logos / dots / the selected-place SVG overlay)
+       .Cutout svg  (the clickable plot outline)
+
+   ...all rotate together as ONE element, so nothing can drift out of
+   alignment. Pin logos and their text labels are then counter-rotated
+   so they still read upright.
+
+   Fixed UI (address badge, ui-hint, jumpbar, enquiry, info card) lives
+   OUTSIDE the rotated frame and is therefore never rotated.
+
+   HOW IT WORKS
+   .map-rotate-stage  = fixed, viewport-sized, clips overflow
+   .map-rotate-frame  = same box with width/height SWAPPED, rotated 90deg
+
+   Because the frame is (viewportHeight x viewportWidth) and then turned
+   90deg, it lands exactly on the viewport. The image inside uses
+   object-fit: contain, so the whole map is always visible — no zoom,
+   no cropping.
+
+   ── TO FLIP THE ROTATION DIRECTION ──
+   Change --map-rotate below to -90deg. The counter-rotation of the
+   labels follows it automatically.
+   ────────────────────────────────────────────────────────────────── */
+
+:root {
+    /* 90deg = clockwise (map's left edge moves to the top of the screen).
+       Use -90deg for counter-clockwise. */
+    --map-rotate: 90deg;
+
+    /* Map.jpg is 8192 x 4175. The frame is sized to this EXACT ratio so the
+       image's layout box equals its rendered content box (zero letterbox).
+       Every coordinate in this project is a percentage of the image box —
+       pins, the selected-route SVG and the .Cutout outline — so any letterbox
+       silently offsets and stretches all three. Keeping the box on-ratio is
+       what makes them land correctly. Update if Map.jpg is ever re-exported. */
+    --map-ar: 1.96216;
+
+    /* Uniform shrink for pin logos + labels on mobile. The artwork is authored
+       for a ~1440px-wide map; on a 390px screen it needs to come right down.
+       One knob scales the logo, the label and their offsets together. */
+    --pin-mobile-scale: 0.5;
+
+    /* Fallbacks only. JS/MapRotate.js overwrites these with real pixel values
+       on browsers that lack dvh support (see the @supports block below). */
+    --vw: 100vw;
+    --vh: 100vh;
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   VIEWPORT UNITS — the Chrome/Safari toolbar problem
+
+   100vh is the viewport WITHOUT browser chrome, so it overflows behind
+   the toolbar. visualViewport.height is the opposite: it shrinks while
+   the toolbar is showing, so sizing to it leaves dead space once the
+   toolbar auto-hides on scroll. That mismatch is what produced the
+   uneven cream gap at the bottom in both browsers.
+
+   100dvh is the DYNAMIC viewport height — the browser keeps it correct
+   across toolbar show/hide by itself, which is exactly what we want and
+   needs no JS at all. Supported in current Chrome, Safari and Firefox.
+   MapRotate.js detects this and stands down when it is available.
+   ────────────────────────────────────────────────────────────────── */
+@supports (height: 100dvh) {
+    :root {
+        --vw: 100dvw;
+        --vh: 100dvh;
+    }
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   DESKTOP / LANDSCAPE — the wrappers are completely inert.
+   `display: contents` removes their boxes from layout entirely, so the
+   original desktop layout is byte-for-byte unchanged.
+   ────────────────────────────────────────────────────────────────── */
+.map-rotate-stage,
+.map-rotate-frame {
+    display: contents;
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   MOBILE PORTRAIT — rotate the map
+   ────────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) and (orientation: portrait) {
+
+    .map-rotate-stage {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        /* --vw / --vh are kept in sync by JS/MapRotate.js.
+           The vw/vh fallbacks keep this correct even if JS is blocked. */
+        width: var(--vw, 100vw);
+        height: var(--vh, 100vh);
+        overflow: hidden;
+        z-index: 1;
+    }
+
+    .map-rotate-frame {
+        display: block;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        /* Swapped on purpose: the frame's WIDTH becomes the on-screen HEIGHT
+           once it is rotated 90deg.
+
+           Sized to the map's exact aspect ratio (--map-ar) so the image box
+           carries NO letterbox. This is load-bearing: pins, the route SVG and
+           the .Cutout outline are all percentages of this box, so an
+           off-ratio box silently stretches and offsets all three.
+
+           max() = FILL the screen (map's short axis crops ~4.7% per side).
+           min() = FIT the whole map (leaves ~39px bars top and bottom).
+           Swap the two max() for min() to go back to fit-whole-map.
+
+           390 x 844 -> frame 844 x 430, drawn as 430 wide x 844 tall,
+           so height is exact and 20px is clipped off each side. */
+        width: max(calc(var(--vw, 100vw) * var(--map-ar)), var(--vh, 100vh));
+        height: max(var(--vw, 100vw), calc(var(--vh, 100vh) / var(--map-ar)));
+        transform: translate(-50%, -50%) rotate(var(--map-rotate));
+        transform-origin: 50% 50%;
+        will-change: transform;
+    }
+
+    /* .Front becomes a plain grouping node — its mobile offset/scale from
+       wbn05d6fbh.css must not fight the frame. */
+    .map-rotate-frame .Front {
+        position: static !important;
+        top: auto !important;
+        left: auto !important;
+        transform: none !important;
+        width: 100%;
+        height: 100%;
+    }
+
+    /* .image-wrapper and .Cutout are position:fixed in the base CSS.
+       Inside the rotated frame they must become absolute children of it,
+       otherwise they anchor to the viewport and refuse to rotate. */
+    .map-rotate-frame .image-wrapper,
+    .map-rotate-frame .Cutout {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        aspect-ratio: auto !important;
+        transform: none !important;
+        overflow: visible;
+    }
+
+    /* Whole map visible, never cropped, never zoomed. */
+    .map-rotate-frame .image-wrapper img#mainImage {
+        width: 100% !important;
+        height: 100% !important;
+        max-width: none !important;
+        max-height: none !important;
+        object-fit: contain;
+    }
+
+    /* Clickable outline sits above the image and shares its exact box,
+       so the SVG viewBox stays perfectly registered to the photo. */
+    .map-rotate-frame .Cutout {
+        z-index: 2;
+    }
+
+    .map-rotate-frame .Cutout svg {
+        display: block;
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    /* ── Keep pin logos + labels upright ──
+       The frame is rotated by --map-rotate, so each pin's content is
+       rotated back by the same amount. Net effect on screen: upright text,
+       while the logo/label offsets still point "above" their dot. */
+    /* The trailing scale() shrinks the logo, the label and their offsets as
+       one unit — the pin's anchor point is unaffected because left/top are
+       percentages applied before the transform. Tune --pin-mobile-scale at
+       the top of this file; no need to touch the per-pin CONFIG in DotPin.js. */
+    .map-rotate-frame .dot-pin__button {
+        transform: translate(-50%, -50%) rotate(calc(-1 * var(--map-rotate))) scale(var(--pin-mobile-scale, 0.5));
+    }
+
+    /* Hover/selected states must keep the counter-rotation AND the scale. */
+    .map-rotate-frame .dot-pin__button:hover,
+    .map-rotate-frame .dot-pin__button:focus-visible {
+        transform: translate(-50%, -50%) rotate(calc(-1 * var(--map-rotate))) scale(var(--pin-mobile-scale, 0.5));
+    }
+
+    /* The selected-place line SVG is map geography — it MUST stay rotated
+       with the map, so it is explicitly left alone here. */
+    .map-rotate-frame .dot-pin-selected-overlay {
+        transform: translate(var(--selected-svg-offset-x, 0px), var(--selected-svg-offset-y, 0px));
+    }
+
+    /* Thinner outline stroke so it doesn't overpower the smaller screen. */
+    .map-rotate-frame .Cutout path[data-link] {
+        stroke-width: 14px;
+        stroke-dasharray: 44 28;
+    }
+}
+
+/* Landscape phones already fit the map — make sure nothing lingers. */
+@media (max-width: 768px) and (orientation: landscape) {
+
+    .map-rotate-stage,
+    .map-rotate-frame {
+        display: contents;
+    }
+}

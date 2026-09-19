@@ -1,0 +1,1438 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    user-select: none;
+}
+
+#upperBalconyBtn {
+    position: fixed;
+    top: 110px;
+    /* below compass */
+    right: 20px;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 20px;
+    z-index: 10001;
+    background: #0F3D2E;
+    /* */
+
+    border: 1px solid rgba(251, 247, 236, 0.2);
+    color: #FBF7EC;
+    cursor: pointer;
+
+    box-shadow:
+        0 6px 20px rgba(4, 18, 13, 0.3),
+        inset 0 0 10px rgba(251, 247, 236, 0.05);
+
+    transition: all 0.25s ease;
+}
+
+#upperBalconyBtn:hover {
+    background: #F4EDDD;
+    transform: translateY(-2px);
+    color: #0A2A20;
+}
+
+/* ABOUT – MINIMAL NAV STYLE */
+.about-nav {
+    position: fixed;
+    top: 26px;
+    right: 26px;
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 10px 18px;
+    border-radius: 999px;
+
+    background: #0F3D2E;
+
+    color: #FBF7EC;
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 0.4px;
+    font-weight: 500;
+
+    border: 1px solid rgba(251, 247, 236, 0.18);
+
+    transition: all 0.3s ease;
+}
+
+/* SINGLE HEADER CONTAINER */
+.top-header {
+    position: fixed;
+    top: 26px;
+    right: 26px;
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 8px;
+    border-radius: 999px;
+
+    background: rgb(235, 226, 207);
+    border: 1px solid rgba(251, 247, 236, 0.18);
+}
+
+/* shared button style */
+.top-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    font: 600 14px/1 system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    padding: 10px 14px;
+    border-radius: 999px;
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 0.4px;
+    font-weight: 700;
+
+    transition: transform 0.2s ease, background 0.25s ease, color 0.25s ease;
+    white-space: nowrap;
+}
+
+/* About = subtle / glass */
+.top-btn--ghost {
+    color: #04120D;
+    background: transparent;
+}
+
+.top-btn--ghost:hover {
+    background: #F4EDDD;
+    transform: translateY(-1px);
+}
+
+/* Contact = highlighted */
+.top-btn--accent {
+    color: #04120D;
+    background: #C39E59;
+}
+
+.top-btn--accent:hover {
+    background: #D5B575;
+    transform: translateY(-1px);
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+    .top-header {
+        top: 16px;
+        right: 16px;
+        padding: 6px;
+        gap: 8px;
+    }
+
+    .top-btn {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+}
+
+/* Contact button position (same style) */
+.contact-nav {
+    right: 160px;
+    /* move left so it sits beside About */
+}
+
+/* GOLD LINE */
+.about-line {
+    width: 3px;
+    height: 16px;
+    background: #C39E59;
+    border-radius: 2px;
+}
+
+/* HOVER */
+.about-nav:hover {
+    background: rgba(195, 158, 89, 0.9);
+    color: #04120D;
+}
+
+.about-nav:hover .about-line {
+    background: #04120D;
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+    .about-nav {
+        top: 16px;
+        right: 16px;
+        padding: 8px 14px;
+        font-size: 12px;
+    }
+
+    .about-line {
+        height: 14px;
+    }
+}
+
+@media (max-width: 600px) {
+    .contact-nav {
+        right: 140px;
+    }
+}
+
+
+/* ────────────────────────────────
+   WhatsApp Floating Button (Clean)
+   ──────────────────────────────── */
+
+.wa-fab {
+    position: fixed;
+    right: calc(env(safe-area-inset-right, 0px) + 20px);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
+    z-index: 1000;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #25D366;
+    display: grid;
+    place-items: center;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(4, 18, 13, 0.25);
+    transition: transform .12s ease, box-shadow .12s ease;
+}
+
+.wa-fab:active {
+    transform: scale(.96);
+}
+
+/* Icon inside the circle */
+.wa-fab .wa-icon,
+.wa-fab svg,
+.wa-fab img.wa-icon-img {
+    width: 34px;
+    height: 34px;
+    display: block;
+    pointer-events: none;
+    /* ensures click passes to button */
+}
+
+/* ────────────────────────────────
+   Mobile Responsive (≤ 600px)
+   ──────────────────────────────── */
+@media (max-width: 600px) {
+    .wa-fab {
+        width: 52px;
+        height: 52px;
+        right: calc(env(safe-area-inset-right, 0px) + 10px);
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 70px);
+    }
+
+    .wa-fab .wa-icon,
+    .wa-fab svg,
+    .wa-fab img.wa-icon-img {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+/* ────────────────────────────────
+   Label (optional small tooltip)
+   ──────────────────────────────── */
+.wa-label {
+    position: fixed;
+    right: calc(env(safe-area-inset-right, 0px) + 92px);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 28px);
+    z-index: 12999;
+    background: rgba(4, 18, 13, 0.7);
+    color: #FBF7EC;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 13px;
+    display: none;
+    pointer-events: none;
+}
+
+.wa-label.show {
+    display: block;
+}
+
+
+
+/* Floor hover tooltip */
+.floortip {
+    position: fixed;
+    /* place by viewport coords */
+    left: 0;
+    top: 0;
+    transform: translate(-50%, -100%);
+    /* center horizontally, sit above */
+    padding: 6px 10px;
+    font: 600 12px/1.2 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    color: #FBF7EC;
+    background: rgba(4, 18, 13, 0.75);
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(4, 18, 13, 0.25);
+    pointer-events: none;
+    /* never blocks clicks */
+    opacity: 0;
+    z-index: 12050;
+    /* above your overlays */
+    transition: opacity .15s ease;
+    white-space: nowrap;
+}
+
+/* small arrow */
+.floortip::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -6px;
+    width: 0;
+    height: 0;
+    transform: translateX(-50%);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid rgba(4, 18, 13, 0.75);
+}
+
+.floortip.is-visible {
+    opacity: 1;
+}
+
+/* quick, soft placeholder look */
+.blur-up {
+    /* filter: blur(10px); */
+    transform: scale(1.02);
+    transition: filter .45s ease, transform .45s ease, opacity .35s ease;
+}
+
+/* once the full image is in */
+.blur-up.is-loaded {
+    /* filter: blur(0); */
+    transform: scale(1);
+    opacity: 1;
+}
+
+
+#ui-hint {
+    position: fixed;
+    top: 40px;
+    /* default desktop position */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+}
+
+/* 📱 Mobile (below 600px width) */
+@media (max-width: 600px) {
+    #ui-hint {
+        top: 100px;
+        /* remove from top */
+        bottom: Auto;
+        /* move near bottom */
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
+
+
+
+
+.lobby-top {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    /* ✅ Make sure no scrollbars */
+    text-align: center;
+    white-space: nowrap;
+    background-color: rgba(161, 185, 166, 1);
+    position: relative;
+}
+
+.lobby-top img {
+    height: 100vh;
+    width: auto;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    user-select: none;
+    pointer-events: none;
+    transition: transform 0.1s linear;
+}
+
+
+.main-container {
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    background: #09261D;
+}
+
+.main-container .image-container {
+    height: 100%;
+    position: fixed;
+    width: 100%;
+}
+
+.main-container h1 {
+    flex: 1;
+    text-align: center;
+    color: #FBF7EC;
+    font-family: "Raleway", sans-serif;
+    text-transform: uppercase;
+    font-size: 60px;
+    font-weight: 800;
+    letter-spacing: 10px;
+
+    z-index: 100;
+    text-shadow: 2px 16px 16px rgba(4, 18, 13, 0.3);
+    pointer-events: none;
+}
+
+.bodytext {
+    padding-left: 200px;
+    padding-right: 200px;
+    padding-top: 20px;
+    font-family: "Raleway", sans-serif;
+    font-size: 20px;
+    text-align: center;
+}
+
+
+.image-wrapper,
+.Cutout {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(var(--scene-scale, 1));
+    width: 90vmin;
+    aspect-ratio: 3840 / 5830;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    z-index: 1;
+}
+
+
+.image-wrapper img,
+.Cutout svg {
+    user-select: none;
+    pointer-events: none;
+    transition: transform 0.1s linear;
+    object-fit: contain;
+}
+
+.Cutout path {
+    fill: transparent;
+    pointer-events: auto;
+    cursor: pointer;
+    stroke: transparent;
+    stroke-width: 8px;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    transition: stroke 0.3s ease, fill 0.3s ease;
+}
+
+
+.Cutout path:hover {
+    /* stroke: rgb(156, 183, 165);
+    fill: rgba(86, 139, 118, 0.2); */
+    /* stroke: #164C39; */
+    stroke: #BA9753;
+    /* fill: rgba(22, 76, 57, 0.4); */
+    fill: rgba(155, 183, 165, 0.4);
+}
+
+
+.Cutout path.selected {
+    /* stroke: rgb(186, 150, 83); */
+    /* stroke: rgb(201, 165, 97); */
+    /* stroke: #215F48; */
+    stroke: #AB8949;
+    /* Orange */
+    /* fill: rgba(22, 76, 57, 0.5); */
+    fill: rgba(119, 162, 144, 0.5);
+}
+
+
+
+/* shared */
+
+/* per-button positions */
+.hs-kitchen {
+    top: 30%;
+    left: 50%;
+}
+
+/* add more: .hs-lobby { top: 46%; left: 62%; } ... */
+
+
+
+
+
+
+
+
+.content-wrapper {
+    position: relative;
+    display: inline-block;
+    /* ✅ Shrinks to fit image size */
+}
+
+.content-wrapper img {
+    display: block;
+    width: auto;
+    /* ✅ Image controls width */
+    height: auto;
+    max-width: 100vw;
+    /* Optional: prevent image from overflowing viewport */
+    user-select: none;
+    pointer-events: none;
+}
+
+.touch-button-button1 {
+    position: absolute;
+    top: 55%;
+    left: 23%;
+    transform: translate(-50%, -50%);
+    padding: 12px 12px;
+    font-size: 16px;
+    background: #e74c3c;
+    /* background: rgb(201, 165, 97); */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+
+/* Hover effect */
+.touch-button:hover {
+    background-color: #c0392b;
+}
+
+
+
+
+
+/* Modal Background */
+.info-card {
+    top: -20px;
+    left: 0px;
+    position: fixed;
+    background-color: transparent;
+    /* No blocking layer */
+    display: flex;
+    z-index: 8999;
+    pointer-events: none;
+    /* ❗️ This makes whole container non-interactive except children */
+
+}
+
+
+.open-btn {
+    margin-top: 10px;
+    width: 100%;
+    padding: 10px 12px;
+    font-weight: 700;
+    border: 0;
+    border-radius: 10px;
+    background: #114131;
+    color: #FBF7EC;
+    cursor: pointer;
+}
+
+.open-btn:hover {
+    background: #154B39;
+}
+
+/* Replace existing .enquiry-btn styles */
+.enquiry-btn {
+    position: fixed;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%) rotate(90deg);
+    transform-origin: right center;
+    margin: 0;
+    padding: 12px 20px;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    border: 0;
+    border-radius: 8px 8px 0 0;
+    background: #0F3D2E;
+    color: #FBF7EC;
+    cursor: pointer;
+    z-index: 10001;
+    white-space: nowrap;
+    box-shadow: -2px 0 12px rgba(4, 18, 13, 0.2);
+    transition: background 0.2s ease;
+}
+
+.enquiry-btn:hover {
+    background: #1C5A44;
+}
+
+@media (max-width: 600px) {
+    .enquiry-btn {
+        padding: 10px 16px;
+        font-size: 12px;
+    }
+}
+
+
+/* overlay must be above close button */
+.enquiry .overlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(4, 18, 13, .55);
+    z-index: 10000;
+}
+
+/* modal + internals */
+.enquiry .modal {
+    width: min(560px, 94vw);
+    background: rgba(12, 49, 37, .92);
+    border: 1px solid rgba(251, 247, 236, .08);
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(4, 18, 13, .5);
+    position: relative;
+}
+
+/* Make "Request Callback" white */
+.enquiry .modal-header .title {
+
+    color: #FBF7EC;
+
+    /* white */
+}
+
+
+
+.enquiry .modal-header {
+    padding: 16px 16px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    color: #FBF7EC;
+}
+
+.enquiry .title {
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: .2px;
+}
+
+.enquiry .close {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    border: 1px solid #114131;
+    border-radius: 8px;
+    background: #0A2B21;
+    color: #E7DDC9;
+    cursor: pointer;
+}
+
+.enquiry .close:hover {
+    background: #0C3125;
+}
+
+.enquiry .modal-body {
+    padding: 12px 16px 16px;
+}
+
+/* form controls (scoped!) */
+.enquiry .form {
+    display: grid;
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.enquiry .two {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.enquiry .input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.enquiry .input,
+.enquiry .select,
+.enquiry .phone {
+    width: 100%;
+    background: #F6EFE0;
+    border: 1px solid #E1D6C0;
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 15px;
+    color: #09251C;
+}
+
+.enquiry .input::placeholder {
+    color: #C3C5AF;
+}
+
+.enquiry .select {
+    appearance: none;
+    cursor: pointer;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path d="M7 10l5 5 5-5" fill="none" stroke="%23555" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+}
+
+.enquiry .phone {
+    display: flex;
+    padding: 0;
+}
+
+.enquiry .phone select {
+    appearance: none;
+    border: none;
+    border-right: 1px solid #E1D6C0;
+    padding: 0 10px;
+    min-width: 84px;
+    background: transparent;
+    color: #17503C;
+}
+
+.enquiry .phone input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 12px;
+}
+
+.enquiry .agree {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 13px;
+    color: #E7DDC9;
+}
+
+.enquiry .agree a {
+    color: #4E8670;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.enquiry .submit {
+    margin-top: 4px;
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-weight: 700;
+    font-size: 16px;
+    /* background: #C6A15B; */
+    background: #4E8670;
+    color: #09261D;
+    cursor: pointer;
+}
+
+.enquiry .submit:hover {
+    /* background: #BA9653; */
+    background: #2F6B55;
+}
+
+@media (max-width:560px) {
+    .enquiry .two {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Button loading state */
+.submit[aria-busy="true"] {
+    position: relative;
+    pointer-events: none;
+    opacity: .8;
+}
+
+.submit[aria-busy="true"]::after {
+    content: "";
+    position: absolute;
+    right: 12px;
+    /* keep some space from text */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    animation: spin .7s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: translateY(-50%) rotate(360deg);
+    }
+}
+
+
+
+.video-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(4, 18, 13, 0.9);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 100000;
+    /* 🟢 keep above everything */
+}
+
+.video-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+
+
+
+/* Non-interactive label styled like the button */
+.context-chip {
+    position: fixed;
+    /* pinned to viewport */
+    top: 24px;
+    left: 60px;
+    z-index: 10001;
+    /* above .info-card */
+    background-color: #104030;
+    /* same as button */
+    color: #FBF7EC;
+    border-radius: 12px;
+    /* same rounded feel */
+    padding: 10px 14px;
+    font-family: "Raleway", sans-serif;
+    font-size: 34px;
+    /* line-height: 1;
+    letter-spacing: 0.5px; */
+    box-shadow: 0 2px 8px rgba(4, 18, 13, 0.3);
+    pointer-events: none;
+    /* clicks pass through; not a button */
+    user-select: none;
+    /* optional: prevent text selection */
+    align-items: flex-start;
+    /* left-align text inside */
+    line-height: 1.1;
+    /* tighter spacing between lines */
+}
+
+.context-chip .mdb {
+    font-family: "YourChosenFont", serif;
+    font-size: 14px;
+    color: rgba(251, 247, 236, 0.6);
+    /* slightly dimmer */
+    margin-bottom: 3px;
+    /* small gap before Lutyen */
+    letter-spacing: 0.5px;
+}
+
+.context-chip .lutyen {
+    font-family: "YourChosenFont", serif;
+    font-size: 30px;
+    font-weight: 600;
+    color: #FBF7EC;
+    letter-spacing: 0.8px;
+}
+
+/* Card Body */
+.info-content {
+    top: 120px;
+    left: 60px;
+    text-align: center;
+    /* background-color: #0C3327; */
+    /* background-color: #0E382A; */
+    background-color: #0A2B21;
+    color: rgb(251, 247, 236);
+    padding: 20px;
+    padding-top: 20px;
+    border-radius: 20px;
+    width: 250px;
+    font-family: "Raleway", sans-serif;
+    position: relative;
+
+    /* ✅ Make this block interactive again */
+    pointer-events: auto;
+}
+
+
+
+
+.close-btn {
+    position: fixed;
+    top: 50px;
+    /* Push down from the top */
+    left: 60px;
+    /* Push right from the left */
+    width: 40px;
+    height: 40px;
+    background-color: #104030;
+    border-radius: 12px;
+    border: none;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(4, 18, 13, 0.3);
+    transition: background-color 0.3s ease;
+    z-index: 9999;
+}
+
+.close-btn:hover {
+    background-color: #1B5742;
+    /* Slightly lighter on hover */
+}
+
+/* Card Title */
+.info-content h2 {
+    font-size: 18px;
+    margin: 0 0 15px 0;
+}
+
+/* Placeholder for Image */
+.image-placeholder {
+    width: 100%;
+    height: 120px;
+    background-color: #D9CDB4;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.info-details {
+    /* background: #F4EDDD; */
+    background: #0F3D2E;
+    padding: 6px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(251, 247, 236, 0.15);
+    font-size: 15px;
+}
+
+.info-details div {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    border-left: none;
+}
+
+.info-details div span:last-child {
+    text-align: right;
+    display: block;
+    min-width: 120px;
+    /* adjust as needed */
+}
+
+
+
+/* Explore Button */
+.explore-btn {
+    width: 100%;
+    padding: 10px;
+    /* background-color: #C29D58; */
+    /* background-color: rgb(201, 165, 97); */
+    /* background-color: #568B76; */
+    /* background-color: #3F7B64; */
+    /* background-color: #D0AE6C; */
+    /* background-color: #BA9653; */
+    /* background-color: #B79351; */
+    /* background-color: #CFAD6A; */
+    /* background-color: #CDAB68; */
+    background-color: #4E8670;
+    border: none;
+    color: white;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 12px;
+}
+
+.explore-btn:hover {
+    /* background-color: #B69350; */
+    /* background-color: #A78646; */
+    background-color: #164C39;
+}
+
+.image-placeholder {
+    width: 100%;
+    height: 120px;
+    border-radius: 10px;
+    overflow: hidden;
+    /* keeps the image corners rounded */
+}
+
+.image-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* make it fill nicely */
+    display: block;
+}
+
+
+
+
+
+.hs-layer {
+    position: fixed;
+    /* JS sets its top/left/width/height to the image rect */
+    pointer-events: none;
+    /* clicks pass through except on the hotspots */
+    z-index: 4;
+}
+
+/* === Hotspot button (uses your round 360 image) === */
+.hs-dot {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 30px;
+    /* desktop/default size */
+    height: 30px;
+    transform: translate(-50%, -50%);
+    transform-origin: center center;
+    pointer-events: auto;
+    /* clickable */
+    border: 0;
+    padding: 0;
+    background: none;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.hs-dot img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ═══════════════════════════════════════════════
+   JUMPBAR — macOS Dock Style
+   ═══════════════════════════════════════════════ */
+.dock-wrap {
+    position: fixed !important;
+    bottom: 20px !important;
+    left: 50% !important;
+    translate: -50% 0;
+    z-index: 11000 !important;
+    display: flex !important;
+    align-items: flex-end;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    animation: dock-bounce .7s cubic-bezier(.34, 1.56, .64, 1) both;
+    animation-delay: .2s;
+}
+
+@keyframes dock-bounce {
+    from {
+        opacity: 0;
+        translate: -50% 80px;
+        scale: .8;
+    }
+
+    to {
+        opacity: 1;
+        translate: -50% 0;
+        scale: 1;
+    }
+}
+
+.dock-shelf {
+    position: absolute;
+    bottom: 0;
+    left: -18px;
+    right: -18px;
+    height: 94px;
+    background: linear-gradient(135deg, rgba(11, 45, 34, 0.88), rgba(8, 36, 27, 0.92));
+    border: 1.5px solid rgba(210, 178, 113, 0.25);
+    border-radius: 24px;
+    box-shadow: 0 8px 40px rgba(4, 18, 13, 0.6), 0 2px 0 rgba(210, 178, 113, 0.08) inset, 0 -1px 0 rgba(4, 18, 13, 0.3), 0 0 60px rgba(210, 178, 113, 0.06);
+    transition: height .35s cubic-bezier(.22, .68, 0, 1.04), border-radius .35s, left .35s, right .35s, box-shadow .35s;
+    z-index: -1;
+    animation: dock-glow-pulse 3s ease-in-out infinite;
+    animation-delay: 2s;
+}
+
+.dock-wrap:hover .dock-shelf {
+    height: 112px;
+    left: -24px;
+    right: -24px;
+    border-radius: 28px;
+    border-color: rgba(210, 178, 113, 0.35);
+    box-shadow: 0 12px 50px rgba(4, 18, 13, 0.7), 0 2px 0 rgba(210, 178, 113, 0.12) inset, 0 0 80px rgba(210, 178, 113, 0.1);
+    animation: none;
+}
+
+@keyframes dock-glow-pulse {
+
+    0%,
+    100% {
+        box-shadow: 0 8px 40px rgba(4, 18, 13, .6), 0 0 40px rgba(210, 178, 113, .06);
+    }
+
+    50% {
+        box-shadow: 0 8px 40px rgba(4, 18, 13, .6), 0 0 60px rgba(210, 178, 113, .15);
+    }
+}
+
+.dock-items {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    padding: 0 14px 14px;
+}
+
+.dock-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    text-decoration: none;
+    cursor: pointer;
+    --size: 52px;
+    width: var(--size);
+    transition: width .25s cubic-bezier(.22, .68, 0, 1.04), margin .25s cubic-bezier(.22, .68, 0, 1.04);
+    position: relative;
+}
+
+.dock-icon {
+    width: var(--size);
+    height: var(--size);
+    border-radius: 16px;
+    background: linear-gradient(145deg, rgba(210, 178, 113, 0.12), rgba(251, 247, 236, 0.04));
+    border: 1.5px solid rgba(210, 178, 113, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: width .25s cubic-bezier(.22, .68, 0, 1.04), height .25s cubic-bezier(.22, .68, 0, 1.04), border-radius .25s, background .3s, border-color .3s, box-shadow .3s;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(4, 18, 13, 0.3), 0 0 20px rgba(210, 178, 113, 0.05);
+}
+
+.dock-icon svg {
+    width: 22px;
+    height: 22px;
+    stroke: rgba(251, 247, 236, 0.75);
+    transition: stroke .3s, width .25s, height .25s, filter .3s;
+    flex-shrink: 0;
+    filter: drop-shadow(0 1px 2px rgba(4, 18, 13, 0.3));
+}
+
+.dock-icon::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(180deg, rgba(251, 247, 236, .1), transparent);
+    border-radius: 16px 16px 0 0;
+    pointer-events: none;
+}
+
+.dock-dot {
+    position: absolute;
+    bottom: -4px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #D2B271;
+    opacity: 0;
+    transition: opacity .3s;
+    box-shadow: 0 0 8px rgba(210, 178, 113, 0.5);
+}
+
+.dock-item.is-accent .dock-dot {
+    opacity: 1;
+}
+
+.dock-label {
+    position: absolute;
+    bottom: calc(100% + 14px);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: #FBF7EC;
+    white-space: nowrap;
+    background: rgba(8, 33, 25, 0.95);
+    border: 1px solid rgba(210, 178, 113, 0.3);
+    padding: 8px 16px;
+    border-radius: 10px;
+    opacity: 0;
+    scale: .9;
+    translate: 0 6px;
+    transition: opacity .2s, scale .2s, translate .2s;
+    pointer-events: none;
+    box-shadow: 0 4px 16px rgba(4, 18, 13, 0.4);
+}
+
+.dock-label::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    translate: -50% 0;
+    border: 5px solid transparent;
+    border-top-color: rgba(8, 33, 25, 0.95);
+}
+
+.dock-item-label {
+    font-family: 'Outfit', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: rgba(251, 247, 236, 0.6);
+    margin-top: 6px;
+    text-align: center;
+    transition: color 0.3s;
+}
+
+.dock-item:hover .dock-item-label {
+    color: #D2B271;
+}
+
+.dock-divider {
+    width: 1.5px;
+    height: 36px;
+    margin: 0 6px 14px;
+    background: linear-gradient(180deg, transparent, rgba(210, 178, 113, 0.3), transparent);
+    flex-shrink: 0;
+    align-self: flex-end;
+    transition: height .25s;
+}
+
+.dock-ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(210, 178, 113, .3);
+    transform: scale(0);
+    animation: dock-rip .5s ease-out forwards;
+    pointer-events: none;
+    z-index: 5;
+}
+
+@keyframes dock-rip {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+@keyframes dock-click-bounce {
+    0% {
+        translate: 0 0;
+    }
+
+    30% {
+        translate: 0 -16px;
+    }
+
+    50% {
+        translate: 0 -4px;
+    }
+
+    70% {
+        translate: 0 -8px;
+    }
+
+    100% {
+        translate: 0 0;
+    }
+}
+
+.dock-item.is-bouncing .dock-icon {
+    animation: dock-click-bounce .45s cubic-bezier(.22, .68, 0, 1.04);
+}
+
+@media (max-width: 520px) {
+    .dock-wrap {
+        bottom: 14px !important;
+    }
+
+    .dock-item {
+        --size: 42px;
+    }
+
+    .dock-icon svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .dock-shelf {
+        height: 82px;
+        border-radius: 20px;
+    }
+
+    .dock-wrap:hover .dock-shelf {
+        height: 98px;
+    }
+
+    .dock-item-label {
+        font-size: 8px;
+    }
+
+    .dock-divider {
+        height: 30px;
+        margin-bottom: 14px;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media (hover:hover) {
+    .hs-dot:hover {
+        transform: translate(-50%, -50%) scale(1.06);
+    }
+}
+
+
+@media (max-width: 600px) {
+
+
+    .hs-dot {
+        width: 20px;
+        height: 20px;
+    }
+
+    .info-card,
+    .info-content {
+        transform: scale(0.7);
+        top: -5px;
+        left: -35px;
+    }
+
+    .context-chip {
+        left: 10px;
+        top: 1px;
+        transform: scale(0.6);
+        /* keep it positioned cleanly */
+        transform-origin: left center;
+        justify-content: flex-start;
+    }
+
+    .close-btn {
+        top: 20px;
+        left: 10px;
+    }
+
+
+}
+
+/* Portrait — fit height */
+@media (max-aspect-ratio: 3840/5830) {
+
+
+    .image-wrapper img {
+        width: auto;
+        height: 100%;
+    }
+
+    .Cutout {
+        width: auto;
+        height: 100%;
+    }
+
+    .Cutout svg {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+/* Landscape — fit width */
+@media (min-aspect-ratio: 3840/5830) {
+    .image-wrapper img {
+        width: 100%;
+        height: auto;
+    }
+
+    .Cutout {
+        width: 100vw;
+        height: auto;
+    }
+
+    .Cutout svg {
+        width: 100%;
+        height: 100%;
+    }
+
+
+}
+
+@media (max-width: 600px) {
+    .Front {
+        position: fixed;
+        /* make .Front itself the viewport-anchored box */
+        top: 50%;
+        left: 45%;
+        transform: translate(-50%, -50%) scale(1.2);
+        transform-origin: center center;
+        /* scale from the middle */
+        z-index: 1;
+        /* keep it beneath overlays if needed */
+    }
+}
+
+

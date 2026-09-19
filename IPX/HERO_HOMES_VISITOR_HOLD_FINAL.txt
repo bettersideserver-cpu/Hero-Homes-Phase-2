@@ -1,0 +1,8 @@
+HERO HOMES VISITOR + HOLD FINAL
+
+- Visitor lead form submits to public.visitors.
+- Successful lead is saved in localStorage under heroHomesVisitor, so Back/navigation does not force the form again.
+- Floor hold requests reuse the saved visitor details and submit tower/floor/unit/apartment_detail to hold_requests.
+- If a user lands directly on a floor without a saved lead, the hold form collects details once, creates the visitor row, saves the lead, then creates the hold request.
+- Tower floor clicks preserve the actual tower and floor from data-name (e.g. 9_Floor_10) and append ?floor=10.
+- Admin login allows every authenticated Supabase user.

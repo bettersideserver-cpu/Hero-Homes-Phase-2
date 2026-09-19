@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+
+  <title>MDB The Lutyens</title>
+  <link rel="stylesheet" href="./../../../wbn05d6fbh.css" />
+  <link rel="stylesheet" href="./../../../JS/CSS/Whatsapp-CSS.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Jost:wght@300;400;500&family=Poppins:wght@500;600&display=swap');
+
+
+
+    #ciWidget {
+      position: absolute;
+      top: 5%;
+      right: 2%;
+      width: 265px;
+      font-family: 'Jost', sans-serif;
+      z-index: 10;
+    }
+
+    /* CARD — two-column grid layout */
+    #ciCard {
+      border-radius: 16px;
+      overflow: hidden;
+      background: rgba(248, 249, 251, 0.97);
+      backdrop-filter: blur(24px) saturate(140%);
+      -webkit-backdrop-filter: blur(24px) saturate(140%);
+      border: 1px solid rgba(100, 150, 175, 0.18);
+      border-top: 2px solid #8ab8cc;
+      box-shadow:
+        0 12px 36px rgba(20, 55, 90, 0.12),
+        0 4px 10px rgba(20, 55, 90, 0.07),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      display: grid;
+      grid-template-areas:
+        "top   top"
+        "sqft  dims"
+        "face  face";
+      grid-template-columns: 95px 1fr;
+    }
+
+    /* HEADER — full width */
+    .ci-top {
+      grid-area: top;
+      background: linear-gradient(160deg, #b8d8ea 0%, #cce6f2 100%);
+      padding: 13px 14px 11px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid rgba(100, 150, 175, 0.2);
+    }
+
+    .ci-top-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .ci-breadcrumb {
+      font-size: 7.5px;
+      letter-spacing: 2.5px;
+      color: rgba(10, 45, 70, 0.75);
+      text-transform: uppercase;
+    }
+
+    .ci-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      line-height: 1.05;
+      color: #07131e;
+      font-weight: 600;
+    }
+
+    .ci-sub {
+      font-size: 9px;
+      color: rgba(10, 40, 65, 0.55);
+    }
+
+    .ci-badge {
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      background: rgba(255, 255, 255, 0.3);
+      color: #0d3a52;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-size: 8px;
+      letter-spacing: 0.5px;
+      height: fit-content;
+      white-space: nowrap;
+      margin-top: 3px;
+    }
+
+    /* SQFT — left column, centred hero number */
+    .ci-sqft {
+      grid-area: sqft;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 6px;
+      background: rgba(100, 150, 175, 0.05);
+      border-right: 1px solid rgba(100, 150, 175, 0.12);
+      border-bottom: 1px solid rgba(100, 150, 175, 0.1);
+      gap: 3px;
+    }
+
+    .ci-sqft-num {
+      font-size: 46px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      color: #2e7a96;
+      line-height: 1;
+      letter-spacing: -1px;
+    }
+
+    .ci-sqft-meta {
+      font-size: 8.5px;
+      color: rgba(30, 65, 90, 0.5);
+      text-align: center;
+      line-height: 1.55;
+      margin-left: 0;
+    }
+
+    /* DIMS — right column, stacked rows */
+    .ci-dims {
+      grid-area: dims;
+      display: flex;
+      flex-direction: column;
+      border-bottom: 1px solid rgba(100, 150, 175, 0.1);
+    }
+
+    .ci-dim {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      border-bottom: 1px solid rgba(100, 150, 175, 0.07);
+    }
+
+    .ci-dim:last-child {
+      border-bottom: none;
+    }
+
+    .ci-dim-label {
+      font-size: 7.5px;
+      color: rgba(30, 65, 90, 0.55);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .ci-dim-value {
+      font-size: 13px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      color: #111c26;
+    }
+
+    /* FACING — full-width bottom strip */
+    .ci-facing {
+      grid-area: face;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      background: rgba(100, 150, 175, 0.04);
+    }
+
+    .ci-facing-title {
+      font-size: 7.5px;
+      color: rgba(30, 65, 90, 0.55);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+
+    .ci-facing-dir {
+      font-size: 13px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      color: #111c26;
+    }
+
+    .ci-sun {
+      margin-left: auto;
+      background: rgba(100, 150, 175, 0.09);
+      border: 1px solid rgba(100, 150, 175, 0.25);
+      color: #2e6880;
+      padding: 2px 9px;
+      border-radius: 20px;
+      font-size: 8px;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+    }
+
+       #navButtons {
+  position: fixed;
+  top: 110px;     /* below compass */
+  right: 20px;    /* right side */
+
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  z-index: 9999;
+}
+.navBtn {
+  text-decoration: none;
+  font-size: 11px;
+  color: white;
+
+  padding: 4px 8px;
+
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 3px;
+}
+
+.navBtn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+  </style>
+</head>
+
+<body>
+  <div id="navButtons">
+  <a href="Balcony_07.html" class="navBtn">Upper Balcony</a>
+  <a href="Balcony_05.html" class="navBtn">Lower Balcony</a>
+</div>
+  <div class="main-container">
+
+    <!-- ✅ REQUIRED FOR PANOLENS -->
+    <div class="image-container">
+
+      <!-- ✅ YOUR INFO CARD -->
+      <!-- <div id="ciWidget">
+        <div id="ciCard">
+          <div class="ci-top">
+
+            <div class="ci-top-left">
+              <div class="ci-breadcrumb">CM INFINIA · TOWER A</div>
+              <div class="ci-title">Kitchen</div>
+       
+            </div>
+
+            <div class="ci-badge">Open Plan</div>
+
+          </div>
+
+          <div class="ci-sqft">
+            <div class="ci-sqft-num">77</div>
+            <div class="ci-sqft-meta">
+              <div>SQ FT</div>
+              <div>Built-up area</div>
+            </div>
+          </div>
+
+          <div class="ci-dims">
+            <div class="ci-dim">
+              <div class="ci-dim-label">LENGTH</div>
+              <div class="ci-dim-value">10'10 ft</div>
+            </div>
+            <div class="ci-dim">
+              <div class="ci-dim-label">WIDTH</div>
+              <div class="ci-dim-value">23'9 ft</div>
+            </div>
+            <div class="ci-dim">
+              <div class="ci-dim-label">HEIGHT</div>
+              <div class="ci-dim-value">9'8 ft</div>
+            </div>
+          </div>
+
+          <div class="ci-facing">
+            <div class="ci-facing-title">WINDOW FACING</div>
+            <div class="ci-facing-dir">--</div>
+           
+          </div>
+
+
+        </div>
+      </div> -->
+
+    </div>
+
+  </div>
+  <!-- <button id="waFab" class="wa-fab" aria-label="Chat on WhatsApp" title="Chat on WhatsApp">
+
+    <svg class="wa-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path
+        d="M21.02 11.63c0 5.38-4.36 9.74-9.74 9.74-1.24 0-2.42-.23-3.51-.65l-6.78 2 1.67-6.54a9.8 9.8 0 0 1-1.12-4.55c0-5.38 4.36-9.74 9.74-9.74s9.74 4.36 9.74 9.74Z"
+        style="fill:#fff;stroke:#fff;stroke-miterlimit:10;stroke-width:.25px" />
+      <path
+        d="M15.45 13.68c-.32-.11-.54-.21-.75.11s-.86 1.07-.97 1.29c-.11.21-.32.21-.54.11-.32-.11-1.4-.43-2.58-1.5-.97-.86-1.61-1.83-1.83-2.15s0-.54.11-.75l.43-.43c.11-.11.21-.32.32-.54s.04-.43-.02-.64c-.06-.16-.64-1.72-.97-2.36-.21-.54-.43-.43-.64-.43h-.54c-.18 0-.48.06-.75.35-.27.28-1.02 1.01-1.02 2.47s0 2.79 1.18 4.19 3.22 2.9 5.16 3.65c1.93.75 2.15.54 2.58.54s1.72-.54 2.04-1.29.25-1.24.21-1.4-.11-.42-.38-.57l-1.05-.64Z"
+        style="fill:#25d366" />
+    </svg>
+  </button>
+  <div id="waLabel" class="wa-label">Chat on WhatsApp</div> -->
+  <button class="close-btn" id="closeCard">←</button>
+  <div class="main-container">
+    <div class="image-container"></div>
+  </div>
+  <!-- <div id="videoOverlay" class="video-overlay">
+    <video id="walkthroughVideo" controls preload="none">
+      <source src="./../../../Video/Lutyen Lobby.webm" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div> -->
+  <!-- Request Callback Modal -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/105/three.min.js" integrity="..." crossorigin="anonymous"
+    referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.jsdelivr.net/npm/panolens@0.12.0/build/panolens.min.js"></script>
+
+  <!-- <script>const panoramaImage = new PANOLENS.ImagePanorama("../../../images/Apparments/3BHK/360/Dinning.jpg"); -->
+
+  <script>
+   function createArrowSVG() {
+  const svg = `
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+    <defs>
+      <!-- Glass morph gradient (simulates frosted glass depth) -->
+      <radialGradient id="glassFill" cx="50%" cy="40%" r="60%">
+        <stop offset="0%"  stop-color="rgba(255,255,255,0.28)"/>
+        <stop offset="55%" stop-color="rgba(255,255,255,0.10)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.04)"/>
+      </radialGradient>
+
+      <!-- Top inner highlight (subtle gloss) -->
+      <linearGradient id="glassHighlight" x1="50%" y1="0%" x2="50%" y2="100%">
+        <stop offset="0%"  stop-color="rgba(255,255,255,0.35)"/>
+        <stop offset="45%" stop-color="rgba(255,255,255,0)"/>
+      </linearGradient>
+
+      <!-- Soft outer shadow for depth on dark backgrounds -->
+      <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+        <feOffset dx="0" dy="2" result="offsetblur"/>
+        <feComponentTransfer>
+          <feFuncA type="linear" slope="0.45"/>
+        </feComponentTransfer>
+        <feMerge>
+          <feMergeNode/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+
+      <!-- Inner dot subtle glow -->
+      <radialGradient id="dotFill" cx="50%" cy="45%" r="50%">
+        <stop offset="0%"  stop-color="#123a8a"/>
+        <stop offset="100%" stop-color="#0A1F44"/>
+      </radialGradient>
+    </defs>
+
+    <!-- Outer glass circle -->
+    <g filter="url(#softShadow)">
+      <circle cx="64" cy="64" r="44"
+              fill="url(#glassFill)"
+              stroke="rgba(255,255,255,0.22)"
+              stroke-width="1.2"/>
+      <!-- Gloss highlight arc (top portion only) -->
+      <circle cx="64" cy="64" r="44"
+              fill="url(#glassHighlight)"
+              opacity="0.9"/>
+      <!-- Faint inner ring for premium depth -->
+      <circle cx="64" cy="64" r="38"
+              fill="none"
+              stroke="rgba(255,255,255,0.08)"
+              stroke-width="1"/>
+    </g>
+
+    <!-- Inner core dot -->
+    <circle cx="64" cy="64" r="6.5" fill="url(#dotFill)"/>
+    <!-- Tiny specular on the dot -->
+    <circle cx="62.5" cy="62" r="1.6" fill="rgba(255,255,255,0.55)"/>
+  </svg>`;
+
+  return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+}
+  </script>
+
+
+  <script>
+    // 1) Define both images
+    // const LOW_SRC = "./../../../images/Thumbnail/Apartments/3BHK/360/Kitchen.webp";
+    const LOW_SRC = "./../../../images/360/Balcony/Floor_06.jpg";
+    const HIGH_SRC = "./../../../images/360/Balcony/Floor_06.jpg";
+
+    const imageContainer = document.querySelector(".image-container");
+
+    // 2) Create panoramas
+    const panoLow = new PANOLENS.ImagePanorama(LOW_SRC);
+    const panoHigh = new PANOLENS.ImagePanorama(HIGH_SRC);
+
+    // 3) Viewer
+    const viewer = new PANOLENS.Viewer({
+      container: imageContainer,
+      autoRotate: false,
+      autoRotateSpeed: 0.1,
+      controlBar: false,
+      cameraFov: 80
+    });
+
+    // after: const viewer = new PANOLENS.Viewer({...});
+    let didInitView = false;
+
+    // Keep the same initial yaw on both (texture yaw)
+    const TEXTURE_YAW = -Math.PI / 2 + 0; // your existing value
+    panoLow.rotation.y = TEXTURE_YAW;
+    panoHigh.rotation.y = TEXTURE_YAW;
+
+    // Desired tilt DOWN amount (pitch)
+    const TILT_DOWN = Math.PI / 50; // ~16°
+
+    function setInitialViewAndLockPitch() {
+      if (didInitView) return;   // ✅ run only once (prevents flicker on swap)
+      didInitView = true;
+
+      const controls = viewer.getControl();
+
+      // Positive value here, we pass -TILT to tilt DOWN
+      const TILT = -Math.PI / 40;     // adjust how much you want to tilt
+      controls.rotateUp(-TILT);      // tilt down
+
+      // No vertical limits (free up/down)
+      if ('minPolarAngle' in controls && 'maxPolarAngle' in controls) {
+        controls.minPolarAngle = 0;          // can look straight up
+        controls.maxPolarAngle = Math.PI;    // can look straight down
+      }
+
+      // Optional: rotation only (no panning)
+      if ('enablePan' in controls) controls.enablePan = false;
+    }
+
+
+    // Apply same camera view when each pano becomes active
+    panoLow.addEventListener('enter', setInitialViewAndLockPitch);
+    panoHigh.addEventListener('enter', setInitialViewAndLockPitch);
+
+    // Start with low; add both to viewer for smooth swap
+    viewer.add(panoLow);
+    viewer.add(panoHigh);
+    viewer.setPanorama(panoLow);
+
+
+    function degToRad(deg) {
+      return deg * Math.PI / 180;
+    }
+
+    function setFromAngles(spot, yawDeg, pitchDeg, radius = 5000) {
+      const yaw = degToRad(yawDeg);
+      const pitch = degToRad(pitchDeg);
+
+      const x = radius * Math.cos(pitch) * Math.sin(yaw);
+      const y = radius * Math.sin(pitch);
+      const z = radius * Math.cos(pitch) * Math.cos(yaw);
+
+      spot.position.set(x, y, z);
+    }
+
+
+
+
+
+
+
+
+    // 🔴 Hotspot 1
+
+       const ARROW_ICON = createArrowSVG();
+
+    const spot1 = new PANOLENS.Infospot(450, ARROW_ICON);
+    setFromAngles(spot1, 95, -10);
+    spot1.addHoverText("Lobby");
+    spot1.addEventListener('click', () => {
+      // keep visible for a moment
+      setTimeout(() => {
+        window.location.href = "Lobby.html";
+      }, 800); // 0.8 sec delay
+    });
+
+    // 🔴 Hotspot 2
+    const spot2 = new PANOLENS.Infospot(450, ARROW_ICON);
+    setFromAngles(spot2, -70, -10);
+    spot2.addHoverText("Enterance");
+    spot2.addEventListener('click', () => {
+      // keep visible for a moment
+      setTimeout(() => {
+        window.location.href = "Enterance.html";
+      }, 800); // 0.8 sec delay
+    });
+
+// 🔴 Hotspot 3
+    const spot3 = new PANOLENS.Infospot(450, ARROW_ICON);
+    setFromAngles(spot3, 50, -10);
+    spot3.addHoverText("Bedroom");
+    spot3.addEventListener('click', () => {
+      // keep visible for a moment
+      setTimeout(() => {
+        window.location.href = "Bedroom.html";
+      }, 800); // 0.8 sec delay
+    });
+
+// 🔴 Hotspot 4
+    const spot4 = new PANOLENS.Infospot(450, ARROW_ICON);
+    setFromAngles(spot4, -47, -10);
+    spot4.addHoverText("Bathroom");
+    spot4.addEventListener('click', () => {
+      // keep visible for a moment
+      setTimeout(() => {
+        window.location.href = "Bathroom.html";
+      }, 800); // 0.8 sec delay
+    });
+
+
+
+    // ✅ Add all to panorama
+    [panoLow, panoHigh].forEach(pano => {
+      pano.add(spot1);
+      pano.add(spot2);
+      pano.add(spot3);
+      pano.add(spot4);
+
+    });
+    // Preload + swap high-res when ready
+    panoLow.addEventListener("load", () => {
+      panoHigh.addEventListener("load", () => {
+        viewer.setPanorama(panoHigh, 600); // fade swap
+        console.log("✅ Swapped to high-res panorama");
+      });
+      panoHigh.load();
+    });
+
+    panoHigh.addEventListener("error", (e) => {
+      console.warn("⚠️ Failed to load high-res:", e);
+    });
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const closeCard = document.getElementById("closeCard");
+
+      if (closeCard) {
+        closeCard.addEventListener("click", () => {
+          // 🔹 Change this path to wherever you want the button to take you
+          // window.location.href = "./../../../Subpages/3BHK/Lobby_Top.html";
+          window.location.href = "./../../../Subpages/Tower_A.html";
+          // Example: "../index.html" or "../Subpages/Tower_A.html"
+        });
+      }
+    });
+  </script>
+
+
+
+
+
+  <script src="./../../../JS/EnquiryForm.js"></script>
+  <script src="./../../../JS/Request-Back.js"></script>
+  <script src="./../../../JS/2a26l58eqz.js"></script>
+  <script src="./../../../JS/InspectDisable.js"></script>
+  <script src="./../../../JS/imageloader.js"></script>
+  <script src="./../../../JS/Whatsapp.js"></script>
+    <!-- JUMPBAR — macOS Dock Style -->
+    <div class="dock-wrap" id="dock">
+        <div class="dock-shelf"></div>
+        <div class="dock-items" id="dockItems">
+            <a class="dock-item" href="Room_1.html">
+                <span class="dock-label">Room 1</span>
+                <div class="dock-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12V7a1 1 0 011-1h16a1 1 0 011 1v5"/><path d="M3 12h18v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5z"/><path d="M7 12V9h4v3"/></svg></div>
+                <span class="dock-item-label">Room 1</span><span class="dock-dot"></span>
+            </a>
+           <a class="dock-item" href="Room_2.html">
+                <span class="dock-label">Room 2</span>
+                <div class="dock-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12V7a1 1 0 011-1h16a1 1 0 011 1v5"/><path d="M3 12h18v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5z"/><path d="M7 12V9h4v3"/></svg></div>
+                <span class="dock-item-label">Room 2</span><span class="dock-dot"></span>
+            </a>
+            <a class="dock-item" href="Room_3.html">
+                <span class="dock-label">Room 3</span>
+                <div class="dock-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12V7a1 1 0 011-1h16a1 1 0 011 1v5"/><path d="M3 12h18v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5z"/><path d="M7 12V9h4v3"/></svg></div>
+                <span class="dock-item-label">Room 3</span><span class="dock-dot"></span>
+            </a>
+            <a class="dock-item" href="Kitchen.html">
+                <span class="dock-label">Kitchen</span>
+                <div class="dock-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12V7a1 1 0 011-1h16a1 1 0 011 1v5"/><path d="M3 12h18v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5z"/><path d="M7 12V9h4v3"/></svg></div>
+                <span class="dock-item-label">Kitchen</span><span class="dock-dot"></span>
+            </a>
+        </div>
+    </div>
+    <script>
+    (function(){
+        const items=document.querySelectorAll('.dock-item'),dockItems=document.getElementById('dockItems');
+        if(!dockItems||!items.length)return;
+        const BASE=52,MAX=80,RANGE=140;
+        function magnify(e){items.forEach(item=>{const icon=item.querySelector('.dock-icon'),svg=item.querySelector('.dock-icon svg'),label=item.querySelector('.dock-label'),rect=item.getBoundingClientRect(),cx=rect.left+rect.width/2,dist=Math.abs(e.clientX-cx);if(dist<RANGE){const t=1-dist/RANGE,sz=BASE+(MAX-BASE)*t;icon.style.width=sz+'px';icon.style.height=sz+'px';icon.style.borderRadius=(16+t*4)+'px';const iSz=22+t*10;svg.style.width=iSz+'px';svg.style.height=iSz+'px';item.style.width=sz+'px';if(t>.7){icon.style.background='linear-gradient(145deg,rgba(201,168,124,.2),rgba(201,168,124,.08))';icon.style.borderColor='rgba(201,168,124,.4)';icon.style.boxShadow='0 4px 24px rgba(201,168,124,.2)';svg.style.stroke='#c9a87c';svg.style.filter='drop-shadow(0 0 6px rgba(201,168,124,.4))';label.style.opacity='1';label.style.scale='1';label.style.translate='0 0';}else{reset(icon,svg,label);}}else{icon.style.width=BASE+'px';icon.style.height=BASE+'px';icon.style.borderRadius='16px';svg.style.width='22px';svg.style.height='22px';item.style.width=BASE+'px';reset(icon,svg,label);}});}
+        function reset(icon,svg,label){icon.style.background='';icon.style.borderColor='';icon.style.boxShadow='';svg.style.stroke='';svg.style.filter='';label.style.opacity='0';label.style.scale='.9';label.style.translate='0 6px';}
+        function resetAll(){items.forEach(item=>{const icon=item.querySelector('.dock-icon'),svg=item.querySelector('.dock-icon svg'),label=item.querySelector('.dock-label');icon.style.width=icon.style.height='';icon.style.borderRadius='';svg.style.width=svg.style.height='';item.style.width='';reset(icon,svg,label);});}
+        dockItems.addEventListener('mousemove',magnify);dockItems.addEventListener('mouseleave',resetAll);
+        items.forEach(c=>{c.addEventListener('click',e=>{c.classList.add('is-bouncing');c.addEventListener('animationend',()=>c.classList.remove('is-bouncing'),{once:true});const r=document.createElement('span');r.className='dock-ripple';const icon=c.querySelector('.dock-icon'),b=icon.getBoundingClientRect(),s=Math.max(b.width,b.height);r.style.width=r.style.height=s+'px';r.style.left=(e.clientX-b.left-s/2)+'px';r.style.top=(e.clientY-b.top-s/2)+'px';icon.appendChild(r);r.addEventListener('animationend',()=>r.remove());});});
+    })();
+    </script>
+</body>
+
+</html>

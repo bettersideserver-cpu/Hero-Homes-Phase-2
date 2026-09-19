@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Hero Homes - Phase 2</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="auth-page">
+    <div class="auth-card">
+        <div class="brand">Hero Homes - Phase 2 <span>ADMIN</span></div>
+        <div id="loginView">
+            <h1>Admin Login</h1>
+            <p class="muted">Sign in to manage units, statuses and visitors.</p>
+            <form id="loginForm"><input id="email" type="email" placeholder="Email" required><input id="password"
+                    type="password" placeholder="Password" required><button>Login</button></form><button class="link"
+                id="showRegister">Register a user</button>
+        </div>
+        <div id="registerView" hidden>
+            <h1>Register User</h1>
+            <p class="muted">Every registered user is an admin.</p>
+            <form id="registerForm"><input id="name" placeholder="Name" required><input id="regEmail" type="email"
+                    placeholder="Email" required><input id="regPassword" type="password" placeholder="Password"
+                    minlength="6" required><button>Register</button></form><button class="link" id="showLogin">Back to
+                login</button>
+        </div>
+        <div id="msg" class="msg"></div>
+    </div>
+    <script type="module" src="js/auth.js"></script>
+</body>
+
+</html>

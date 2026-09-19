@@ -1,0 +1,2557 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hero Homes</title>
+    <link rel="stylesheet" href="./../wbn05d6fbh.css">
+    <link rel="stylesheet" href="./../JS/CSS/Floor-Hint.css">
+    <link rel="stylesheet" href="./../JS/Notification/UI_Hint-CSS.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        /* ═══════════════════════════════════════════════
+           Hero Homes — MINIMAL VIEWER UI
+           Greige field · cream surfaces · #0F3D2E accent
+           ═══════════════════════════════════════════════ */
+        :root {
+            --bg-0: #C9C3B7;
+            --bg-tint: #B8B0A0;
+
+            --surface-1: #F4EDDD;
+            --surface-2: #FBF7EC;
+            --surface-3: #FBF7EC;
+
+            --ink: #0A2B21;
+            --ink-soft: rgba(10, 43, 33, 0.72);
+            --ink-mid: rgba(10, 43, 33, 0.58);
+            --ink-dim: rgba(10, 43, 33, 0.40);
+            --ink-faint: rgba(10, 43, 33, 0.24);
+
+            --gold: #0F3D2E;
+            --gold-light: #1C5A44;
+            --gold-dark: #04120D;
+            --gold-soft: rgba(15, 61, 46, 0.06);
+            --gold-tint: rgba(15, 61, 46, 0.12);
+
+            --on-accent: #FBF7EC;
+            --brass: #C39E59;
+
+            --hair: rgba(10, 43, 33, 0.14);
+            --hair-soft: rgba(10, 43, 33, 0.08);
+
+            --text: #0A2B21;
+            --text-muted: rgba(10, 43, 33, 0.55);
+
+            --shadow-sm: 0 1px 2px rgba(10, 43, 33, 0.06);
+            --shadow-md: 0 4px 16px rgba(10, 43, 33, 0.10);
+            --shadow-lg: 0 12px 40px rgba(10, 43, 33, 0.16);
+
+            --font-display: 'Cormorant Garamond', serif;
+            --font-ui: 'Outfit', sans-serif;
+            --ease-out: cubic-bezier(0.22, 0.68, 0, 1.04);
+            --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+            --r: 10px;
+            --r-lg: 16px;
+            --r-pill: 999px;
+            --bar: 56px;
+            --foot: 48px;
+        }
+
+        body {
+            background: var(--bg-0);
+            color: var(--ink);
+            font-family: var(--font-ui);
+        }
+
+        @media (max-width: 600px) {
+            .Front {
+                position: fixed;
+                top: 55%;
+                left: 50%;
+            }
+        }
+
+        /* ═══ TOP BAR ═══════════════════════════════════ */
+        /* Not a connected bar: two corner tabs anchored into the top edge.
+           Cream runs flush to the top and to its own side; only the inner
+           corner curves away. Middle is cut out so the image shows through.
+           The rail itself is transparent and click-through. */
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--bar);
+            z-index: 10000;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            padding: 0;
+            background: none;
+            border: none;
+            pointer-events: none;
+            opacity: 0;
+            animation: fade-down 0.7s var(--ease-out) 0.15s forwards;
+        }
+
+        @keyframes fade-down {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        .tb-brand,
+        .tb-actions {
+            pointer-events: auto;
+        }
+
+        .tb-brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            user-select: none;
+            height: 46px;
+            padding: 0 26px 0 22px;
+            background: var(--surface-2);
+            border: 1px solid var(--hair);
+            border-top: none;
+            border-left: none;
+            border-radius: 0 0 var(--r-lg) 0;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tb-mark {
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--gold);
+        }
+
+        .tb-rule {
+            width: 1px;
+            height: 16px;
+            background: var(--hair);
+            align-self: center;
+        }
+
+        .tb-name {
+            font-family: var(--font-display);
+            font-size: 19px;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+            color: var(--ink);
+            line-height: 1;
+        }
+
+        .tb-actions {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            height: 46px;
+            padding: 0 10px 0 12px;
+            background: var(--surface-2);
+            border: 1px solid var(--hair);
+            border-top: none;
+            border-right: none;
+            border-radius: 0 0 0 var(--r-lg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .control-btn {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            height: 32px;
+            padding: 0 15px;
+            background: none;
+            border: none;
+            border-radius: var(--r-pill);
+            color: var(--ink-soft);
+            font-family: var(--font-ui);
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            cursor: pointer;
+            text-decoration: none;
+            position: relative;
+            transition: color 0.25s ease, background 0.25s ease;
+        }
+
+        .control-btn svg {
+            width: 15px;
+            height: 15px;
+            stroke: currentColor;
+            stroke-width: 1.6;
+        }
+
+        .control-btn:hover {
+            color: var(--on-accent);
+            background: var(--gold);
+        }
+
+        .menu-btn {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            display: grid;
+            place-items: center;
+            background: none;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.25s ease;
+        }
+
+        .menu-btn:hover {
+            background: var(--gold-soft);
+        }
+
+        .menu-btn-lines {
+            width: 17px;
+            height: 11px;
+            position: relative;
+        }
+
+        .menu-btn-lines span {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 1.5px;
+            background: var(--ink);
+            transition: all 0.35s var(--ease-out);
+        }
+
+        .menu-btn-lines span:nth-child(1) {
+            top: 0;
+        }
+
+        .menu-btn-lines span:nth-child(2) {
+            top: 50%;
+            transform: translateY(-50%);
+            width: 62%;
+        }
+
+        .menu-btn-lines span:nth-child(3) {
+            bottom: 0;
+        }
+
+        .menu-btn.is-open .menu-btn-lines span {
+            background: var(--gold);
+        }
+
+        .menu-btn.is-open .menu-btn-lines span:nth-child(1) {
+            top: 50%;
+            transform: translateY(-50%) rotate(45deg);
+        }
+
+        .menu-btn.is-open .menu-btn-lines span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-btn.is-open .menu-btn-lines span:nth-child(3) {
+            bottom: 50%;
+            transform: translateY(50%) rotate(-45deg);
+        }
+
+        /* ═══ DROPDOWN ══════════════════════════════════ */
+        .dropdown-menu {
+            position: fixed;
+            top: calc(var(--bar) + 8px);
+            right: 12px;
+            z-index: 10001;
+            width: 288px;
+            background: var(--surface-2);
+            border: 1px solid var(--hair);
+            border-radius: var(--r-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            padding: 0;
+            opacity: 0;
+            transform: translateY(-6px);
+            pointer-events: none;
+            transition: opacity 0.25s ease, transform 0.25s var(--ease-out);
+        }
+
+        .dropdown-menu.is-open {
+            opacity: 1;
+            transform: none;
+            pointer-events: auto;
+        }
+
+        .dropdown-header {
+            padding: 18px 20px 14px;
+            border-bottom: 1px solid var(--hair);
+        }
+
+        .dropdown-header-label {
+            font-size: 8.5px;
+            font-weight: 600;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--gold);
+        }
+
+        .dropdown-header-title {
+            font-family: var(--font-display);
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--ink);
+            margin-top: 4px;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 14px 20px;
+            text-decoration: none;
+            color: var(--ink);
+            font-family: var(--font-ui);
+            border-bottom: 1px solid var(--hair-soft);
+            transition: background 0.22s ease;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: var(--gold-soft);
+        }
+
+        .dropdown-item-icon {
+            width: 30px;
+            height: 30px;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            border: 1px solid var(--hair);
+            border-radius: 50%;
+            transition: border-color 0.22s ease, background 0.22s ease;
+        }
+
+        .dropdown-item:hover .dropdown-item-icon {
+            border-color: var(--gold);
+            background: var(--surface-1);
+        }
+
+        .dropdown-item-icon svg {
+            width: 14px;
+            height: 14px;
+            stroke: var(--gold);
+            stroke-width: 1.6;
+        }
+
+        .dropdown-item-text {
+            flex: 1;
+        }
+
+        .dropdown-item-title {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+        }
+
+        .dropdown-item-sub {
+            display: block;
+            font-size: 8.5px;
+            font-weight: 500;
+            color: var(--text-muted);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-top: 3px;
+        }
+
+        .dropdown-item-arrow {
+            stroke: var(--ink-faint);
+            opacity: 0;
+            transition: all 0.22s ease;
+        }
+
+        .dropdown-item:hover .dropdown-item-arrow {
+            stroke: var(--gold);
+            opacity: 1;
+            transform: translateX(3px);
+        }
+
+        /* ═══ LEFT PANEL — RESIDENCES ═══════════════════ */
+        .left-panel {
+            position: fixed;
+            top: calc(var(--bar) + 74px);
+            left: 20px;
+            z-index: 9000;
+            width: 258px;
+            background: var(--surface-2);
+            border: 1px solid var(--hair);
+            border-radius: var(--r-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            opacity: 0;
+            animation: fade-in 0.7s var(--ease-out) 0.35s forwards;
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        .panel-header {
+            padding: 15px 18px 13px;
+            border-bottom: 1px solid var(--hair);
+        }
+
+        .panel-label {
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--ink-dim);
+        }
+
+        .property-type {
+            display: grid;
+            grid-template-columns: 20px 1fr auto;
+            align-items: center;
+            gap: 13px;
+            padding: 14px 18px;
+            text-decoration: none;
+            border-bottom: 1px solid var(--hair-soft);
+            position: relative;
+            transition: background 0.22s ease, padding-left 0.25s var(--ease-out);
+        }
+
+        .property-type:last-child {
+            border-bottom: none;
+        }
+
+        .property-type::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--gold);
+            transform: scaleY(0);
+            transition: transform 0.25s var(--ease-out);
+        }
+
+        .property-type:hover {
+            background: var(--gold-soft);
+            padding-left: 22px;
+        }
+
+        .property-type:hover::before {
+            transform: scaleY(1);
+        }
+
+        .pt-index {
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            color: var(--ink-faint);
+            transition: color 0.22s ease;
+        }
+
+        .property-type:hover .pt-index {
+            color: var(--gold);
+        }
+
+        .pt-text {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            min-width: 0;
+        }
+
+        .pt-name {
+            font-family: var(--font-display);
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--ink);
+            line-height: 1.1;
+            letter-spacing: 0.01em;
+        }
+
+        .pt-sub {
+            font-size: 8.5px;
+            font-weight: 500;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .property-type:hover .pt-sub {
+            color: var(--gold-light);
+        }
+
+        .pt-arrow {
+            opacity: 0;
+            transform: translateX(-4px);
+            transition: all 0.25s var(--ease-out);
+        }
+
+        .pt-arrow svg {
+            width: 14px;
+            height: 14px;
+            stroke: var(--gold);
+            stroke-width: 1.8;
+        }
+
+        .property-type:hover .pt-arrow {
+            opacity: 1;
+            transform: none;
+        }
+
+        /* ═══ BACK BUTTON (#closeCard) — sits clear of the topbar ═══ */
+        .close-btn {
+            position: fixed !important;
+            top: calc(var(--bar) + 18px) !important;
+            left: 20px !important;
+            right: auto !important;
+            bottom: auto !important;
+            width: 40px !important;
+            height: 40px !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            z-index: 9500;
+            display: grid;
+            place-items: center;
+            background: var(--surface-2);
+            color: var(--ink);
+            border: 1px solid var(--hair) !important;
+            border-radius: 50% !important;
+            box-shadow: var(--shadow-md);
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+            transition: background 0.22s ease, color 0.22s ease, border-color 0.22s ease;
+        }
+
+        .close-btn:hover {
+            background: var(--gold);
+            color: var(--on-accent);
+            border-color: var(--gold) !important;
+        }
+
+        /* ═══ UI HINT — keep it below the topbar ════════ */
+        #ui-hint,
+        .ui-hint {
+            top: calc(var(--bar) + 18px) !important;
+            bottom: auto !important;
+            border-radius: var(--r-pill) !important;
+        }
+
+        /* ═══ BOTTOM NAV ════════════════════════════════ */
+        .jumpbar {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 11000;
+            display: flex;
+            align-items: stretch;
+            height: var(--foot);
+            background: var(--surface-2);
+            border: 1px solid var(--hair);
+            border-radius: var(--r-pill);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            opacity: 0;
+            animation: fade-up 0.7s var(--ease-out) 0.45s forwards;
+        }
+
+        @keyframes fade-up {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(-50%);
+            }
+        }
+
+        .jumpbar-nav {
+            display: flex;
+            align-items: stretch;
+        }
+
+        .jumpbar-item {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 0 22px;
+            text-decoration: none;
+            color: var(--ink-soft);
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            border-right: 1px solid var(--hair-soft);
+            white-space: nowrap;
+            position: relative;
+            transition: color 0.22s ease, background 0.22s ease;
+        }
+
+        .jumpbar-item:last-child {
+            border-right: none;
+        }
+
+        .jumpbar-item svg {
+            width: 15px;
+            height: 15px;
+            stroke: currentColor;
+            stroke-width: 1.6;
+        }
+
+        .jumpbar-item:hover {
+            color: var(--gold);
+            background: var(--gold-soft);
+        }
+
+        .jumpbar-item.is-active,
+        .jumpbar-item.is-active:hover {
+            color: var(--on-accent);
+            background: var(--gold);
+            border-radius: var(--r-pill);
+            border-right-color: transparent;
+            margin: 5px 3px;
+            padding: 0 19px;
+        }
+
+        .jumpbar-ripple {
+            display: none;
+        }
+
+        /* ═══ ENQUIRY TAB ═══════════════════════════════ */
+        .enquiry-btn {
+            position: fixed;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10001;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            padding: 22px 12px;
+            border-radius: var(--r-lg) 0 0 var(--r-lg);
+            background: var(--gold);
+            color: var(--on-accent);
+            font-family: var(--font-ui);
+            font-weight: 600;
+            font-size: 10px;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            border: none;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.25s ease, padding 0.25s var(--ease-out);
+        }
+
+        .enquiry-btn:hover {
+            background: var(--gold-dark);
+            padding: 26px 12px;
+        }
+
+        @media (max-width: 600px) {
+            .enquiry-btn {
+                font-size: 9px;
+                padding: 16px 9px;
+                letter-spacing: 0.2em;
+            }
+        }
+
+        /* ═══ ENQUIRY MODAL ═════════════════════════════ */
+        .enquiry .overlay {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            justify-content: flex-end;
+            background: rgba(4, 18, 13, 0);
+            z-index: 99999;
+            pointer-events: none;
+            transition: background 0.35s ease;
+        }
+
+        .enquiry .overlay.is-open {
+            background: rgba(4, 18, 13, 0.45);
+            pointer-events: auto;
+        }
+
+        .enquiry .modal {
+            width: min(390px, 100vw);
+            height: 100%;
+            background: var(--surface-2);
+            border-left: 1px solid var(--hair);
+            display: flex;
+            flex-direction: column;
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+
+        .enquiry .overlay.is-open .modal {
+            transform: none;
+        }
+
+        .enquiry .modal-header {
+            padding: 0 8px 0 22px;
+            height: var(--bar);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--hair);
+        }
+
+        .enquiry .modal-header .title {
+            flex: 1;
+            color: var(--ink);
+            font-weight: 500;
+            font-size: 11px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            font-family: var(--font-ui);
+        }
+
+        .enquiry .close {
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            display: grid;
+            place-items: center;
+            border: 1px solid var(--hair);
+            border-radius: 50%;
+            background: none;
+            color: var(--ink-mid);
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.22s ease;
+        }
+
+        .enquiry .close:hover {
+            background: var(--gold);
+            color: var(--on-accent);
+            border-color: var(--gold);
+        }
+
+        .enquiry .modal-body {
+            padding: 24px 22px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .enquiry .form {
+            display: grid;
+            gap: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .enquiry .input,
+        .enquiry .select,
+        .enquiry .phone {
+            width: 100%;
+            box-sizing: border-box;
+            background: var(--surface-1);
+            border: 1px solid var(--hair);
+            border-radius: var(--r);
+            padding: 13px 14px;
+            font-size: 13px;
+            color: var(--ink);
+            font-family: var(--font-ui);
+            transition: border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .enquiry .input:focus,
+        .enquiry .select:focus {
+            outline: none;
+            border-color: var(--gold);
+            background: var(--surface-2);
+        }
+
+        .enquiry .input::placeholder {
+            color: var(--ink-faint);
+        }
+
+        .enquiry .select {
+            appearance: none;
+            cursor: pointer;
+            color: var(--ink-mid);
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path d="M7 10l5 5 5-5" fill="none" stroke="%231C5A44" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+        }
+
+        .enquiry .phone {
+            display: flex;
+            padding: 0;
+        }
+
+        .enquiry .phone select {
+            appearance: none;
+            border: none;
+            border-right: 1px solid var(--hair);
+            padding: 0 11px;
+            min-width: 68px;
+            background: transparent;
+            color: var(--ink-mid);
+            font-size: 13px;
+            font-family: var(--font-ui);
+            cursor: pointer;
+        }
+
+        .enquiry .phone input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 13px 14px;
+            font-size: 13px;
+            color: var(--ink);
+            font-family: var(--font-ui);
+        }
+
+        .enquiry .phone input::placeholder {
+            color: var(--ink-faint);
+        }
+
+        .enquiry .phone input:focus {
+            outline: none;
+        }
+
+        .enquiry .submit {
+            width: 100%;
+            border: none;
+            border-radius: var(--r);
+            padding: 15px;
+            font-weight: 600;
+            font-size: 10px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            background: var(--gold);
+            color: var(--on-accent);
+            cursor: pointer;
+            margin-top: 6px;
+            font-family: var(--font-ui);
+            transition: background 0.25s ease;
+        }
+
+        .enquiry .submit:hover {
+            background: var(--gold-dark);
+        }
+
+        .call-btn {
+            display: block;
+            width: 100%;
+            text-align: center;
+            padding: 14px 8px;
+            border-radius: var(--r);
+            font-weight: 600;
+            font-size: 10px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            text-decoration: none;
+            background: none;
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            transition: all 0.25s ease;
+            box-sizing: border-box;
+        }
+
+        .call-btn:hover {
+            background: var(--gold);
+            color: var(--on-accent);
+        }
+
+        @media (max-width: 560px) {
+            .enquiry .modal {
+                width: 100vw;
+            }
+        }
+
+        /* ═══ MOBILE PANEL TOGGLE ═══════════════════════ */
+        .panel-toggle-btn {
+            display: none;
+        }
+
+        /* ═══ CHROME / MISC ═════════════════════════════ */
+        .dock-wrap {
+            display: none !important;
+        }
+
+        .ambient-particles {
+            display: none;
+        }
+
+        ::selection {
+            background: var(--gold);
+            color: var(--on-accent);
+        }
+
+        ::-webkit-scrollbar {
+            width: 3px;
+            height: 3px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--hair);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold);
+        }
+
+        /* ═══ GALLERY LIGHTBOX ══════════════════════════ */
+        .gallery-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 13000;
+            background: rgba(4, 18, 13, 0.96);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gallery-overlay.is-open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .gallery-close,
+        .walkthrough-close {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(251, 247, 236, 0.22);
+            border-radius: 50%;
+            background: none;
+            color: #FBF7EC;
+            font-size: 16px;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            transition: background 0.22s ease;
+            z-index: 2;
+        }
+
+        .gallery-close:hover,
+        .walkthrough-close:hover {
+            background: rgba(251, 247, 236, 0.1);
+        }
+
+        .gallery-counter {
+            position: absolute;
+            top: 22px;
+            left: 24px;
+            font-family: var(--font-ui);
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.25em;
+            color: rgba(251, 247, 236, 0.65);
+            z-index: 2;
+        }
+
+        .gallery-main {
+            position: relative;
+            width: 100%;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 76px 116px;
+            box-sizing: border-box;
+        }
+
+        .gallery-main img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: var(--r-lg);
+        }
+
+        .gallery-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 44px;
+            height: 44px;
+            border: 1px solid rgba(251, 247, 236, 0.18);
+            border-radius: 50%;
+            background: none;
+            color: #FBF7EC;
+            font-size: 18px;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            transition: all 0.22s ease;
+            z-index: 2;
+        }
+
+        .gallery-nav:hover {
+            background: rgba(251, 247, 236, 0.1);
+            border-color: rgba(251, 247, 236, 0.4);
+        }
+
+        .gallery-prev {
+            left: 20px;
+        }
+
+        .gallery-next {
+            right: 20px;
+        }
+
+        .gallery-thumbs {
+            position: absolute;
+            bottom: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+            z-index: 2;
+            max-width: 90vw;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .gallery-thumbs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .gallery-thumb {
+            width: 56px;
+            height: 38px;
+            overflow: hidden;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            flex-shrink: 0;
+            opacity: 0.4;
+            transition: all 0.22s ease;
+        }
+
+        .gallery-thumb.is-active {
+            border-color: var(--brass);
+            opacity: 1;
+        }
+
+        .gallery-thumb:hover {
+            opacity: 0.8;
+        }
+
+        .gallery-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ═══ WALKTHROUGH ═══════════════════════════════ */
+        .walkthrough-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 13000;
+            background: rgba(4, 18, 13, 0.97);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .walkthrough-overlay.is-open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .walkthrough-video-wrap {
+            width: 90vw;
+            max-width: 1000px;
+            aspect-ratio: 16/9;
+            border: 1px solid rgba(251, 247, 236, 0.14);
+            border-radius: var(--r-lg);
+            overflow: hidden;
+        }
+
+        .walkthrough-video-wrap video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #04120D;
+        }
+
+        /* ═══════════════════════════════════════════════
+           RESPONSIVE
+           ═══════════════════════════════════════════════ */
+        @media (max-width: 900px) {
+            .jumpbar-item {
+                padding: 0 16px;
+                letter-spacing: 0.14em;
+            }
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --bar: 50px;
+                --foot: 54px;
+            }
+
+            .topbar {
+                padding: 0;
+            }
+
+            .tb-brand {
+                height: 42px;
+                padding: 0 18px 0 14px;
+            }
+
+            .tb-actions {
+                height: 42px;
+                padding: 0 8px 0 10px;
+                gap: 1px;
+            }
+
+            .tb-name {
+                font-size: 17px;
+            }
+
+            .tb-mark {
+                font-size: 8px;
+                letter-spacing: 0.24em;
+            }
+
+            .control-btn {
+                padding: 0;
+                width: 30px;
+                height: 28px;
+                justify-content: center;
+            }
+
+            .control-btn span {
+                display: none;
+            }
+
+            .control-btn svg {
+                width: 16px;
+                height: 16px;
+            }
+
+            .menu-btn {
+                width: 28px;
+                height: 28px;
+            }
+
+            .dropdown-menu {
+                left: 12px;
+                right: 12px;
+                width: auto;
+            }
+
+            /* Residences: collapsible sheet triggered by .panel-toggle-btn */
+            .panel-toggle-btn {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                position: fixed;
+                left: 12px;
+                right: 12px;
+                bottom: calc(var(--foot) + 26px);
+                width: auto;
+                height: 42px;
+                padding: 0 18px;
+                z-index: 10001;
+                border-radius: var(--r-pill);
+                background: var(--gold);
+                color: var(--on-accent);
+                border: none;
+                cursor: pointer;
+                font-family: var(--font-ui);
+                font-size: 10px;
+                font-weight: 600;
+                letter-spacing: 0.24em;
+                text-transform: uppercase;
+                transition: background 0.25s ease;
+            }
+
+            .panel-toggle-btn::before {
+                content: 'Residences';
+            }
+
+            .panel-toggle-btn svg {
+                width: 15px;
+                height: 15px;
+                stroke: var(--on-accent);
+                stroke-width: 2;
+                transition: transform 0.3s var(--ease-out);
+            }
+
+            .panel-toggle-btn.is-open svg {
+                transform: rotate(180deg);
+            }
+
+            .left-panel {
+                top: auto;
+                left: 12px;
+                right: 12px;
+                width: auto;
+                bottom: calc(var(--foot) + 68px);
+                border-radius: var(--r-lg);
+                animation: none;
+                opacity: 0;
+                pointer-events: none;
+                transform: translateY(8px);
+                transition: opacity 0.25s ease, transform 0.25s var(--ease-out);
+                box-shadow: var(--shadow-md);
+            }
+
+            .left-panel.is-open {
+                opacity: 1;
+                pointer-events: auto;
+                transform: none;
+            }
+
+            .panel-header {
+                display: none;
+            }
+
+            .property-type {
+                padding: 13px 16px;
+                grid-template-columns: 18px 1fr auto;
+                gap: 11px;
+            }
+
+            .property-type:hover {
+                padding-left: 16px;
+            }
+
+            .pt-name {
+                font-size: 15px;
+            }
+
+            .pt-sub {
+                font-size: 8px;
+            }
+
+            /* Bottom nav: full-width, edge to edge */
+            .jumpbar {
+                left: 0;
+                right: 0;
+                bottom: 0;
+                transform: none;
+                border-left: none;
+                border-right: none;
+                border-bottom: none;
+                border-radius: var(--r-lg) var(--r-lg) 0 0;
+            }
+
+            @keyframes fade-up {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: none;
+                }
+            }
+
+            .jumpbar-nav {
+                width: 100%;
+            }
+
+            .jumpbar-item {
+                flex: 1;
+                justify-content: center;
+                flex-direction: column;
+                gap: 4px;
+                padding: 0 4px;
+                font-size: 8px;
+                letter-spacing: 0.1em;
+            }
+
+            .jumpbar-item svg {
+                width: 16px;
+                height: 16px;
+            }
+
+            .gallery-main {
+                padding: 66px 14px 96px;
+            }
+
+            .gallery-nav {
+                width: 34px;
+                height: 34px;
+                font-size: 15px;
+            }
+
+            .gallery-prev {
+                left: 8px;
+            }
+
+            .gallery-next {
+                right: 8px;
+            }
+
+            .gallery-thumb {
+                width: 42px;
+                height: 30px;
+            }
+
+            .gallery-counter {
+                top: 26px;
+                left: 16px;
+            }
+
+            .gallery-close,
+            .walkthrough-close {
+                top: 12px;
+                right: 12px;
+                width: 36px;
+                height: 36px;
+            }
+
+            .close-btn {
+                top: calc(var(--bar) + 12px) !important;
+                left: 12px !important;
+                width: 36px !important;
+                height: 36px !important;
+            }
+
+            #ui-hint,
+            .ui-hint {
+                top: calc(var(--bar) + 12px) !important;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .tb-name {
+                font-size: 16px;
+            }
+
+            .tb-rule,
+            .tb-mark {
+                display: none;
+            }
+
+            .jumpbar-item {
+                font-size: 7.5px;
+            }
+        }
+
+        /* =========================================================
+   NEW LEAD FORM
+   COMPLETELY INDEPENDENT FROM EXISTING ENQUIRY
+   ========================================================= */
+
+        .lead-form-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 120000;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+            box-sizing: border-box;
+
+            background: rgba(4, 18, 13, 0.62);
+
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+
+            transition:
+                opacity 0.3s ease,
+                visibility 0.3s ease;
+        }
+
+        .lead-form-overlay.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+
+        .lead-form-box {
+            width: min(460px, 100%);
+            max-height: calc(100vh - 40px);
+
+            overflow-y: auto;
+
+            box-sizing: border-box;
+
+            background: var(--surface-2);
+
+            border: 1px solid var(--hair);
+
+            border-radius: var(--r-lg);
+
+            box-shadow:
+                0 24px 80px rgba(4, 18, 13, 0.28);
+
+            padding: 32px;
+        }
+
+
+        .lead-form-header {
+            margin-bottom: 26px;
+        }
+
+
+        .lead-form-eyebrow {
+            display: block;
+
+            font-family: var(--font-ui);
+
+            font-size: 9px;
+            font-weight: 600;
+
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+
+            color: var(--gold);
+
+            margin-bottom: 8px;
+        }
+
+
+        .lead-form-title {
+            margin: 0;
+
+            font-family: var(--font-display);
+
+            font-size: 30px;
+            font-weight: 600;
+
+            line-height: 1.05;
+
+            color: var(--ink);
+        }
+
+
+        .lead-form-subtitle {
+            margin: 8px 0 0;
+
+            font-family: var(--font-ui);
+
+            font-size: 12px;
+            line-height: 1.6;
+
+            color: var(--text-muted);
+        }
+
+
+        .lead-form {
+            display: grid;
+            gap: 14px;
+        }
+
+
+        .lead-form-field {
+            display: grid;
+            gap: 7px;
+        }
+
+
+        .lead-form-field label {
+            font-family: var(--font-ui);
+
+            font-size: 9px;
+            font-weight: 600;
+
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+
+            color: var(--ink-soft);
+        }
+
+
+        .lead-form-field input {
+            width: 100%;
+
+            box-sizing: border-box;
+
+            padding: 14px 15px;
+
+            border: 1px solid var(--hair);
+
+            border-radius: var(--r);
+
+            background: var(--surface-1);
+
+            color: var(--ink);
+
+            font-family: var(--font-ui);
+
+            font-size: 13px;
+
+            outline: none;
+
+            transition:
+                border-color 0.2s ease,
+                background 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+
+        .lead-form-field input::placeholder {
+            color: var(--ink-faint);
+        }
+
+
+        .lead-form-field input:focus {
+            border-color: var(--gold);
+
+            background: var(--surface-2);
+
+            box-shadow:
+                0 0 0 3px var(--gold-soft);
+        }
+
+
+        .lead-form-submit {
+            width: 100%;
+
+            margin-top: 6px;
+
+            padding: 15px;
+
+            border: none;
+
+            border-radius: var(--r);
+
+            background: var(--gold);
+
+            color: var(--on-accent);
+
+            font-family: var(--font-ui);
+
+            font-size: 10px;
+            font-weight: 600;
+
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+
+            cursor: pointer;
+
+            transition:
+                background 0.25s ease,
+                transform 0.2s ease;
+        }
+
+
+        .lead-form-submit:hover {
+            background: var(--gold-dark);
+        }
+
+
+        .lead-form-submit:active {
+            transform: translateY(1px);
+        }
+
+
+        .lead-form-submit:disabled {
+            opacity: 0.65;
+            cursor: default;
+        }
+
+
+        .lead-form-message {
+            min-height: 18px;
+
+            margin-top: 4px;
+
+            font-family: var(--font-ui);
+
+            font-size: 11px;
+
+            text-align: center;
+        }
+
+
+        .lead-form-message.error {
+            color: #9B3B32;
+        }
+
+
+        .lead-form-message.success {
+            color: var(--gold);
+        }
+
+
+        @media (max-width: 600px) {
+
+            .lead-form-overlay {
+                padding: 12px;
+            }
+
+            .lead-form-box {
+                padding: 24px 20px;
+                max-height: calc(100vh - 24px);
+            }
+
+            .lead-form-title {
+                font-size: 27px;
+            }
+        }
+    </style>
+
+    <style>
+        /* =====================================
+   THE LUTYENS — RED & WHITE THEME
+   ===================================== */
+
+        :root {
+            --bg-0: #FFFFFF;
+            --bg-tint: #F8F8F8;
+
+            --surface-1: #F8F8F8;
+            --surface-2: #FFFFFF;
+            --surface-3: #FFFFFF;
+
+            --ink: #292929;
+            --ink-soft: rgba(41, 41, 41, 0.75);
+            --ink-mid: rgba(41, 41, 41, 0.60);
+            --ink-dim: rgba(41, 41, 41, 0.45);
+            --ink-faint: rgba(41, 41, 41, 0.25);
+
+            /* Red accent */
+            --gold: #B5121B;
+            --gold-light: #D12B34;
+            --gold-dark: #850D14;
+            --gold-soft: rgba(181, 18, 27, 0.07);
+            --gold-tint: rgba(181, 18, 27, 0.13);
+
+            --on-accent: #FFFFFF;
+            --brass: #B5121B;
+
+            --hair: rgba(41, 41, 41, 0.13);
+            --hair-soft: rgba(41, 41, 41, 0.07);
+
+            --text: #292929;
+            --text-muted: rgba(41, 41, 41, 0.60);
+
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 18px rgba(0, 0, 0, 0.09);
+            --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Page background */
+        body {
+            background: #FFFFFF;
+            color: #292929;
+        }
+
+        /* Red interactive controls */
+        .control-btn:hover,
+        .close-btn:hover,
+        .enquiry-btn,
+        .enquiry .submit,
+        .lead-form-submit,
+        .panel-toggle-btn {
+            background: #B5121B;
+            color: #FFFFFF;
+        }
+
+        /* Hover states */
+        .property-type:hover,
+        .dropdown-item:hover {
+            background: rgba(181, 18, 27, 0.06);
+        }
+
+        /* Selected tower navigation */
+        .jumpbar-item.is-active,
+        .jumpbar-item.is-active:hover {
+            background: #B5121B;
+            color: #FFFFFF;
+        }
+
+        /* Selection and focus */
+        ::selection {
+            background: #B5121B;
+            color: #FFFFFF;
+        }
+
+        .enquiry .input:focus,
+        .enquiry .select:focus,
+        .lead-form-field input:focus {
+            border-color: #B5121B;
+        }
+
+        /* Dark overlays for gallery and walkthrough */
+        .gallery-overlay {
+            background: rgba(20, 10, 10, 0.96);
+        }
+
+        .walkthrough-overlay {
+            background: rgba(20, 10, 10, 0.97);
+        }
+
+        .tb-logo {
+            display: block;
+            width: 90px;
+            height: 32px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .tb-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        @media (max-width: 600px) {
+            .tb-logo {
+                width: 76px;
+                height: 28px;
+            }
+        }
+
+
+        /* MOBILE — ZOOM IMAGE + SVG ONLY */
+        @media (max-width: 768px) {
+            .Front {
+                transform: translate(30px, 0px) scale(1.8);
+
+                transform-origin: center center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        sessionStorage.setItem('lastTower', 'A');
+    </script>
+    <!-- =========================================================
+     NEW LEAD FORM
+     COMPLETELY INDEPENDENT FROM EXISTING ENQUIRY
+     ========================================================= -->
+
+    <div class="lead-form-overlay" id="newLeadFormOverlay" aria-hidden="true">
+
+        <div class="lead-form-box" role="dialog" aria-modal="true" aria-labelledby="leadFormTitle">
+
+            <div class="lead-form-header">
+
+                <span class="lead-form-eyebrow">
+                    The Lutyens
+                </span>
+
+                <h2 class="lead-form-title" id="leadFormTitle">
+                    Request Details
+                </h2>
+
+                <p class="lead-form-subtitle">
+                    Please share your details and our team
+                    will get in touch with you.
+                </p>
+
+            </div>
+
+
+            <form class="lead-form" id="newLeadCaptureForm" novalidate>
+
+                <!-- FULL NAME -->
+
+                <div class="lead-form-field">
+
+                    <label for="leadFullName">
+                        Full Name *
+                    </label>
+
+                    <input type="text" id="leadFullName" name="fullName" placeholder="Enter your full name"
+                        autocomplete="name" required>
+
+                </div>
+
+
+                <!-- MOBILE -->
+
+                <div class="lead-form-field">
+
+                    <label for="leadMobile">
+                        Mobile Number *
+                    </label>
+
+                    <input type="tel" id="leadMobile" name="mobile" placeholder="Enter your mobile number"
+                        autocomplete="tel" inputmode="numeric" required>
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="lead-form-field">
+
+                    <label for="leadEmail">
+                        Email Address *
+                    </label>
+
+                    <input type="email" id="leadEmail" name="email" placeholder="Enter your email address"
+                        autocomplete="email" required>
+
+                </div>
+
+
+                <!-- CITY -->
+
+                <div class="lead-form-field">
+
+                    <label for="leadCity">
+                        City *
+                    </label>
+
+                    <input type="text" id="leadCity" name="city" placeholder="Enter your city"
+                        autocomplete="address-level2" required>
+
+                </div>
+
+
+                <!-- MESSAGE -->
+
+                <div class="lead-form-message" id="leadFormMessage" aria-live="polite">
+                </div>
+
+
+                <!-- SUBMIT -->
+
+                <button type="submit" class="lead-form-submit">
+
+                    Submit Request
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+    <div id="ui-hint" class="ui-hint" aria-live="polite" role="status">
+        <div class="ui-hint__row ui-hint__desktop">
+            <svg width="18" height="24" viewBox="0 0 18 24" aria-hidden="true">
+                <path d="M9 1c3.9 0 7 3.1 7 7v8c0 3.9-3.1 7-7 7s-7-3.1-7-7V8c0-3.9 3.1-7 7-7z" fill="white"
+                    opacity=".18" />
+                <rect x="8" y="4" width="2" height="5" rx="1" fill="white" />
+                <rect x="5" y="10" width="8" height="9" rx="4" fill="white" opacity=".4" />
+            </svg>
+            <span>Click on Floor To See Apartments</span>
+        </div>
+        <div class="ui-hint__row ui-hint__touch">
+            <svg width="18" height="24" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                    d="M12 2a4 4 0 014 4v4h1.2a2.8 2.8 0 012.8 2.8V16c0 3.3-2.7 6-6 6H9.5A5.5 5.5 0 014 16.5V11a3 3 0 016 0v3h1V6a4 4 0 011-2.7z"
+                    fill="white" opacity=".28" />
+                <rect x="11" y="5" width="2" height="9" rx="1" fill="white" />
+            </svg>
+            <span>Click on Tower's To Select Floor</span>
+        </div>
+    </div>
+
+    <button class="close-btn" id="closeCard">&larr;</button>
+
+    <div id="floorTip" class="floortip" aria-hidden="true"></div>
+
+    <!-- ═══ LEFT PANEL — Residences ═══ -->
+    <!-- ═══ MOBILE PANEL TOGGLE ═══ -->
+    <!-- <button class="panel-toggle-btn" id="panelToggleBtn" aria-label="Show residence types">
+        <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 15l-6-6-6 6"/>
+        </svg>
+    </button> -->
+
+    <!-- <aside class="left-panel" aria-label="Residence Types">
+        <div class="panel-header"><span class="panel-label">Residences</span></div>
+        <a class="property-type" href="A-skyvilla/360/SkyVilla_Tour.html" data-type="skyvilla">
+            <span class="pt-index">01</span>
+            <span class="pt-text">
+                <span class="pt-name">Skyvilla</span>
+                <span class="pt-sub">Ultra Luxury</span>
+            </span>
+            <span class="pt-arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+            </span>
+        </a>
+        <a class="property-type" href="A-penthouse/Penthouse.html" data-type="penthouse">
+            <span class="pt-index">02</span>
+            <span class="pt-text">
+                <span class="pt-name">Penthouse</span>
+                <span class="pt-sub">Ultra Luxury</span>
+            </span>
+            <span class="pt-arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+            </span>
+        </a>
+        <a class="property-type" href="A-Typical/Typical.html" data-type="3bhk">
+            <span class="pt-index">03</span>
+            <span class="pt-text">
+                <span class="pt-name">3 BHK Residences</span>
+                <span class="pt-sub">Premium Homes</span>
+            </span>
+            <span class="pt-arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+            </span>
+        </a>
+        <a class="property-type" href="A-Typical/Typical.html?room=balcony" data-type="balcony">
+            <span class="pt-index">04</span>
+            <span class="pt-text">
+                <span class="pt-name">Balcony</span>
+                <span class="pt-sub">Ultra Luxury</span>
+            </span>
+            <span class="pt-arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+            </span>
+        </a>
+    </aside> -->
+
+    <!-- ═══ TOP CONTROLS ═══ -->
+    <header class="topbar">
+        <div class="tb-brand">
+            <img class="tb-logo" src="../images/logo-herohomes.png" alt="HeroHomes">
+            <span class="tb-rule"></span>
+            <span class="tb-name">Phase 2</span>
+        </div>
+    </header>
+    <div class="tb-actions">
+        <a class="control-btn" href="#" data-open-gallery id="galleryBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="1" />
+                <circle cx="8.5" cy="8.5" r="1.5" />
+                <path d="M21 15l-5-5L5 21" />
+            </svg>
+            <span>Gallery</span>
+        </a>
+        <a class="control-btn" href="#" data-open-walkthrough id="walkthroughBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9" />
+                <path d="M10 8.5l6 3.5-6 3.5z" />
+            </svg>
+            <span>Walkthrough</span>
+        </a>
+        <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
+            <div class="menu-btn-lines"><span></span><span></span><span></span></div>
+        </button>
+    </div>
+    </header>
+
+    <!-- ═══ DROPDOWN MENU ═══ -->
+    <div class="dropdown-menu" id="dropdownMenu" role="menu" aria-hidden="true">
+        <div class="dropdown-header">
+            <div class="dropdown-header-label">Explore</div>
+            <div class="dropdown-header-title">The Lutyens</div>
+        </div>
+        <a class="dropdown-item" href="./../The Lutyens Gatefold Brochure.pdf" download role="menuitem">
+            <div class="dropdown-item-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <path d="M12 18v-6" />
+                    <path d="M9 15l3 3 3-3" />
+                </svg>
+            </div>
+            <div class="dropdown-item-text"><span class="dropdown-item-title">Download Brochure</span><span
+                    class="dropdown-item-sub">PDF &middot; 4.2 MB</span></div>
+            <svg class="dropdown-item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+        </a>
+        <a class="dropdown-item" href="About.html" role="menuitem">
+            <div class="dropdown-item-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 16v-4" />
+                    <path d="M12 8h.01" />
+                </svg>
+            </div>
+            <div class="dropdown-item-text"><span class="dropdown-item-title">About the Project</span><span
+                    class="dropdown-item-sub">Vision &middot; Developer</span></div>
+            <svg class="dropdown-item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+        </a>
+        <a class="dropdown-item" href="Contact.html" role="menuitem">
+            <div class="dropdown-item-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                        d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" />
+                </svg>
+            </div>
+            <div class="dropdown-item-text"><span class="dropdown-item-title">Contact Us</span><span
+                    class="dropdown-item-sub">Sales &middot; Enquiry</span></div>
+            <svg class="dropdown-item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+        </a>
+    </div>
+
+    <!-- ═══ MAIN IMAGE + TOWERS (preserved) ═══ -->
+    <div class="Front">
+        <div class="image-wrapper">
+            <img id="mainImage" src="./../images/Thumbnail/Tower_C.webp" data-full="./../images/Tower_C.jpg"
+                alt="Tower_2" fetchpriority="high" decoding="async" width="3840" height="5830" class="blur-up" />
+            <div class="Cutout">
+                <svg viewBox="0 0 3840 5830" xmlns="http://www.w3.org/2000/svg">
+                    <path id="Floor_1" data-name="12A_Floor_32" data-link="Floor/Tower-C-12-A.html" floorNumber="01"
+                        d="m2448.83 1991.64-.64 27.7v6.51l-4.38 93.24-22.81 1.87-.6-12.26-24.08 2.04.38-16.12-7.64.74v-12.06l-73.4 8.42 2.29 10.53-188.52 18.28 1.53 8.04-96.51 9.96-2.43-7.4-103.4 10.72-66.07 6.05-3.4-7.88-63.58 5.53 7.66 7.78-7.12.65v9.19l-16.42.85.01-31.42-3.28-63.73 117.13-13.23-.08-13.45 74.04-7.91 4.51 12.25z"
+                        class="st0" />
+                    <path id="Floor_2" data-name="12A_Floor_31" data-link="Floor/Tower-C-12-A.html" floorNumber="02"
+                        d="m2421 2120.96-.23 32.23-23.66.51v-11.57l-8.6.08-.6-9.61-72.08 7.06 3.06 8.6-190.42 18.29 2.81 8.56-94.9 7.83-3.83-7.15-169.02 16.66-5.17-7.6-62.98 6.04 7.41 7.15-6.9.34v8l-6.98.6-9.25.47.03-43.43 16.42-.85v-9.19l7.12-.65-7.66-7.78 63.58-5.53 3.4 7.88 66.07-6.05 103.4-10.72 2.43 7.4 96.51-9.96-1.53-8.04 188.52-18.28-2.29-10.53 73.4-8.42v12.06l7.64-.74-.38 16.12 24.08-2.04z"
+                        class="st0" />
+                    <path id="Floor_3" data-name="12A_Floor_30" data-link="Floor/Tower-C-12-A.html" floorNumber="03"
+                        d="M2396.26 2198.99v-9.58h-7.28l-1.41-8.93-71.1 6.25 1.66 8.05-190.09 17.52 7.79 8.77-99.19 7.41-3.7-6.51-168.51 15.44-5.75-7.91-62.68 5.62 6.77 6.25-6 .64v7.28l-7.79.51-9.33-.54.01-41.81 9.25-.47 6.98-.6v-8l6.9-.34-7.41-7.15 62.98-6.04 5.17 7.6 169.02-16.66 3.83 7.15 94.9-7.83-2.81-8.56 190.42-18.29-3.06-8.6 72.08-7.06.6 9.61 8.6-.08v11.57l23.66-.51.76 44.4z"
+                        class="st0" />
+                    <path id="Floor_4" data-name="12A_Floor_29" data-link="Floor/Tower-C-12-A.html" floorNumber="04"
+                        d="M2396.49 2242.65v-6.89l-7.4 1.4-.9-8.68-72 5.36 1.66 7.15-189.32 17.62 6.51 7.4-97.91 7.4-4.85-5.87-103.28 8.3-65.23 4.21-5.62-5.74-62.3 4.85 6.51 6.25-5.62.13v3.58l-17.11.6.02-40.46 9.33.54 7.79-.51v-7.28l6-.64-6.77-6.25 62.68-5.62 5.75 7.91 168.51-15.44 3.7 6.51 99.19-7.41-7.79-8.77 190.09-17.52-1.66-8.05 71.1-6.25 1.41 8.93h7.28v9.58l25.27-1.4.62 44.17z"
+                        class="st0" />
+                    <path id="Floor_5" data-name="12A_Floor_28" data-link="Floor/Tower-C-12-A.html" floorNumber="05"
+                        d="M2422.15 2241.76v41.4l-33.32-1.36-1.19-5.96-71.49 4.94 1.36 6.98-188.6 17.36 3.07 6.29-95.49 7.49-4.43-6.12-168.63 11.23-4.94-5.02-64 4.17 7.49 5.36-12.6 3.36-9.77.21.02-42.37 17.11-.6v-3.58l5.62-.13-6.51-6.25 62.3-4.85 5.62 5.74 65.23-4.21 103.28-8.3 4.85 5.87 97.91-7.4-6.51-7.4 189.32-17.62-1.66-7.15 72-5.36.9 8.68 7.4-1.4v6.89z"
+                        class="st0" />
+                    <path id="Floor_6" data-name="12A_Floor_27" data-link="Floor/Tower-C-12-A.html" floorNumber="06"
+                        d="m2422.15 2283.16-.62 48.72-31.59-1.27-1.54-7.66-71.49 5.61 1.54 6.51-189.58 15.83 2.81 5.75-95.74 6.51-2.68-4.85-169.66 10.85-4.22-5.62-64.59 3.32 8.81 6-24.01.83.02-41.6 9.77-.21 12.6-3.36-7.49-5.36 64-4.17 4.94 5.02 168.63-11.23 4.43 6.12 95.49-7.49-3.07-6.29 188.6-17.36-1.36-6.98 71.49-4.94 1.19 5.96z"
+                        class="st0" />
+                    <path id="Floor_7" data-name="12A_Floor_26" data-link="Floor/Tower-C-12-A.html" floorNumber="07"
+                        d="M2421.53 2331.88v45.96l-31.25-.64-.64-6.25-73.28 4.98 3.07 5.48-191.75 16.22 5.49 3.96-96 7.53-4.6-5.62-169.53 9.32-4.34-5.23-64.08 3.95 8.29 5.75-23.34.58.02-44.18 24.01-.83-8.81-6 64.59-3.32 4.22 5.62 169.66-10.85 2.68 4.85 95.74-6.51-2.81-5.75 189.58-15.83-1.54-6.51 71.49-5.61 1.54 7.66z"
+                        class="st0" />
+                    <path id="Floor_8" data-name="12A_Floor_25" data-link="Floor/Tower-C-12-A.html" floorNumber="08"
+                        d="M2421.53 2377.84v48.53l-31.74-1.36-1.02-6.47-72.51 3.75 2.55 6.47-190.64 14.46 4.6 5.11-95.83 5.28-4.26-4.43-169.3 8.68-4.98-5.62-62.74 3.9 6.89 4.93-23 .31.02-43.51 23.34-.58-8.29-5.75 64.08-3.95 4.34 5.23 169.53-9.32 4.6 5.62 96-7.53-5.49-3.96 191.75-16.22-3.07-5.48 73.28-4.98.64 6.25z"
+                        class="st0" />
+                    <path id="Floor_9" data-name="12A_Floor_24" data-link="Floor/Tower-C-12-A.html" floorNumber="09"
+                        d="M2389.4 2471.69v-5.23l-72.89 3.83 1.79 5.1-189.19 14.17 2.29 6-94.76 3.71-3.7-4.22-169.03 6-5.1-3.57-63.45 2.81 6.9 4.21-22.73.34.02-43.46 23-.31-6.89-4.93 62.74-3.9 4.98 5.62 169.3-8.68 4.26 4.43 95.83-5.28-4.6-5.11 190.64-14.46-2.55-6.47 72.51-3.75 1.02 6.47 31.74 1.36.62 45.96z"
+                        class="st0" />
+                    <path id="Floor_10" data-name="12A_Floor_23" data-link="Floor/Tower-C-12-A.html" floorNumber="10"
+                        d="M2422.15 2472.33v46.4l-33.7.13v-4.47l-72.39 3.07 2.94 4.34-190.72 14.3 5.49 4.34-96.39 4.46-3.7-4.21-170.3 4.6-4.59-3.58-63.83 1.92 6.38 4.08-21.83.67.02-43.54 22.73-.34-6.9-4.21 63.45-2.81 5.1 3.57 169.03-6 3.7 4.22 94.76-3.71-2.29-6 189.19-14.17-1.79-5.1 72.89-3.83v5.23z"
+                        class="st0" />
+                    <path id="Floor_11" data-name="12A_Floor_22" data-link="Floor/Tower-C-12-A.html" floorNumber="11"
+                        d="m2422.15 2518.73-.62 48.78-32.36-1.02v-4.6l-73.53 2.43 3.57 5.23-190.34 12.26 5.49 3.57-97.27 4.09-4.6-3.45-169.15 3.83-4.98-4.72-62.72 2.72 5.55 3.64-21.71.48.03-43.59 21.83-.67-6.38-4.08 63.83-1.92 4.59 3.58 170.3-4.6 3.7 4.21 96.39-4.46-5.49-4.34 190.72-14.3-2.94-4.34 72.39-3.07v4.47z"
+                        class="st0" />
+                    <path id="Floor_12" data-name="12A_Floor_21" data-link="Floor/Tower-C-12-A.html" floorNumber="12"
+                        d="m2422.15 2613.04-32.53-.85-1.53-3.23-72.18 3.06 3.24 4.83-190.94 10.58 8.51 3.31-100.08 3.32-3.15-2.46-170.21 1.95-4.17-3.06-62.81 2.38 5.19 2.36-22.03.57.02-43.83 21.71-.48-5.55-3.64 62.72-2.72 4.98 4.72 169.15-3.83 4.6 3.45 97.27-4.09-5.49-3.57 190.34-12.26-3.57-5.23 73.53-2.43v4.6l32.36 1.02z"
+                        class="st0" />
+                    <path id="Floor_13" data-name="12A_Floor_20" data-link="Floor/Tower-C-12-A.html" floorNumber="13"
+                        d="M2422.15 2613.04v49.39l-32.72-1.37v-3.91l-74.39 1.36 4.26 3.58v3.57l-189.75 8.98 8.51 2.81-101.1 2.17-3.92-1.96-104.72 3.15v-3.83l-64.28.11-4.66-1.86-63.02 2.75-16.92.67.02-42.85 22.03-.57-5.19-2.36 62.81-2.38 4.17 3.06 170.21-1.95 3.15 2.46 100.08-3.32-8.51-3.31 190.94-10.58-3.24-4.83 72.18-3.06 1.53 3.23z"
+                        class="st0" />
+                    <path id="Floor_14" data-name="12A_Floor_19" data-link="Floor/Tower-C-12-A.html" floorNumber="14"
+                        d="M2422.15 2662.43v47.29l-32.55-1.02s-.26-2.68-.64-3.32c-.39-.64-72.77 1.28-72.77 1.28l3.58 7.66-189.83 6.89-91.66 3.32-6.39-1.79-102.98 2.73v-6.3l-65.53 2.09-4.68-1.28-62.13 1.7-17.15.62.02-43.65 16.92-.67 63.02-2.75 4.66 1.86 64.28-.11v3.83l104.72-3.15 3.92 1.96 101.1-2.17-8.51-2.81 189.75-8.98v-3.57l-4.26-3.58 74.39-1.36v3.91z"
+                        class="st0" />
+                    <path id="Floor_15" data-name="12A_Floor_18" data-link="Floor/Tower-C-12-A.html" floorNumber="15"
+                        d="M2422.15 2709.72v49.41h-30.68l-2.43-6.26-73.27 1.53 4.72 8.56-191.11 3.32-92.42 4.46-4.6-1.78-103.53 1.15V2765l-65.23 1.53-4.09-2.68-63.83 2.04 6 1.54-22.28.11.02-45.24 17.15-.62 62.13-1.7 4.68 1.28 65.53-2.09v6.3l102.98-2.73 6.39 1.79 91.66-3.32 189.83-6.89-3.58-7.66s72.38-1.92 72.77-1.28c.38.64.64 3.32.64 3.32z"
+                        class="st0" />
+                    <path id="Floor_16" data-name="12A_Floor_17" data-link="Floor/Tower-C-12-A.html" floorNumber="16"
+                        d="M2422.15 2759.13v48.85h-32.21s-.39-7.92 0-7.92-73.15 1.66-73.15 1.66l4.08 7.54-190.47 4.08-201.57 2.81v-5.36l-65.23.25-3.45-1.91-80.77 1.08.02-42.67 22.28-.11-6-1.54 63.83-2.04 4.09 2.68 65.23-1.53v5.11l103.53-1.15 4.6 1.78 92.42-4.46 191.11-3.32-4.72-8.56 73.27-1.53 2.43 6.26z"
+                        class="st0" />
+                    <path id="Floor_17" data-name="12A_Floor_16" data-link="Floor/Tower-C-12-A.html" floorNumber="17"
+                        d="M2422.15 2807.98v48.98h-32.51v-8.94l-72.64 1.15 1.91 7.4-189.19 3.32-95.36.13-105.06 1.28-.64-8.3s-1.97.03-5.5.09c-.59 0-1.22.02-1.89.03-.94.01-1.96.03-3.06.04l-1.45.03c-.43 0-.87.01-1.32.02-.42 0-.85 0-1.28.02-1.59.02-3.28.05-5.07.08-.88.01-1.78.03-2.71.04-.77.01-1.56.02-2.36.04l-2.27.03c-.39.01-.78.01-1.17.02-1.07.01-2.16.03-3.28.05-4.99.08-10.41.16-16.12.25h-.13c-.88.02-1.78.03-2.68.04-.86.02-1.72.03-2.58.04-1.78.03-3.58.06-5.4.08-.68 0-1.36.02-2.04.03-1.15.02-2.31.04-3.48.05l-5.6.09c-.97.01-1.93.03-2.9.04-.29.01-.59.01-.88.01l-5.72.09-17.99.27c-1.04.01-2.07.03-3.11.04l-1.99.03c-1.03.01-2.05.03-3.07.04l-8.12.12c-1.24.02-2.47.03-3.69.05-1.07.02-2.13.03-3.19.05l-2.24.03c-.69 0-1.37.02-2.04.02-1.1.02-2.18.03-3.26.05-.58.01-1.16.02-1.73.02l-2.1.03c-2.15.03-4.25.06-6.29.08-.94.02-1.88.03-2.8.04-3.07.04-6.01.08-8.79.11l.02-44.98 80.77-1.08 3.45 1.91 65.23-.25v5.36l201.57-2.81 190.47-4.08-4.08-7.54s73.53-1.66 73.15-1.66 0 7.92 0 7.92z"
+                        class="st0" />
+                    <path id="Floor_18" data-name="12A_Floor_15" data-link="Floor/Tower-C-12-A.html" floorNumber="18"
+                        d="M2422.15 2856.96v45.7h-32v-6.3h-73.02l.85 6.13-187.92 3.4-93.95 1.02h-107.75v-9.36l-65.7 1.54-83.32.5.02-44.4c2.78-.03 5.72-.07 8.79-.11.92-.01 1.86-.02 2.8-.04 2.04-.02 4.14-.05 6.29-.08l2.1-.03c.57 0 1.15-.01 1.73-.02 1.08-.02 2.16-.03 3.26-.05.67 0 1.35-.01 2.04-.02l2.24-.03c1.06-.02 2.12-.03 3.19-.05 1.22-.02 2.45-.03 3.69-.05l8.12-.12c1.02-.01 2.04-.03 3.07-.04l1.99-.03c1.04-.01 2.07-.03 3.11-.04l17.99-.27c1.92-.03 3.82-.05 5.72-.09.29 0 .59 0 .88-.01.97-.01 1.93-.03 2.9-.04l5.6-.09c1.17-.01 2.33-.03 3.48-.05l2.04-.03c1.82-.02 3.62-.05 5.4-.08.86-.01 1.72-.02 2.58-.04.9-.01 1.8-.02 2.68-.04h.13c5.71-.09 11.13-.17 16.12-.25 1.12-.01 2.21-.03 3.28-.05.39-.01.78-.01 1.17-.02l2.27-.03c.8-.02 1.59-.03 2.36-.04.93 0 1.83-.03 2.71-.04 1.79-.03 3.48-.06 5.07-.08.43-.01.86-.01 1.28-.02.45-.01.89-.02 1.32-.02l1.45-.03c1.1 0 2.12-.03 3.06-.04l1.89-.03c3.53-.06 5.5-.09 5.5-.09l.64 8.3 105.06-1.28 95.36-.13 189.19-3.32-1.91-7.4 72.64-1.15v8.94z"
+                        class="st0" />
+                    <path id="Floor_19" data-name="12A_Floor_14" data-link="Floor/Tower-C-12-A.html" floorNumber="19"
+                        d="M2390.43 2950.79v-6.81h-72.86v7.49l-187.23.42-93.19-.25h-108.34v-9.87l-149.49.36.02-42.54 83.32-.5 65.7-1.54v9.36h107.75l93.95-1.02 187.92-3.4-.85-6.13h73.02v6.3h32l.62 48.13z"
+                        class="st0" />
+                    <path id="Floor_20" data-name="12A_Floor_13" data-link="Floor/Tower-C-12-A.html" floorNumber="20"
+                        d="M2422.77 2950.79v46.72h-32.34v-5.74h-72v6.51h-63.32l-16.34 1.27-108.77-1.02-201.19-2.3v-8.38h-133.87l-15.64-.14.02-45.58 149.49-.36v9.87h108.34l93.19.25 187.23-.42v-7.49h72.86v6.81z"
+                        class="st0" />
+                    <path id="Floor_21" data-name="12A_Floor_12" data-link="Floor/Tower-C-12-A.html" floorNumber="21"
+                        d="M2422.77 2997.51v45.96h-31.83v-4.09h-73.54v5.11H2130l-96-1.53-104.94-1.53v-7.54l-149.78-1.91.02-44.27 15.64.14h133.87v8.38l201.19 2.3 108.77 1.02 16.34-1.27h63.32v-6.51h72v5.74z"
+                        class="st0" />
+                    <path id="Floor_22" data-name="12A_Floor_11" data-link="Floor/Tower-C-12-A.html" floorNumber="22"
+                        d="M2422.77 3043.47v44.04l-105.37-.77-187.53-1.78-92.68-2.17-4.08 1.27h-104.3v-7.78h-132.77l-16.78-.22.02-44.08 149.78 1.91v7.54l104.94 1.53 96 1.53h187.4v-5.11h73.54v4.09z"
+                        class="st0" />
+                    <path id="Floor_23" data-name="12A_Floor_10" data-link="Floor/Tower-C-12-A.html" floorNumber="23"
+                        d="M2422.77 3087.51v48.77l-104.81-3.07-187.92-5.87-97.66-2.04-103.53-6.51h-64.47l-4.34 3.83-64.98-3.71-15.82-.04.02-42.81 16.78.22h132.77v7.78h104.3l4.08-1.27 92.68 2.17 187.53 1.78z"
+                        class="st0" />
+                    <path id="Floor_24" data-name="12A_Floor_09" data-link="Floor/Tower-C-12-A.html" floorNumber="24"
+                        d="M2422.77 3136.28v44.81h-31.58l-2.81 2.29-70.85-2.55 1.28-4.47-188.3-3.06-94.47-5.49-3.7 2.93-37.53-1.65-65.75-4.73h-65.74l-4.85 2.68-62.56-3.06-16.69-.78.02-44.33 15.82.04 64.98 3.71 4.34-3.83h64.47l103.53 6.51 97.66 2.04 187.92 5.87z"
+                        class="st0" />
+                    <path id="Floor_25" data-name="12A_Floor_08" data-link="Floor/Tower-C-12-A.html" floorNumber="25"
+                        d="M2422.77 3181.09v50.29h-33.07l-70.59-1.91v-4.85l-189.32-3.07 2.42-5.49-95.74-2.42-3.83 3.32-37.79-1.66-65.87-2.17v-3.32l-64.72-1.02-6.39 3.32-61.27-3.07-17.4-1.34.02-44.5 16.69.78 62.56 3.06 4.85-2.68h65.74l65.75 4.73 37.53 1.65 3.7-2.93 94.47 5.49 188.3 3.06-1.28 4.47 70.85 2.55 2.81-2.29z"
+                        class="st0" />
+                    <path id="Floor_26" data-name="12A_Floor_07" data-link="Floor/Tower-C-12-A.html" floorNumber="26"
+                        d="M2422.77 3231.38v47.73h-32.92l-71.49-2.05v-6.63l-188.04-3.58 2.17-6.25-95.11-2.56-4.59 4.47-104.05-5.23v-3.96h-65.61l-3.45 3.32-64.47-3.07-16.03-1.14.02-44.73 17.4 1.34 61.27 3.07 6.39-3.32 64.72 1.02v3.32l65.87 2.17 37.79 1.66 3.83-3.32 95.74 2.42-2.42 5.49 189.32 3.07v4.85l70.59 1.91z"
+                        class="st0" />
+                    <path id="Floor_27" data-name="12A_Floor_06" data-link="Floor/Tower-C-12-A.html" floorNumber="27"
+                        d="M2422.77 3279.11v48.49l-30.45-.77-73.28-3.19v-5.49l-188.93-2.94 2.17-7.27-94.85-2.68-2.94 3.95-105.19-5.49v-4.85l-65.36-1.27-4.73 4.46-66.25-4.21 2.81-4.21-16.61.05.02-41.26 16.03 1.14 64.47 3.07 3.45-3.32h65.61v3.96l104.05 5.23 4.59-4.47 95.11 2.56-2.17 6.25 188.04 3.58v6.63l71.49 2.05z"
+                        class="st0" />
+                    <path id="Floor_28" data-name="12A_Floor_05" data-link="Floor/Tower-C-12-A.html" floorNumber="28"
+                        d="M2422.77 3327.6v47.7h-31.05l-74.17-3.96 1.54-6.25-189.07-4.86 2.04-7.91-95.49-2.81-4.34 4.47-103.53-5.75v-4.21l-64.08-2.17-4.98 5.11-64.34-4.98 1.53-5.11-17.69.31.02-43.49 16.61-.05-2.81 4.21 66.25 4.21 4.73-4.46 65.36 1.27v4.85l105.19 5.49 2.94-3.95 94.85 2.68-2.17 7.27 188.93 2.94v5.49l73.28 3.19z"
+                        class="st0" />
+                    <path id="Floor_29" data-name="12A_Floor_04" data-link="Floor/Tower-C-12-A.html" floorNumber="29"
+                        d="M2423.74 3422.38h-32.93l-73.92-4.21 1.54-6.38-188.05-5.75 1.92-8.04-96.26-2.43-4.08 4.09-102.9-5.62v-5.74l-64.59-2.04-6.9 5.48-62.68-5.1 1.54-5.49-17.31.29.02-44.26 17.69-.31-1.53 5.11 64.34 4.98 4.98-5.11 64.08 2.17v4.21l103.53 5.75 4.34-4.47 95.49 2.81-2.04 7.91 189.07 4.86-1.54 6.25 74.17 3.96h31.05z"
+                        class="st0" />
+                    <path id="Floor_30" data-name="12A_Floor_03" data-link="Floor/Tower-C-12-A.html" floorNumber="30"
+                        d="M2423.74 3422.38v49.19l-35.31.64-70.6-7.4-187.79-10.09 2.17-8.29-94.72-5.11-5.49 5.11-102.89-6.39v-4.98l-64.85-4.08-5.49 6.25-64.6-5.49 2.55-3.95-17.63.05.03-46.4 17.31-.29-1.54 5.49 62.68 5.1 6.9-5.48 64.59 2.04v5.74l102.9 5.62 4.08-4.09 96.26 2.43-1.92 8.04 188.05 5.75-1.54 6.38 73.92 4.21z"
+                        class="st0" />
+                    <path id="Floor_31" data-name="12A_Floor_02" data-link="Floor/Tower-C-12-A.html" floorNumber="31"
+                        d="M2423.74 3471.57v44.17l-31.31 3.83-74.43-4.21 2.04-8.55-189.95-6.13 1.91-6.89-94.34-6.39-3.96 5.37-104.42-6.39v-8.04l-65.11-2.43-5.62 6.9-63.36-6.21.9-6.26-17.02.25.02-42.75 17.63-.05-2.55 3.95 64.6 5.49 5.49-6.25 64.85 4.08v4.98l102.89 6.39 5.49-5.11 94.72 5.11-2.17 8.29 187.79 10.09 70.6 7.4z"
+                        class="st0" />
+                    <path id="Floor_32" data-name="12A_Floor_01" data-link="Floor/Tower-C-12-A.html" floorNumber="32"
+                        d="M2423.74 3515.74v48l-32.68 1.71-12.08 2.72-60.94-5.62 1.53-7.66-189.78-8.85 4.76-11.91-95.66-2.04-7.15 8-102.8-7.49v-6.64l-64.68-3.92-5.45 5.96-66.21-6.47 3.06-5.44-16.61-.2.02-45.3 17.02-.25-.9 6.26 63.36 6.21 5.62-6.9 65.11 2.43v8.04l104.42 6.39 3.96-5.37 94.34 6.39-1.91 6.89 189.95 6.13-2.04 8.55 74.43 4.21z"
+                        class="st0" />
+                    <path id="Floor_33" data-name="12_Floor_32" data-link="Floor/Tower-12.html" floorNumber="33"
+                        d="M1779.7 2132.6v31.42l-8.36.43-12.64-8.81-6.93.58-5.34-7.54-48.69 4.34 7.91 7.02-4.91.32v7.53l-7.34-4.72-2.8.47-.51 5.93-4.09-.57-51.68 4.66-6.47-5.96-65.36 6.3v9.36l-44.43 5.62-11.23-9.02-85.28 7.83-.68 11.06-42.04 4.26-10.55-9.54-60.6 6.3-45.11 3.92 2.56 3.91-6.3 1.02-4.26.51h-5.44l-48.51 3.07-10.56-5.96V2190l-34.38-20.77v-6.12l18.72-1.54s.69-5.61 0-5.95c-.68-.34-19.4-10.73-19.4-10.73l.62-5.12 361.42-41.15-.64-11.88 65.75-7.78 10.08 10.72 184.19-20.81z"
+                        class="st0" />
+                    <path id="Floor_34" data-name="12_Floor_31" data-link="Floor/Tower-12.html" floorNumber="34"
+                        d="m1779.69 2164.02-.03 43.43-7.6.38-11.91-8.51-8.85.68-6.13-6.64-46.3 3.58 7.83 8-8-1.37v5.62l-4.76-2.04-14.13 1.53-3.41-3.23-47.66 4.93-66.38 6.13-55.83 5.45-85.62 8.3-113.61 11.65-42.81 2.56 1.02 3.83-8.17.17 2.21 2.47-59.67 3.13-10.79-7.47v-15.92h10.29l1.24-18.38 48.51-3.07h5.44l4.26-.51 6.3-1.02-2.56-3.91 45.11-3.92 60.6-6.3 10.55 9.54 42.04-4.26.68-11.06 85.28-7.83 11.23 9.02 44.43-5.62V2174l65.36-6.3 6.47 5.96L1686 2169l4.09.57.51-5.93 2.8-.47 7.34 4.72v-7.53l4.91-.32-7.91-7.02 48.69-4.34 5.34 7.54 6.93-.58 12.64 8.81z"
+                        class="st0" />
+                    <path id="Floor_35" data-name="12_Floor_30" data-link="Floor/Tower-12.html" floorNumber="35"
+                        d="m1779.66 2207.45-.01 41.81-8.29-.48-12.89-4.98-6.64.25-6-7.27-49.28 4.59 9.58 7.66-7.79 3.96-4.85-3.06-3.96 1.14-10.98.77-1.53-2.81-115.28 10.85-55.02 4.6-84.89 7.28-53.23 4.85-61.49 6.04-41.37 3.01-1.11 3.22-6.35 1.12 1.46 1.63-17.8-.97-9.39-6.06-42.95 3.12.31-16.08h9.97v-17.57l59.67-3.13-2.21-2.47 8.17-.17-1.02-3.83 42.81-2.56 113.61-11.65 85.62-8.3 55.83-5.45 66.38-6.13 47.66-4.93 3.41 3.23 14.13-1.53 4.76 2.04v-5.62l8 1.37-7.83-8 46.3-3.58 6.13 6.64 8.85-.68 11.91 8.51z"
+                        class="st0" />
+                    <path id="Floor_36" data-name="12_Floor_29" data-link="Floor/Tower-12.html" floorNumber="36"
+                        d="m1779.65 2249.26-.02 40.46-8.16.29-12.77-3.45-7.02.51-5.87-6.12-47.66 4.17 8 5.95-7.92 5.2-3.83-2.73-15.91.77-2.38-2.68-412.58 34.64 2.24 3.51-7.6 1.78-16.21.32-8.66-5.36-43.7 3.51v-17.87h9.59l.38-17.55-9.97-6.89 42.95-3.12 9.39 6.06 17.8.97-1.46-1.63 6.35-1.12 1.11-3.22 41.37-3.01 61.49-6.04 53.23-4.85 84.89-7.28 55.02-4.6 115.28-10.85 1.53 2.81 10.98-.77 3.96-1.14 4.85 3.06 7.79-3.96-9.58-7.66 49.28-4.59 6 7.27 6.64-.25 12.89 4.98z"
+                        class="st0" />
+                    <path id="Floor_37" data-name="12_Floor_28" data-link="Floor/Tower-12.html" floorNumber="37"
+                        d="m1779.63 2289.72-.02 42.37-8.44.18-13.11-1.71-6.89-.08-5.02-5.79-49.28 3.58 8.94 5.44-8.34 3.32-7.19.51-10.9.43-2.55-2.47-412.64 32.13v2.64l-6.21.25.42 1.7h-16.25l-9.79-4.93-42.76 2.98v-17.2h9.91v-19.48l-9.91-3.56 43.7-3.51 8.66 5.36 16.21-.32 7.6-1.78-2.24-3.51 412.58-34.64 2.38 2.68 15.91-.77 3.83 2.73 7.92-5.2-8-5.95 47.66-4.17 5.87 6.12 7.02-.51 12.77 3.45z"
+                        class="st0" />
+                    <path id="Floor_38" data-name="12_Floor_27" data-link="Floor/Tower-12.html" floorNumber="38"
+                        d="m1779.61 2332.09-.02 41.6-27.7.96-5.61-5.36-48.77 2.93 8.17 6.26-14.3 1.91-11.87 1.15-3.19-2.68-413.23 29.87 1.14 3.45h-22.34l-10.08-4.85-43.79 3.06v-15.95h11.36v-22.22l-9.78-1.95 42.76-2.98 9.79 4.93h16.25l-.42-1.7 6.21-.25v-2.64l412.64-32.13 2.55 2.47 10.9-.43 7.19-.51 8.34-3.32-8.94-5.44 49.28-3.58 5.02 5.79 6.89.08 13.11 1.71z"
+                        class="st0" />
+                    <path id="Floor_39" data-name="12_Floor_26" data-link="Floor/Tower-12.html" floorNumber="39"
+                        d="m1779.59 2373.69-.02 44.18-27.46.69-6.51-5.36-48.51 3.15 9.53 5.36-26.9 2.05-2.63-2.39-413.88 28.34v2.64l-21.87.43-9.53-4.43-43.79 1.7v-15.49h11.45v-22.08l-11.45-2.09 43.79-3.06 10.08 4.85h22.34l-1.14-3.45 413.23-29.87 3.19 2.68 11.87-1.15 14.3-1.91-8.17-6.26 48.77-2.93 5.61 5.36z"
+                        class="st0" />
+                    <path id="Floor_40" data-name="12_Floor_25" data-link="Floor/Tower-12.html" floorNumber="40"
+                        d="m1779.57 2417.87-.02 43.51-27.89.38s-6.04-4.43-6.3-4.43-48.42 1.87-48.42 1.87l10.55 5.87-28.43 2.22-2.63-2.3-413.58 25.28v2.87l-4.4.19-18 .57s-8.56-3.83-8.75-3.83-43.02 1.98-43.02 1.98l.45-16.98h9.96v-20.36l-11.07-4.66 43.79-1.7 9.53 4.43 21.87-.43v-2.64l413.88-28.34 2.63 2.39 26.9-2.05-9.53-5.36 48.51-3.15 6.51 5.36z"
+                        class="st0" />
+                    <path id="Floor_41" data-name="12_Floor_24" data-link="Floor/Tower-12.html" floorNumber="41"
+                        d="m1779.55 2461.38-.02 43.46-28.59.43-4.09-3.32-50.04 1.53 10.47 4.98-27.07 2.04-3.57-1.66-413.66 22.89v2.3h-5.7l-15.66.51-9.28-3.23-43.66 2.38v-16.76h10.98v-22.47l-10.98-2.41s42.83-1.98 43.02-1.98 8.75 3.83 8.75 3.83l18-.57 4.4-.19v-2.87l413.58-25.28 2.63 2.3 28.43-2.22-10.55-5.87s48.17-1.87 48.42-1.87 6.3 4.43 6.3 4.43z"
+                        class="st0" />
+                    <path id="Floor_42" data-name="12_Floor_23" data-link="Floor/Tower-12.html" floorNumber="42"
+                        d="m1779.53 2504.84-.02 43.54-27.96.86-5.36-3.95-49.15 1.66 8.17 3.83-24.64 3.57-3.06-2.17-414.55 21.02v2.94l-20.96-.53-7.79-2.94-44.81.89v-15.06h9.83v-23.96l-10.55-.85 43.66-2.38 9.28 3.23 15.66-.51h5.7v-2.3l413.66-22.89 3.57 1.66 27.07-2.04-10.47-4.98 50.04-1.53 4.09 3.32z"
+                        class="st0" />
+                    <path id="Floor_43" data-name="12_Floor_22" data-link="Floor/Tower-12.html" floorNumber="43"
+                        d="m1779.51 2548.38-.03 43.59-26.48.58-6.81-2.72-50.38 1.02 8.42 3.32-14.04 2.47-12.17.25-1.36-1.19-412.75 17.77-6.38 3.38-14.81-1.15-9.63-1.91-44.88.32v-16.41l9.64.83.83-21.51-9.28-3.46 44.81-.89 7.79 2.94 20.96.53v-2.94l414.55-21.02 3.06 2.17 24.64-3.57-8.17-3.83 49.15-1.66 5.36 3.95z"
+                        class="st0" />
+                    <path id="Floor_44" data-name="12_Floor_21" data-link="Floor/Tower-12.html" floorNumber="44"
+                        d="m1779.48 2591.97-.02 43.83-28.52.73-5.11-2.81-48.68 1.13 8.59 2.81-15.87 1.36-10.85.47-2.08-.85-414.71 16.06v1.21h-6.89l-13.72.45-6.9-2.1-36.34.8-9.74.22v-16.02h10.08v-22.79l-10.51-2.36 44.88-.32 9.63 1.91 14.81 1.15 6.38-3.38 412.75-17.77 1.36 1.19 12.17-.25 14.04-2.47-8.42-3.32 50.38-1.02 6.81 2.72z"
+                        class="st0" />
+                    <path id="Floor_45" data-name="12_Floor_20" data-link="Floor/Tower-12.html" floorNumber="45"
+                        d="m1779.46 2635.8-.02 42.85-26.97 1.07-6.73-1.87-49.02 1.02 9.11 2.13-15.57 1.51-384.22 12.15-63.83 1.79-10.55-.6h-43.45l.39-15.74h9.78v-25.05l36.34-.8 6.9 2.1 13.72-.45h6.89v-1.21l414.71-16.06 2.08.85 10.85-.47 15.87-1.36-8.59-2.81 48.68-1.13 5.11 2.81z"
+                        class="st0" />
+                    <path id="Floor_46" data-name="12_Floor_19" data-link="Floor/Tower-12.html" floorNumber="46"
+                        d="m1779.44 2678.65-.02 43.65-27.44.98-4.15-.77-52.15.38 10.28 1.54-22.49 1.72-376.96 9.42-49.6 1.92-58.38-1.04-9.85-.17v-14.81h9.64v-25.62h33.34l10.55.6 63.83-1.79 384.22-12.15 15.57-1.51-9.11-2.13 49.02-1.02 6.73 1.87z"
+                        class="st0" />
+                    <path id="Floor_47" data-name="12_Floor_18" data-link="Floor/Tower-12.html" floorNumber="47"
+                        d="m1779.42 2722.3-.02 45.24-26.87.14-4.85-1.66-50.17 1.02 8.04 1.15-14.93 1.15-434.05 8.55-14.55.51-9.11-.76h-48.85v-1.7h4.62v-14.22h9.85v-25.27l58.38 1.04 49.6-1.92 376.96-9.42 22.49-1.72-10.28-1.54 52.15-.38 4.15.77z"
+                        class="st0" />
+                    <path id="Floor_48" data-name="12_Floor_17" data-link="Floor/Tower-12.html" floorNumber="48"
+                        d="m1779.4 2767.54-.02 42.67-81.61 1.09-8.17 1.53-433.11 6.38-16.98-.7h-51.38v-15.13h9.44v-25.74h35.34l9.11.76 14.55-.51 434.05-8.55 14.93-1.15-8.04-1.15 50.17-1.02 4.85 1.66z"
+                        class="st0" />
+                    <path id="Floor_49" data-name="12_Floor_16" data-link="Floor/Tower-12.html" floorNumber="49"
+                        d="m1779.38 2810.21-.02 44.98c-.46.01-.92.01-1.37.02-.63 0-1.25 0-1.86.02a4885 4885 0 0 0-7.82.09c-.6 0-1.18.01-1.75.02h-1.61c-.57.01-1.12.01-1.65.02-.46 0-.92.01-1.36.01-.32 0-.63.01-.93.01-4.02.03-6.85.04-8.16.02-.24.01-.43 0-.57 0-.07 0-.12 0-.16-.01-.06 0-.1 0-.1-.01-.08-.42-52.25 0-52.25 0l-194.22 1.96-249.19 3.06-58.8-.58-9.88-.1v-16.68h9.96v-24.53h41.87l16.98.7 433.11-6.38 8.17-1.53z"
+                        class="st0" />
+                    <path id="Floor_50" data-name="12_Floor_15" data-link="Floor/Tower-12.html" floorNumber="50"
+                        d="M1777.99 2855.21c.45-.01.91-.01 1.37-.02l-.02 44.4-29.19.18-188.85.17-55.58.34-84.85-.22-53.53.34-61.7.6-50.21.09h-13.28l-7.49-.94h-46.98v-15.75h9.88v-24.58l58.8.58 249.19-3.06 194.22-1.96s52.17-.42 52.25 0c0 .01.04.01.1.01.04.01.09.01.16.01.14 0 .33.02.57 0 1.31.02 4.14.01 8.16-.02.3 0 .61-.01.93-.01.44 0 .9-.01 1.36-.01.53-.01 1.08-.01 1.65-.02h1.61c.57-.01 1.15-.02 1.75-.02a3111 3111 0 0 1 7.82-.09c.61-.01 1.23-.02 1.86-.02"
+                        class="st0" />
+                    <path id="Floor_51" data-name="12_Floor_14" data-link="Floor/Tower-12.html" floorNumber="51"
+                        d="m1779.34 2899.59-.02 42.54-273.32.66-139.23-.26H1256.3l-16.34-.59h-52.28v-18.13h9.81v-23.66h37.17l7.49.94h13.28l50.21-.09 61.7-.6 53.53-.34 84.85.22 55.58-.34 188.85-.17z"
+                        class="st0" />
+                    <path id="Floor_52" data-name="12_Floor_13" data-link="Floor/Tower-12.html" floorNumber="52"
+                        d="m1779.32 2942.13-.02 45.58-522.92-4.54h-15.49l-43.82-.98-9.39-.21v-17.96h9.72v-22.08h42.56l16.34.59h110.47l139.23.26z"
+                        class="st0" />
+                    <path id="Floor_53" data-name="12_Floor_12" data-link="Floor/Tower-12.html" floorNumber="53"
+                        d="m1779.3 2987.71-.02 44.27-582.86-7.41-9.82-.12v-17.96h10.47v-24.3l43.82.98h15.49z"
+                        class="st0" />
+                    <path id="Floor_54" data-name="12_Floor_11" data-link="Floor/Tower-12.html" floorNumber="54"
+                        d="m1779.28 3031.98-.02 44.08-82.79-1.06-329.75-7.28-169.98-3.64h-.01l-9.05-.19v-14.55h8.74v-24.77z"
+                        class="st0" />
+                    <path id="Floor_55" data-name="12_Floor_10" data-link="Floor/Tower-12.html" floorNumber="55"
+                        d="m1779.26 3076.06-.02 42.81-28.22-.08-4.85 2.3-50.3-2.43-4.98-2.68-386.17-7.92H1258l-2.55-2.42h-14.3l-8.43 1.02h-45.7v-16.34h9.71v-26.24h.01l169.98 3.64 329.75 7.28z"
+                        class="st0" />
+                    <path id="Floor_56" data-name="12_Floor_09" data-link="Floor/Tower-12.html" floorNumber="56"
+                        d="m1779.24 3118.87-.02 44.33-27.09-1.26-4.98 3.57-50.21-1.74-18.81-2.9-416.9-12.51-5.19-1.19s-24.08 1.19-24.34 1.19c-.18 0-22.56-.61-35.34-.95-5.1-.14-8.67-.24-8.67-.24v-16.6h8.45v-23.91h36.59l8.43-1.02h14.3l2.55 2.42h46.72l386.17 7.92 4.98 2.68 50.3 2.43 4.85-2.3 28.22.08Z"
+                        class="st0" />
+                    <path id="Floor_57" data-name="12_Floor_08" data-link="Floor/Tower-12.html" floorNumber="57"
+                        d="m1779.22 3163.2-.02 44.5-27.41-2.1-5.62 4.08-49.91-2.3-5.49-3.95-12.9.76-373.27-13.53-48.51-2.94-14.81-1.4-12.13 4.34-32.9-1.69-9.23-.48v-20.43l9.33-.89v-19.76c12.78.34 35.16.95 35.34.95.26 0 24.34-1.19 24.34-1.19l5.19 1.19 416.9 12.51 18.81 2.9 50.21 1.74 4.98-3.57 27.09 1.26Z"
+                        class="st0" />
+                    <path id="Floor_58" data-name="12_Floor_07" data-link="Floor/Tower-12.html" floorNumber="58"
+                        d="m1779.2 3207.7-.02 44.73-26.86-1.92-6.64 3.58-48.77-2.81v-4.98l-6.51.25-11.36-.89-2.42 2.55-309.92-13.44-61.57-3.39-44.56-.55v-2.23l-5.04.31-14.17-1.21-11.49 3.68-33.63-1.24-10.79-.4v-16.72l10.8-1.98v-22.07l32.9 1.69 12.13-4.34 14.81 1.4 48.51 2.94 373.27 13.53 12.9-.76 5.49 3.95 49.91 2.3 5.62-4.08z"
+                        class="st0" />
+                    <path id="Floor_59" data-name="12_Floor_06" data-link="Floor/Tower-12.html" floorNumber="59"
+                        d="m1779.18 3252.43-.02 41.26-27.05.08-5.62 4.08-50.62-1.85 1.15-5.94-18.15-.68-3.23 2.56-49.02-2.73-65.71-3.06-55.31-2.55-85.96-4.49-51.58-1.81-112.66-7.83-15.06.38-8.81 3-35.85-1.98-9.21-.51v-17.55l9.77-2.68v-19.99l33.63 1.24 11.49-3.68 14.17 1.21 5.04-.31v2.23l44.56.55 61.57 3.39 309.92 13.44 2.42-2.55 11.36.89 6.51-.25v4.98l48.77 2.81 6.64-3.58z"
+                        class="st0" />
+                    <path id="Floor_60" data-name="12_Floor_05" data-link="Floor/Tower-12.html" floorNumber="60"
+                        d="m1779.16 3293.69-.02 43.49-26.35.46-6 4.34-50.43-2.04v-7.54l-17.49.26-2.68 1.79-49.4-2.68-65.24-3.32-56.04-2.81-85.53-5.36-54-2.17-61.92-3.71-47.87-3.57-16.08-1.02-7.28 4.59-37.37-2.26-8.99-.54v-18.13h9.21v-22.6l35.85 1.98 8.81-3 15.06-.38 112.66 7.83 51.58 1.81 85.96 4.49 55.31 2.55 65.71 3.06 49.02 2.73 3.23-2.56 18.15.68-1.15 5.94 50.62 1.85 5.62-4.08z"
+                        class="st0" />
+                    <path id="Floor_61" data-name="12_Floor_04" data-link="Floor/Tower-12.html" floorNumber="61"
+                        d="m1779.14 3337.18-.02 44.26-27.5.47-6 4.73-49.02-3.96v-7.38l-17.24.61-2.55 2.43-50.81-3.04-64.09-3.85-57.19-2.94-86.29-5.62-51.96-3.19-62.24-3.7-44.55-1.91-4.28-2.69-14.36-.38-9.13 4.02-36.54-.98-10.75-.29.44-15.77 10.4-2.62v-23.24l37.37 2.26 7.28-4.59 16.08 1.02 47.87 3.57 61.92 3.71 54 2.17 85.53 5.36 56.04 2.81 65.24 3.32 49.4 2.68 2.68-1.79 17.49-.26v7.54l50.43 2.04 6-4.34z"
+                        class="st0" />
+                    <path id="Floor_62" data-name="12_Floor_03" data-link="Floor/Tower-12.html" floorNumber="62"
+                        d="m1779.12 3381.44-.03 46.4-27.18.07-6.12 5.88-49.92-4.68.43-7.75-7.15.09-10.13-.43-2.81 2.81-115.66-8.3-56.59-3.91-84.6-5.88-53.79-3.91-61.53-3.49-48.59-5.53-16.17-.51-9.28 4.76-35.18-2.06-8.35-.49v-16.42l8.9-2.39v-21.64l36.54.98 9.13-4.02 14.36.38 4.28 2.69 44.55 1.91 62.24 3.7 51.96 3.19 86.29 5.62 57.19 2.94 64.09 3.85 50.81 3.04 2.55-2.43 17.24-.61v7.38l49.02 3.96 6-4.73z"
+                        class="st0" />
+                    <path id="Floor_63" data-name="12_Floor_02" data-link="Floor/Tower-12.html" floorNumber="63"
+                        d="m1779.09 3427.84-.02 42.75-26.39.39-5.74 5.62-51.45-3.71.89-7.91-7.53-.26h-10.47l-1.91 1.92-49.53-3.32-66.64-5.49-55.41-3.7-86.04-6.9-52.47-2.68-62.29-4.85-44.18-2.81v-3.06l-5.48-.13-14.81.51-9.07 4.85-35.06-2.92-10.87-.91v-16.34l10.2-3.7V3395l35.18 2.06 9.28-4.76 16.17.51 48.59 5.53 61.53 3.49 53.79 3.91 84.6 5.88 56.59 3.91 115.66 8.3 2.81-2.81 10.13.43 7.15-.09-.43 7.75 49.92 4.68 6.12-5.88z"
+                        class="st0" />
+                    <path id="Floor_64" data-name="12_Floor_01" data-link="Floor/Tower-12.html" floorNumber="64"
+                        d="m1779.07 3470.59-.02 45.3-25.94-.32-8 5.96-49.88-5.1 1.54-7.66-5.96-.17-11.58-1.03-4.25 3.75-47.66-5.28-122.21-9.7-200.77-15.06-44.34-3.07-.6-3.66-4.93-.08-14.9.17-11.57 5.27-43.38-3.82-.88-17.62 11.75-1.96v-20.37l35.06 2.92 9.07-4.85 14.81-.51 5.48.13v3.06l44.18 2.81 62.29 4.85 52.47 2.68 86.04 6.9 55.41 3.7 66.64 5.49 49.53 3.32 1.91-1.92h10.47l7.53.26-.89 7.91 51.45 3.71 5.74-5.62z"
+                        class="st0" />
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ ENQUIRY BUTTON ═══ -->
+    <button class="enquiry-btn" id="enquiryBtn">Enquiry</button>
+
+    <!-- ═══ ENQUIRY MODAL ═══ -->
+    <div class="enquiry">
+        <div class="overlay" id="enquiryOverlay" aria-hidden="true">
+            <div class="modal" role="dialog" aria-labelledby="enquiryTitle">
+                <div class="modal-header">
+                    <div id="enquiryTitle" class="title">Request Callback</div>
+                    <button class="close" id="closeBtn" aria-label="Close">&#x2715;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="enquiryForm" class="form" novalidate>
+                        <input class="input" name="fullName" placeholder="Full Name" required />
+                        <div class="phone">
+                            <select name="dialCode" aria-label="Country Code">
+                                <option>+91</option>
+                                <option>+971</option>
+                                <option>+44</option>
+                                <option>+1</option>
+                            </select>
+                            <input type="tel" name="phone" placeholder="Phone Number" maxlength="10" pattern="[0-9]{10}"
+                                inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'')" required />
+                        </div>
+                        <input class="input" name="city" placeholder="City" required />
+                        <input class="input" type="email" name="email" placeholder="Email Address"
+                            pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" required />
+                        <select class="input select" name="preferredTime" required>
+                            <option value="" disabled selected>Preferred Time to Call</option>
+                            <option value="morning">Morning</option>
+                            <option value="afternoon">Afternoon</option>
+                            <option value="evening">Evening</option>
+                        </select>
+                        <div class="g-recaptcha" data-sitekey="6Le6qZQsAAAAALlNrziohJHHqf43BSZvE1wfoxnl"></div>
+                        <button class="submit" type="submit">Request a Call Back</button>
+                        <a href="tel:+919876543210" class="call-btn">&#x1F4DE; Call Now</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ BOTTOM JUMPBAR ═══ -->
+    <nav class="jumpbar" id="jumpbar" aria-label="Primary navigation">
+        <div class="jumpbar-nav">
+            <a class="jumpbar-item" href="../index.html" data-view="home">
+                <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
+                <span>Home</span>
+            </a>
+            <!-- <a class="jumpbar-item" href="ClubHouse/360/Cafe.html" data-view="parking">
+                <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21h16"/><path d="M6 21V9l6-4 6 4v12"/><path d="M10 21v-5h4v5"/></svg>
+                <span>Clubhouse</span> -->
+            </a>
+            <a class="jumpbar-item" href="Tower_A.html" data-view="front">
+                <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="5" y="3" width="14" height="18" rx="1" />
+                    <path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2" />
+                </svg>
+                <span>Tower A</span>
+            </a>
+            <a class="jumpbar-item" href="Tower_B.html" data-view="back">
+                <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="5" y="3" width="14" height="18" rx="1" />
+                    <path d="M9 7h6M9 11h6M9 15h6" />
+                </svg>
+                <span>Tower B</span>
+            </a>
+            <a class="jumpbar-item is-active" href="Tower_C.html" data-view="back">
+                <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="5" y="3" width="14" height="18" rx="1" />
+                    <path d="M9 7h6M9 11h6M9 15h6" />
+                </svg>
+                <span>Tower C</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Old dock (hidden, kept for compat) -->
+    <div class="dock-wrap" id="dock" style="display:none">
+        <div class="dock-shelf"></div>
+        <div class="dock-items" id="dockItems"></div>
+    </div>
+
+    <!-- ═══ AMBIENT PARTICLES ═══ -->
+    <div class="ambient-particles" id="ambientParticles" aria-hidden="true"></div>
+
+    <!-- ═══ SCRIPTS ═══ -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const detailsBox = document.getElementById('details');
+            if (detailsBox) detailsBox.innerHTML = `<div><span>1BHK</span><span>: 48</span></div>`;
+        });
+    </script>
+
+    <script src="./../JS/CutoutPath.js"></script>
+    <script src="./../JS/Notification/UI_Hint.js"></script>
+    <script src="./../JS/BackButton.js"></script>
+    <script src="./../JS/FloorTIP.js"></script>
+    <script src="./../JS/InspectDisable.js"></script>
+    <script src="./../JS/imageloader.js"></script>
+
+    <script>
+        // Hamburger Dropdown Menu
+        (function () {
+            const menuBtn = document.getElementById('menuBtn');
+            const dropdown = document.getElementById('dropdownMenu');
+            if (!menuBtn || !dropdown) return;
+            function openMenu() {
+                menuBtn.classList.add('is-open'); dropdown.classList.add('is-open');
+                menuBtn.setAttribute('aria-expanded', 'true'); dropdown.setAttribute('aria-hidden', 'false');
+            }
+            function closeMenu() {
+                menuBtn.classList.remove('is-open'); dropdown.classList.remove('is-open');
+                menuBtn.setAttribute('aria-expanded', 'false'); dropdown.setAttribute('aria-hidden', 'true');
+            }
+            menuBtn.addEventListener('click', (e) => { e.stopPropagation(); menuBtn.classList.contains('is-open') ? closeMenu() : openMenu(); });
+            document.addEventListener('click', (e) => { if (!dropdown.contains(e.target) && !menuBtn.contains(e.target)) closeMenu(); });
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+        })();
+    </script>
+
+    <script>
+        // Jumpbar Click Ripple & Active State
+        (function () {
+            const items = document.querySelectorAll('.jumpbar-item');
+            items.forEach(item => {
+                item.addEventListener('click', function (e) {
+                    items.forEach(i => i.classList.remove('is-active'));
+                    this.classList.add('is-active');
+                    const ripple = document.createElement('span');
+                    ripple.className = 'jumpbar-ripple';
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    ripple.style.width = ripple.style.height = size + 'px';
+                    ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+                    ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+                    this.appendChild(ripple);
+                    ripple.addEventListener('animationend', () => ripple.remove());
+                });
+            });
+        })();
+    </script>
+
+    <script>
+        // Enquiry button toggle
+        (function () {
+            const btn = document.getElementById('enquiryBtn');
+            const overlay = document.getElementById('enquiryOverlay');
+            const closeBtn = document.getElementById('closeBtn');
+            if (!btn || !overlay) return;
+            btn.addEventListener('click', () => { overlay.classList.add('is-open'); overlay.setAttribute('aria-hidden', 'false'); });
+            if (closeBtn) closeBtn.addEventListener('click', () => { overlay.classList.remove('is-open'); overlay.setAttribute('aria-hidden', 'true'); });
+            overlay.addEventListener('click', (e) => { if (e.target === overlay) { overlay.classList.remove('is-open'); overlay.setAttribute('aria-hidden', 'true'); } });
+        })();
+    </script>
+
+    <script>
+        // Floating gold particles
+        (function () {
+            const container = document.getElementById('ambientParticles');
+            if (!container) return;
+            for (let i = 0; i < 12; i++) {
+                const p = document.createElement('span');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.animationDuration = (12 + Math.random() * 18) + 's';
+                p.style.animationDelay = (Math.random() * 15) + 's';
+                p.style.width = p.style.height = (1.5 + Math.random() * 1.5) + 'px';
+                container.appendChild(p);
+            }
+        })();
+    </script>
+    <!-- ═══ GALLERY LIGHTBOX (ADDED) ═══ -->
+    <div class="gallery-overlay" id="galleryOverlay">
+        <button class="gallery-close" id="galleryClose">&#x2715;</button>
+        <div class="gallery-counter"><span id="galleryCurrent">1</span> / <span id="galleryTotal">6</span></div>
+        <div class="gallery-main">
+            <button class="gallery-nav gallery-prev" id="galleryPrev">&#8249;</button>
+            <img id="galleryImage" src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80"
+                alt="Gallery" />
+            <button class="gallery-nav gallery-next" id="galleryNext">&#8250;</button>
+        </div>
+        <div class="gallery-thumbs" id="galleryThumbs"></div>
+    </div>
+
+    <!-- ═══ WALKTHROUGH VIDEO MODAL (ADDED) ═══ -->
+    <div class="walkthrough-overlay" id="walkthroughOverlay">
+        <button class="walkthrough-close" id="walkthroughClose">&#x2715;</button>
+        <div class="walkthrough-video-wrap">
+            <video id="walkthroughModalVideo" controls preload="none"
+                poster="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=960&q=80">
+                <source src="../Video/MDB_The_Lutyens_Walkthrough.mp4" type="video/mp4">
+            </video>
+        </div>
+    </div>
+
+    <!-- ═══ GALLERY + WALKTHROUGH SCRIPTS (ADDED) ═══ -->
+    <script>
+        // Gallery Lightbox
+        (function () {
+            const images = [
+                'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80',
+                'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80',
+                'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80',
+                'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200&q=80',
+                'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&q=80',
+                'https://images.unsplash.com/photo-1600566753376-12c8ab7a5a1e?w=1200&q=80'
+            ];
+            let idx = 0;
+            const overlay = document.getElementById('galleryOverlay');
+            const img = document.getElementById('galleryImage');
+            const counter = document.getElementById('galleryCurrent');
+            const total = document.getElementById('galleryTotal');
+            const thumbsWrap = document.getElementById('galleryThumbs');
+            if (!overlay || !img) return;
+            total.textContent = images.length;
+
+            // Build thumbs
+            images.forEach((src, i) => {
+                const t = document.createElement('div');
+                t.className = 'gallery-thumb' + (i === 0 ? ' is-active' : '');
+                t.innerHTML = '<img src="' + src.replace('w=1200', 'w=120') + '" alt="">';
+                t.addEventListener('click', () => goTo(i));
+                thumbsWrap.appendChild(t);
+            });
+
+            function goTo(i) {
+                idx = i; img.src = images[idx]; counter.textContent = idx + 1;
+                thumbsWrap.querySelectorAll('.gallery-thumb').forEach((t, j) => t.classList.toggle('is-active', j === idx));
+            }
+            function open() { overlay.classList.add('is-open'); goTo(idx); }
+            function close() { overlay.classList.remove('is-open'); }
+
+            document.getElementById('galleryPrev').addEventListener('click', () => goTo((idx - 1 + images.length) % images.length));
+            document.getElementById('galleryNext').addEventListener('click', () => goTo((idx + 1) % images.length));
+            document.getElementById('galleryClose').addEventListener('click', close);
+            overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
+
+            // Wire all gallery buttons
+            document.querySelectorAll('[data-open-gallery]').forEach(btn => {
+                btn.addEventListener('click', e => { e.preventDefault(); open(); });
+            });
+            // Keyboard
+            document.addEventListener('keydown', e => {
+                if (!overlay.classList.contains('is-open')) return;
+                if (e.key === 'Escape') close();
+                if (e.key === 'ArrowLeft') goTo((idx - 1 + images.length) % images.length);
+                if (e.key === 'ArrowRight') goTo((idx + 1) % images.length);
+            });
+        })();
+    </script>
+    <script>
+        // Walkthrough Video Modal
+        (function () {
+            const overlay = document.getElementById('walkthroughOverlay');
+            const video = document.getElementById('walkthroughModalVideo');
+            if (!overlay || !video) return;
+            function open() { overlay.classList.add('is-open'); video.play().catch(() => { }); }
+            function close() { overlay.classList.remove('is-open'); video.pause(); video.currentTime = 0; }
+            document.getElementById('walkthroughClose').addEventListener('click', close);
+            overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
+            document.querySelectorAll('[data-open-walkthrough]').forEach(btn => {
+                btn.addEventListener('click', e => { e.preventDefault(); open(); });
+            });
+            document.addEventListener('keydown', e => { if (e.key === 'Escape' && overlay.classList.contains('is-open')) close(); });
+        })();
+    </script>
+
+    <script>
+        (function () {
+            var items = document.querySelectorAll('.jumpbar-item');
+            var current = window.location.pathname.split('/').pop() || 'index.html';
+            items.forEach(function (a) {
+                var page = (a.getAttribute('href') || '').split('/').pop();
+                if (page && current === page) a.classList.add('is-active');
+                else a.classList.remove('is-active');
+            });
+        })();
+    </script>
+    <script>
+        function onFloorClick(floorNumber) {
+
+            sessionStorage.setItem("selectedFloor", floorNumber);
+
+            window.location.href = "A-Typical/Typical.html";
+        }
+    </script>
+
+
+    <script>function openSkyvilla() {
+
+            const floor = window.currentFloor; // selected floor
+
+            sessionStorage.setItem("selectedFloor", floor);
+
+            window.location.href =
+                "A-skyvilla/360/SkyVilla_Tour.html";
+        }</script>
+    <script>
+
+        function openSkyvilla() {
+
+            const floor = sessionStorage.getItem("selectedFloor");
+
+            alert("Floor = " + floor);
+
+            window.location.href =
+                "A-skyvilla/360/SkyVilla_Tour.html";
+        }
+
+    </script>
+
+    <script>
+        // ── Mobile panel toggle ──
+        (function () {
+            var btn = document.getElementById('panelToggleBtn');
+            var panel = document.querySelector('.left-panel');
+            if (!btn || !panel) return;
+            btn.addEventListener('click', function () {
+                var open = panel.classList.toggle('is-open');
+                btn.classList.toggle('is-open', open);
+                btn.setAttribute('aria-expanded', open);
+            });
+        })();
+    </script>
+
+    <script src="./../JS/HeroHomesLeadCaptureGlobal.js"></script>
+</body>
+
+</html>

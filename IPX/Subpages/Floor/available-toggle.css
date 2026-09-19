@@ -1,0 +1,309 @@
+/* Hero Homes floor controls — red and white theme */
+
+#hhFloorControls {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 2147483646;
+    width: 150px;
+    font-family: Arial, sans-serif;
+    pointer-events: auto;
+}
+
+#hhFloorSelect {
+    display: block;
+    width: 150px;
+    height: 42px;
+    padding: 0 12px;
+    border: 1px solid #B5121B;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #292929;
+    font-size: 12px;
+    font-weight: 700;
+    outline: none;
+    cursor: pointer;
+    box-sizing: border-box;
+    appearance: auto;
+    -webkit-appearance: auto;
+}
+
+#hhAvailableRow {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 150px;
+    height: 38px;
+    padding: 0 10px;
+    border-radius: 20px;
+    background: #ffffff;
+    box-sizing: border-box;
+    box-shadow: 0 2px 14px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(181, 18, 27, 0.18);
+}
+
+#hhAvailableLabel {
+    font-size: 10px;
+    color: #555555;
+    font-weight: 800;
+    line-height: 1;
+}
+
+#hhAvailableSwitch {
+    position: relative;
+    width: 42px;
+    height: 24px;
+    flex: 0 0 42px;
+}
+
+#hhAvailableSwitch input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+#hhAvailableSlider {
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    background: #bdbdbd;
+    cursor: pointer;
+    transition: 0.18s;
+}
+
+#hhAvailableSlider:before {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 2px;
+    top: 2px;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    transition: 0.18s;
+}
+
+#hhAvailableSwitch input:checked + #hhAvailableSlider {
+    background: #B5121B;
+}
+
+#hhAvailableSwitch input:checked + #hhAvailableSlider:before {
+    transform: translateX(18px);
+}
+
+#availableOffLayer {
+    display: none;
+}
+
+#availableOffLayer * {
+    pointer-events: auto;
+}
+/* SVG apartment areas: visible fill by default */
+#availableOffLayer path,
+#availableOffLayer polygon,
+#availableOffLayer rect,
+#availableOffLayer circle,
+#availableOffLayer ellipse {
+    fill: rgba(241, 232, 233, 0.082) !important;
+    stroke: rgba(160, 85, 98, 0.95) !important;
+    stroke-width: 5.5px !important;
+    cursor: pointer !important;
+    transition: fill 0.2s ease, stroke 0.2s ease, stroke-width 0.2s ease;
+}
+#availableOffLayer .hh-stroke-glow {
+    fill: none !important;
+    stroke: #12102e !important;
+    stroke-width: 5.5px !important;
+
+    filter: url(#whiteStrokeGlow);
+
+    pointer-events: none !important;
+}
+
+
+/* Stronger fill and outline on hover */
+#availableOffLayer path:hover,
+#availableOffLayer polygon:hover,
+#availableOffLayer rect:hover,
+#availableOffLayer circle:hover,
+#availableOffLayer ellipse:hover,
+#availableOffLayer polyline:hover {
+    fill: rgba(181, 18, 27, 0.48) !important;
+    stroke: #B5121B !important;
+    stroke-width: 5.5px !important;
+}
+@media (max-width: 600px) {
+    #hhFloorControls {
+        top: 10px;
+        right: 10px;
+        width: 122px;
+    }
+
+    #hhFloorSelect {
+        width: 122px;
+        height: 38px;
+    }
+
+    #hhAvailableRow {
+        width: 122px;
+        height: 34px;
+    }
+
+    #hhAvailableSwitch {
+        width: 38px;
+        height: 22px;
+    }
+
+    #hhAvailableSlider:before {
+        width: 18px;
+        height: 18px;
+    }
+
+    #hhAvailableSwitch input:checked + #hhAvailableSlider:before {
+        transform: translateX(16px);
+    }
+}
+/* Custom red-and-white floor dropdown */
+#hhFloorDropdown {
+  position: relative;
+  width: 150px;
+}
+
+#hhFloorSelect {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 150px;
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid #B5121B;
+  border-radius: 8px;
+  background: #fff;
+  color: #292929;
+  font: 700 12px Arial, sans-serif;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+#hhFloorArrow {
+  font-size: 18px;
+  line-height: 1;
+}
+
+#hhFloorMenu {
+  position: absolute;
+  top: 48px;
+  right: 0;
+  z-index: 2147483647;
+  width: 100%;
+  max-height: 280px;
+  overflow-y: auto;
+  border: 1px solid #B5121B;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  box-sizing: border-box;
+}
+
+#hhFloorMenu[hidden] {
+  display: none;
+}
+
+.hhFloorOption {
+  display: block;
+  width: 100%;
+  min-height: 34px;
+  padding: 8px 12px;
+  border: 0;
+  border-bottom: 1px solid #f0d9db;
+  background: #fff;
+  color: #292929;
+  text-align: left;
+  font: 600 12px Arial, sans-serif;
+  cursor: pointer;
+}
+
+.hhFloorOption:last-child {
+  border-bottom: 0;
+}
+
+.hhFloorOption:hover,
+.hhFloorOption:focus-visible {
+  background: #fff0f1;
+  outline: none;
+}
+
+.hhFloorOption.is-selected {
+  background: #B5121B;
+  color: #fff;
+}
+
+@media (max-width: 600px) {
+  #hhFloorControls {
+    top: 14px;
+    right: 14px;
+    width: 168px;
+  }
+  #hhFloorDropdown, #hhFloorSelect {
+    width: 168px;
+  }
+  #hhFloorSelect {
+    height: 52px;
+    padding: 0 16px;
+    font-size: 16px;
+  }
+  #hhAvailableRow {
+    width: 168px;
+    height: 50px;
+    padding: 0 14px;
+  }
+  #hhAvailableLabel {
+    font-size: 14px;
+  }
+  #hhAvailableSwitch {
+    width: 50px;
+    height: 30px;
+    flex: 0 0 50px;
+  }
+  #hhAvailableSlider:before {
+    width: 26px;
+    height: 26px;
+  }
+  #hhAvailableSwitch input:checked + #hhAvailableSlider:before {
+    transform: translateX(20px);
+  }
+  #hhFloorMenu {
+    top: 58px;
+    max-height: 320px;
+  }
+  .hhFloorOption {
+    min-height: 48px;
+    padding: 12px 14px;
+    font-size: 15px;
+  }
+}
+#availableOffTooltip {
+    position: fixed;
+    z-index: 2147483647;
+    display: none;
+
+    padding: 8px 12px;
+    border-radius: 7px;
+
+    background: rgba(0, 0, 0, 0.88);
+    color: #ffffff;
+
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+
+    white-space: nowrap;
+    pointer-events: none;
+
+    box-shadow:
+        0 0 5px rgba(255,255,255,0.8),
+        0 0 12px rgba(255,255,255,0.35);
+}

@@ -1,0 +1,63 @@
+/* --- UI HINT --- */
+.ui-hint {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    font-family: "Raleway", sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.4px;
+    padding: 10px 16px;
+    border-radius: 12px;
+    display: none;
+    /* hidden by default */
+    align-items: center;
+    gap: 10px;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.ui-hint.is-visible {
+    display: flex;
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+.ui-hint.is-gone {
+    opacity: 0;
+    transform: translate(-50%, 8px);
+}
+
+/* Row layout */
+.ui-hint__row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* show desktop or touch hint based on device */
+.ui-hint__desktop {
+    display: none;
+}
+
+.ui-hint__touch {
+    display: none;
+}
+
+/* auto-detect device type */
+@media (hover: hover) and (pointer: fine) {
+    .ui-hint__desktop {
+        display: flex;
+    }
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .ui-hint__touch {
+        display: flex;
+    }
+}

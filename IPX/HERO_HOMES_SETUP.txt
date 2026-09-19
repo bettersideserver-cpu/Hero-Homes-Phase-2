@@ -1,0 +1,14 @@
+HERO HOMES PROJECT - NEXT STEPS
+
+1. Open admin/js/config.js
+2. Paste the Supabase URL and Publishable Key from the new HeroHomes_Phase2 project.
+3. In Supabase SQL Editor run admin/hero_homes_setup.sql
+4. Create/sign in an Auth user. If email confirmation is enabled, confirm the email.
+5. Add that user's UUID to public.admin_users in SQL:
+   insert into public.admin_users (user_id) values ('YOUR-AUTH-USER-UUID');
+6. Open admin/login.html.
+
+The admin now uses:
+Tower -> Floor -> Unit 1 / Unit 2 -> Status
+
+The old Eldeco plot/floor logic has been removed from the active admin.

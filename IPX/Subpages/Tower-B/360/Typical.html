@@ -1,0 +1,2577 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Typical Tour</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.124.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/panolens@0.12.0/build/panolens.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap');
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+    font-family: 'Jost', sans-serif;
+}
+
+#viewer {
+    width: 100%;
+    height: 100%;
+}
+
+/* =========================================
+   FADE
+========================================= */
+
+#fadeOverlay {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .45s ease;
+    z-index: 99999;
+}
+
+
+/* =========================================
+   BACK BUTTON
+========================================= */
+
+#backBtn {
+    position: fixed;
+    top: 24px;
+    left: 24px;
+    z-index: 10000;
+
+    width: 46px;
+    height: 46px;
+
+    border: 1px solid rgba(255,255,255,.20);
+    border-radius: 50%;
+
+  background: rgba(30,48,43,.82);
+    color: #fff;
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-shadow:
+        0 8px 30px rgba(0,0,0,.25),
+        inset 0 1px 0 rgba(255,255,255,.08);
+
+    transition:
+        background .25s ease,
+        transform .25s ease,
+        border-color .25s ease;
+}
+
+#backBtn:hover {
+    background: rgba(255,255,255,.92);
+    color: #111;
+    border-color: rgba(255,255,255,.5);
+    transform: translateX(-2px);
+}
+
+#backBtn svg {
+    width: 19px;
+    height: 19px;
+}
+
+
+/* =========================================
+   ROOM INFORMATION
+========================================= */
+
+
+/* =========================================
+   BOTTOM ROOM NAVIGATION
+========================================= */
+
+.tour-nav-wrap {
+    position: fixed;
+
+    left: 50%;
+    bottom: 22px;
+
+    transform: translateX(-50%);
+
+    z-index: 10000;
+
+    display: flex;
+    align-items: center;
+
+    width: auto;
+    max-width: calc(100vw - 40px);
+}
+
+.tour-nav {
+    display: flex;
+    align-items: center;
+
+    gap: 4px;
+
+    padding: 7px;
+
+    background: rgba(30,48,43,.82);
+
+    border: 1px solid rgba(255,255,255,.16);
+    border-radius: 18px;
+
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+
+    box-shadow:
+        0 15px 50px rgba(0,0,0,.35),
+        inset 0 1px 0 rgba(255,255,255,.07);
+
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.tour-nav::-webkit-scrollbar {
+    display: none;
+}
+
+
+/* =========================================
+   ROOM BUTTONS
+========================================= */
+
+.tour-pill {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    height: 40px;
+    padding: 0 15px;
+
+    border: 1px solid transparent;
+    border-radius: 12px;
+
+    background: transparent;
+    color: rgba(245,242,234,.68);
+
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+
+    letter-spacing: .025em;
+
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+
+    transition:
+        background .25s ease,
+        color .25s ease,
+        transform .25s ease,
+        border-color .25s ease;
+}
+
+.tour-pill svg {
+    width: 16px;
+    height: 16px;
+
+    flex-shrink: 0;
+
+    opacity: .72;
+
+    transition:
+        opacity .25s ease,
+        transform .25s ease;
+}
+
+.tour-pill:hover {
+    color: #fff;
+    background: rgba(245,242,234,.10);
+
+    transform: translateY(-1px);
+}
+
+.tour-pill:hover svg {
+    opacity: 1;
+}
+
+.tour-pill.active {
+    background: #E8E3D9;
+    color: #1E302B;
+
+
+    border-color: rgba(255,255,255,.5);
+
+    box-shadow:
+        0 5px 18px rgba(0,0,0,.2),
+        inset 0 1px 0 rgba(255,255,255,.5);
+}
+
+.tour-pill.active svg {
+    opacity: 1;
+}
+/* =========================================
+   ROOM INFO — HIGH READABILITY VERSION
+========================================= */
+
+#roomInfoCard {
+    position: fixed !important;
+
+    top: 24px !important;
+    right: 24px !important;
+    left: auto !important;
+
+    width: 240px !important;
+    min-width: 240px !important;
+    max-width: 240px !important;
+
+    padding: 18px 20px !important;
+
+    /* SOLID DARK FOREST GREEN */
+    background: #1E302B !important;
+
+    /* CLEAR BORDER */
+    border: 1px solid #AFA99E !important;
+    border-radius: 8px !important;
+
+    /* STRONG SHADOW */
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.45) !important;
+
+    /* REMOVE BLUR */
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+
+    text-align: left !important;
+
+    opacity: 0 !important;
+    transform: translateY(-8px) !important;
+
+    transition:
+        opacity .35s ease,
+        transform .35s ease !important;
+}
+
+
+/* VISIBLE */
+
+#roomInfoCard.visible {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
+
+/* ROOM NAME */
+
+#roomInfoCard .hud-name {
+    display: block !important;
+
+    margin: 0 0 14px !important;
+    padding: 0 !important;
+
+    color: #FFFFFF !important;
+
+    font-size: 24px !important;
+    line-height: 1.15 !important;
+    font-weight: 600 !important;
+
+    letter-spacing: 0 !important;
+}
+
+
+/* DIMENSIONS */
+
+#roomInfoCard .hud-dims {
+    display: block !important;
+
+    margin: 0 0 6px !important;
+    padding: 0 !important;
+
+    color: #F5F2EA !important;
+
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+    font-weight: 500 !important;
+
+    letter-spacing: .02em !important;
+}
+
+
+/* SQ FT */
+
+#roomInfoCard .hud-sqft {
+    display: block !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    color: #D8D3C9 !important;
+
+    font-size: 10px !important;
+    line-height: 1.4 !important;
+    font-weight: 500 !important;
+
+    letter-spacing: .12em !important;
+
+    text-transform: uppercase !important;
+}
+
+
+/* FT */
+
+#roomInfoCard .hud-accent {
+    color: #E8E3D9 !important;
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 768px) {
+
+    #roomInfoCard {
+        top: 14px !important;
+        right: 14px !important;
+
+        width: 195px !important;
+        min-width: 195px !important;
+        max-width: 195px !important;
+
+        padding: 14px 16px !important;
+
+        border-radius: 7px !important;
+    }
+
+    #roomInfoCard .hud-name {
+        font-size: 19px !important;
+        margin-bottom: 10px !important;
+    }
+
+    #roomInfoCard .hud-dims {
+        font-size: 11px !important;
+        margin-bottom: 5px !important;
+    }
+
+    #roomInfoCard .hud-sqft {
+        font-size: 8px !important;
+    }
+}
+
+/* =========================================
+   SCROLL ARROW
+========================================= */
+
+.scroll-arrow {
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 36px;
+    height: 40px;
+
+    margin-left: 5px;
+
+    flex-shrink: 0;
+
+    border: 1px solid rgba(255,255,255,.16);
+    border-radius: 12px;
+
+    background: rgba(12,12,12,.55);
+    color: #fff;
+
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    pointer-events: none;
+
+    transition: opacity .3s ease;
+}
+
+.scroll-arrow svg {
+    width: 15px;
+    height: 15px;
+}
+
+.scroll-arrow.hidden {
+    opacity: 0;
+}
+
+
+/* =========================================
+   BALCONY / FLOOR CONTROL
+========================================= */
+
+#balconyControls {
+    position: fixed;
+
+    top: 50%;
+    right: 24px;
+
+    transform: translateY(-50%);
+
+    z-index: 10001;
+
+    display: none;
+
+    flex-direction: column;
+    align-items: center;
+
+    padding: 5px;
+
+background: rgba(18,35,30,.94);
+    border: 1px solid rgba(255,255,255,.17);
+    border-radius: 17px;
+
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+
+    box-shadow:
+        0 12px 40px rgba(0,0,0,.3),
+        inset 0 1px 0 rgba(255,255,255,.07);
+
+    overflow: hidden;
+}
+
+#balconyControls .floor-btn {
+    width: 42px;
+    height: 42px;
+
+    border: 0;
+    border-radius: 12px;
+
+    background: transparent;
+    color: rgba(255,255,255,.72);
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition:
+        background .2s ease,
+        color .2s ease,
+        transform .2s ease;
+}
+
+#balconyControls .floor-btn:hover {
+    background: rgba(255,255,255,.10);
+    color: #fff;
+
+    transform: scale(1.04);
+}
+
+#balconyControls .floor-btn:active {
+    transform: scale(.94);
+}
+
+#balconyControls .floor-btn svg {
+    width: 17px;
+    height: 17px;
+}
+
+#floorIndicator {
+    width: 42px;
+
+    padding: 9px 0;
+
+    border-top: 1px solid rgba(255,255,255,.10);
+    border-bottom: 1px solid rgba(255,255,255,.10);
+
+    color: #fff;
+
+    font-family: 'Jost', sans-serif;
+    font-size: 9px;
+    font-weight: 500;
+
+    line-height: 1.45;
+    letter-spacing: .12em;
+
+    text-align: center;
+    text-transform: uppercase;
+}
+
+
+/* =========================================
+   DESKTOP
+========================================= */
+
+@media (min-width: 769px) {
+
+    .tour-nav-wrap {
+        left: 50% !important;
+        right: auto !important;
+        bottom: 22px !important;
+
+        width: auto !important;
+
+        transform: translateX(-50%) !important;
+    }
+
+    .tour-nav-wrap .tour-nav {
+        position: static !important;
+
+        transform: none !important;
+
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+    }
+
+    .scroll-arrow {
+        display: none !important;
+    }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 768px) {
+
+    #backBtn {
+        top: 14px;
+        left: 14px;
+
+        width: 40px;
+        height: 40px;
+
+        border-radius: 13px;
+    }
+
+    #backBtn svg {
+        width: 17px;
+        height: 17px;
+    }
+
+
+
+
+    .tour-nav-wrap {
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+
+        width: auto;
+        max-width: none;
+
+        transform: none;
+
+        display: flex;
+    }
+
+    .tour-nav {
+        width: 100%;
+
+        padding: 6px;
+
+        gap: 4px;
+
+        border-radius: 15px;
+    }
+
+    .tour-pill {
+        height: 38px;
+
+        padding: 0 13px;
+
+        border-radius: 10px;
+
+        font-size: 12px;
+    }
+
+    .tour-pill svg {
+        width: 15px;
+        height: 15px;
+    }
+
+    .scroll-arrow {
+        display: flex;
+    }
+
+
+    #balconyControls {
+        right: 12px;
+    }
+
+    #balconyControls .floor-btn {
+        width: 39px;
+        height: 39px;
+    }
+
+    #floorIndicator {
+        width: 39px;
+        font-size: 8px;
+    }
+}
+
+
+/* =========================================
+   SMALL PHONES
+========================================= */
+
+@media (max-width: 400px) {
+
+    #backBtn {
+        width: 37px;
+        height: 37px;
+    }
+
+    #roomInfoCard {
+        padding: 10px 12px;
+    }
+
+    #roomInfoCard .hud-name {
+        font-size: 15px;
+    }
+
+    #roomInfoCard .hud-dims {
+        font-size: 10px;
+    }
+
+    .tour-pill {
+        height: 36px;
+        padding: 0 11px;
+        font-size: 11px;
+    }
+}
+/* =========================================
+   REQUEST TO HOLD BUTTON
+========================================= */
+
+#holdRequestBtn {
+    position: fixed;
+    right: 24px;
+    bottom: 94px;
+
+    z-index: 10002;
+
+    height: 46px;
+    padding: 0 22px;
+
+    border: 1px solid rgba(255,255,255,.35);
+    border-radius: 13px;
+
+    background: #E8E3D9;
+    color: #1E302B;
+
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .04em;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.35),
+        inset 0 1px 0 rgba(255,255,255,.65);
+
+    transition:
+        background .25s ease,
+        color .25s ease,
+        transform .25s ease,
+        box-shadow .25s ease;
+}
+
+#holdRequestBtn svg {
+    width: 17px;
+    height: 17px;
+}
+
+#holdRequestBtn:hover {
+    background: #1E302B;
+    color: #E8E3D9;
+    border-color: rgba(232,227,217,.55);
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 14px 35px rgba(0,0,0,.45),
+        inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+#holdRequestBtn:active {
+    transform: translateY(0) scale(.98);
+}
+
+
+/* =========================================
+   HOLD REQUEST OVERLAY
+========================================= */
+
+#holdOverlay {
+    position: fixed;
+    inset: 0;
+
+    z-index: 20000;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(0,0,0,.58);
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+#holdOverlay.show {
+    display: flex;
+}
+
+
+/* =========================================
+   HOLD FORM CARD
+========================================= */
+
+#holdCard {
+    position: relative;
+
+    width: 430px;
+    max-width: 100%;
+
+    padding: 30px;
+
+    background: #1E302B;
+
+    border: 1px solid #AFA99E;
+    border-radius: 14px;
+
+    box-shadow:
+        0 25px 80px rgba(0,0,0,.55),
+        inset 0 1px 0 rgba(255,255,255,.08);
+
+    color: #F5F2EA;
+
+    animation: holdCardIn .3s ease;
+}
+
+@keyframes holdCardIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px) scale(.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+
+/* =========================================
+   CLOSE BUTTON
+========================================= */
+
+#holdClose {
+    position: absolute;
+
+    top: 14px;
+    right: 14px;
+
+    width: 34px;
+    height: 34px;
+
+    border: 1px solid rgba(255,255,255,.18);
+    border-radius: 10px;
+
+    background: rgba(255,255,255,.06);
+    color: #F5F2EA;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: .25s ease;
+}
+
+#holdClose:hover {
+    background: #E8E3D9;
+    color: #1E302B;
+}
+
+#holdClose svg {
+    width: 16px;
+    height: 16px;
+}
+
+
+/* =========================================
+   FORM TITLE
+========================================= */
+
+#holdCard h2 {
+    margin: 0 45px 7px 0;
+
+    font-size: 24px;
+    font-weight: 600;
+
+    color: #FFFFFF;
+}
+
+#holdCard .hold-subtitle {
+    margin: 0 0 24px;
+
+    font-size: 12px;
+    line-height: 1.6;
+
+    color: #D8D3C9;
+
+    letter-spacing: .02em;
+}
+
+
+/* =========================================
+   FORM GROUP
+========================================= */
+
+.hold-field {
+    margin-bottom: 16px;
+}
+
+.hold-field label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    font-size: 11px;
+    font-weight: 500;
+
+    color: #D8D3C9;
+
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.hold-field input,
+.hold-field select,
+.hold-field textarea {
+    width: 100%;
+
+    height: 44px;
+
+    padding: 0 13px;
+
+    border: 1px solid rgba(175,169,158,.55);
+    border-radius: 9px;
+
+    outline: none;
+
+    background: rgba(255,255,255,.06);
+    color: #F5F2EA;
+
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+
+    transition:
+        border-color .2s ease,
+        background .2s ease,
+        box-shadow .2s ease;
+}
+
+.hold-field textarea {
+    height: 80px;
+    padding: 12px 13px;
+    resize: none;
+}
+
+.hold-field input::placeholder,
+.hold-field textarea::placeholder {
+    color: rgba(245,242,234,.42);
+}
+
+.hold-field input:focus,
+.hold-field select:focus,
+.hold-field textarea:focus {
+    border-color: #E8E3D9;
+
+    background: rgba(255,255,255,.09);
+
+    box-shadow:
+        0 0 0 3px rgba(232,227,217,.08);
+}
+
+.hold-field select option {
+    background: #1E302B;
+    color: #F5F2EA;
+}
+
+
+/* =========================================
+   SELECTED ROOM
+========================================= */
+
+#selectedRoom {
+    width: 100%;
+
+    padding: 12px 14px;
+
+    margin-bottom: 18px;
+
+    border: 1px solid rgba(175,169,158,.45);
+    border-radius: 9px;
+
+    background: rgba(232,227,217,.07);
+
+    font-size: 12px;
+    color: #E8E3D9;
+}
+
+#selectedRoom strong {
+    color: #FFFFFF;
+}
+
+
+/* =========================================
+   SUBMIT BUTTON
+========================================= */
+
+#submitHoldBtn {
+    width: 100%;
+    height: 46px;
+
+    margin-top: 5px;
+
+    border: 1px solid rgba(255,255,255,.35);
+    border-radius: 10px;
+
+    background: #E8E3D9;
+    color: #1E302B;
+
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+
+    letter-spacing: .05em;
+
+    cursor: pointer;
+
+    transition: .25s ease;
+}
+
+#submitHoldBtn:hover {
+    background: #F5F2EA;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,.25);
+}
+
+#submitHoldBtn:active {
+    transform: translateY(0);
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 768px) {
+
+    #holdRequestBtn {
+        right: 14px;
+        bottom: 68px;
+
+        height: 42px;
+
+        padding: 0 16px;
+
+        font-size: 11px;
+
+        border-radius: 11px;
+    }
+
+    #holdRequestBtn svg {
+        width: 15px;
+        height: 15px;
+    }
+
+    #holdCard {
+        width: 100%;
+
+        padding: 24px 20px;
+
+        border-radius: 12px;
+    }
+
+    #holdCard h2 {
+        font-size: 21px;
+    }
+}
+</style>
+<style>
+/* Hero Homes — Red & White theme */
+/* ===== Red & White Tour Theme ===== */
+
+/* Back button */
+#backBtn {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border: 1px solid #c62828 !important;
+}
+
+#backBtn:hover {
+  background: #f8d7da !important;
+  color: #000000 !important;
+}
+
+/* Information and control panels */
+#roomInfoCard,
+#holdCard,
+#balconyControls {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border: 1px solid #c62828 !important;
+}
+
+#roomInfoCard *,
+#holdCard *,
+#balconyControls * {
+  color: #000000 !important;
+}
+
+/* Navigation */
+.tour-nav {
+  background: rgba(255, 255, 255, 0.96) !important;
+  border: 1px solid #c62828 !important;
+}
+
+/* Navigation pills */
+.tour-pill {
+  background: transparent !important;
+  color: #000000 !important;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Hover on an unselected pill */
+.tour-pill:not(.active):hover {
+  background: #f8d7da !important;
+  color: #000000 !important;
+}
+
+/* Selected pill */
+.tour-pill.active {
+  background: #c62828 !important;
+  color: #000000 !important;
+}
+/* Buttons */
+#holdRequestBtn,
+#holdCard button,
+#holdCard input[type="submit"] {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border: 1px solid #c62828 !important;
+}
+
+#holdRequestBtn:hover,
+#holdCard button:hover,
+#holdCard input[type="submit"]:hover {
+  background: #f8d7da !important;
+  color: #000000 !important;
+}
+
+/* Form fields */
+#holdCard input,
+#holdCard textarea,
+#holdCard select {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border: 1px solid #c62828 !important;
+}
+
+#holdCard input::placeholder,
+#holdCard textarea::placeholder {
+  color: #555555 !important;
+}
+
+/* Smooth hover transition */
+#backBtn,
+.tour-pill,
+#holdRequestBtn,
+#holdCard button,
+#holdCard input[type="submit"] {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+#roomInfoCard,
+#roomInfoCard *,
+#roomInfoCard *::before,
+#roomInfoCard *::after {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+
+/* Balcony floor dropdown */
+#balconyControls {
+    display: none;
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 9999;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: rgba(10, 18, 32, 0.82);
+    border: 1px solid rgba(255,255,255,0.18);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    color: #fff;
+    font-family: inherit;
+}
+#balconyControls label {
+    font-size: 10px;
+    letter-spacing: 1.2px;
+    opacity: .72;
+    white-space: nowrap;
+}
+#balconyFloorSelect {
+    min-width: 118px;
+    padding: 8px 30px 8px 10px;
+    border: 1px solid rgba(255,255,255,.22);
+    border-radius: 8px;
+    background: rgba(255,255,255,.08);
+    color: #fff;
+    outline: none;
+    font: inherit;
+    cursor: pointer;
+}
+#balconyFloorSelect option {
+    background: #101827;
+    color: #fff;
+}
+@media (max-width: 600px) {
+    #balconyControls { top: 12px; right: 12px; padding: 8px; gap: 7px; }
+    #balconyControls label { display: none; }
+    #balconyFloorSelect { min-width: 105px; }
+}
+/* Balcony floor selector — cleaner compact UI */
+#balconyControls {
+    position: fixed;
+    top: 46px;
+    right: 16px;
+    z-index: 9999;
+
+    display: none;
+    align-items: center;
+    gap: 10px;
+
+    padding: 8px 10px 8px 14px;
+    border: 1px solid #c62828;
+    border-radius: 12px;
+
+    background: #ffffff;
+    color: #000000;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+
+    font-family: inherit;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+#balconyControls label {
+    display: block;
+    margin: 0;
+
+    color: #555555;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    white-space: nowrap;
+}
+
+#balconyFloorSelect {
+    min-width: 100px;
+    padding: 8px 28px 8px 10px;
+
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #000000;
+
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    outline: none;
+}
+
+#balconyFloorSelect option {
+    background: #ffffff;
+    color: #000000;
+}
+
+@media (max-width: 600px) {
+    #balconyControls {
+        top: 42px;
+        right: 12px;
+        gap: 6px;
+        padding: 6px 7px 6px 10px;
+        border-radius: 10px;
+    }
+
+    #balconyControls label {
+        font-size: 9px;
+        letter-spacing: 0.4px;
+    }
+
+    #balconyFloorSelect {
+        min-width: 82px;
+        padding: 7px 22px 7px 8px;
+        font-size: 12px;
+    }
+}
+</style>
+
+    <script src="../../../JS/HeroHomesLeadCaptureGlobal.js"></script>
+
+<style>
+/* ===== Room info card — compact dimensions UI ===== */
+#roomInfoCard {
+    width: 220px !important;
+    min-width: 220px !important;
+    max-width: 220px !important;
+    padding: 17px 19px !important;
+    background: rgba(255,255,255,.97) !important;
+    border: 1px solid #c62828 !important;
+    border-radius: 10px !important;
+    box-shadow: 0 12px 32px rgba(0,0,0,.18) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+}
+
+#roomInfoCard .hud-name {
+    margin: 0 0 12px !important;
+    color: #111 !important;
+    -webkit-text-fill-color: #111 !important;
+    font-size: 21px !important;
+    line-height: 1.15 !important;
+    font-weight: 600 !important;
+    letter-spacing: -.01em !important;
+}
+
+#roomInfoCard .hud-dims {
+    display: flex !important;
+    align-items: baseline !important;
+    gap: 7px !important;
+    margin: 0 !important;
+    color: #222 !important;
+    -webkit-text-fill-color: #222 !important;
+    font-size: 14px !important;
+    line-height: 1.2 !important;
+    font-weight: 500 !important;
+    letter-spacing: .01em !important;
+}
+
+#roomInfoCard .hud-dims::after {
+   
+    color: #777 !important;
+    -webkit-text-fill-color: #777 !important;
+    font-size: 10px !important;
+    font-weight: 500 !important;
+    letter-spacing: .06em !important;
+    text-transform: uppercase;
+}
+
+#roomInfoCard .hud-accent {
+    color: #c62828 !important;
+    -webkit-text-fill-color: #c62828 !important;
+}
+
+@media (max-width: 768px) {
+    #roomInfoCard {
+        width: 180px !important;
+        min-width: 180px !important;
+        max-width: 180px !important;
+        padding: 13px 15px !important;
+    }
+
+    #roomInfoCard .hud-name {
+        font-size: 17px !important;
+        margin-bottom: 9px !important;
+    }
+
+    #roomInfoCard .hud-dims {
+        font-size: 12px !important;
+        gap: 5px !important;
+    }
+}
+
+@media (max-width: 400px) {
+    #roomInfoCard {
+        width: 165px !important;
+        min-width: 165px !important;
+        max-width: 165px !important;
+        padding: 11px 13px !important;
+    }
+
+    #roomInfoCard .hud-name {
+        font-size: 15px !important;
+    }
+
+    #roomInfoCard .hud-dims {
+        font-size: 11px !important;
+    }
+}
+</style>
+
+<style>
+/* =========================================================
+   AUTO SCROLL ARROW
+   IMPORTANT: ORIGINAL TOUR BAR + BUTTON SIZES ARE PRESERVED.
+   The arrow is overlaid and NEVER adds width to the bar.
+   ========================================================= */
+
+#tourNavWrap {
+    position: fixed;
+}
+
+/* Arrows sit on top of the left/right edges, not beside the bar */
+#tourNavWrap .scroll-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    width: 36px;
+    height: 40px;
+    margin: 0;
+
+    z-index: 20;
+    pointer-events: auto;
+    cursor: pointer;
+
+    border: 1px solid #c62828;
+    border-radius: 12px;
+    background: rgba(255,255,255,.96);
+    color: #000;
+
+    box-shadow: 0 4px 14px rgba(0,0,0,.16);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    opacity: 1;
+    transition: opacity .2s ease, transform .2s ease;
+}
+
+#tourNavWrap .scroll-arrow-right {
+    right: 7px;
+}
+
+#tourNavWrap .scroll-arrow-left {
+    left: 7px;
+}
+
+#tourNavWrap .scroll-arrow svg {
+    width: 15px;
+    height: 15px;
+}
+
+#tourNavWrap .scroll-arrow.hidden {
+    display: none !important;
+}
+
+/* JS adds this ONLY when the buttons actually overflow */
+#tourNavWrap.has-overflow .scroll-arrow-right:not(.hidden) {
+    display: flex !important;
+}
+
+#tourNavWrap.has-overflow .scroll-arrow-left:not(.hidden) {
+    display: flex !important;
+}
+
+/* Never reserve space for the arrows */
+#tourNavWrap.has-overflow .tour-nav {
+    padding-right: 7px;
+    padding-left: 7px;
+}
+
+/* Desktop: preserve the original bar exactly */
+@media (min-width: 769px) {
+    #tourNavWrap .scroll-arrow {
+        display: none !important;
+    }
+
+    #tourNavWrap.has-overflow .scroll-arrow:not(.hidden) {
+        display: flex !important;
+    }
+}
+
+/* Mobile: preserve the original mobile bar dimensions */
+@media (max-width: 768px) {
+    #tourNavWrap .scroll-arrow-right {
+        right: 6px;
+    }
+
+    #tourNavWrap .scroll-arrow-left {
+        left: 6px;
+    }
+
+    #tourNavWrap.has-overflow .scroll-arrow:not(.hidden) {
+        display: flex !important;
+    }
+}
+/* =========================================================
+   2K DESKTOP — 2560 × 1440
+   UI SCALE ONLY
+   Does NOT affect the panorama/viewer
+========================================================= */
+
+@media screen and (min-width: 1920px) and (min-height: 1080px) {
+
+    /* =========================
+       BACK BUTTON
+    ========================= */
+
+    #backBtn {
+        top: 30px;
+        left: 30px;
+
+        width: 54px;
+        height: 54px;
+
+        border-radius: 50%;
+    }
+
+    #backBtn svg {
+        width: 22px;
+        height: 22px;
+    }
+
+
+    /* =========================
+       ROOM INFORMATION CARD
+    ========================= */
+
+    #roomInfoCard {
+        top: 30px !important;
+        right: 30px !important;
+
+        width: 270px !important;
+        min-width: 270px !important;
+        max-width: 270px !important;
+
+        padding: 21px 23px !important;
+
+        border-radius: 11px !important;
+    }
+
+    #roomInfoCard .hud-name {
+        font-size: 25px !important;
+        margin-bottom: 14px !important;
+    }
+
+    #roomInfoCard .hud-dims {
+        font-size: 15px !important;
+    }
+
+
+    /* =========================
+       BOTTOM NAVIGATION
+    ========================= */
+
+    .tour-nav-wrap {
+        bottom: 30px !important;
+
+        max-width: calc(100vw - 60px);
+    }
+
+    .tour-nav {
+        gap: 5px;
+
+        padding: 8px;
+
+        border-radius: 20px;
+    }
+
+    .tour-pill {
+        height: 46px;
+
+        padding: 0 18px;
+
+        border-radius: 13px;
+
+        font-size: 14px;
+    }
+
+    .tour-pill svg {
+        width: 18px;
+        height: 18px;
+    }
+
+
+    /* =========================
+       REQUEST TO HOLD
+    ========================= */
+
+    #holdRequestBtn {
+        right: 30px;
+        bottom: 115px;
+
+        height: 52px;
+
+        padding: 0 25px;
+
+        border-radius: 14px;
+
+        font-size: 14px;
+
+        gap: 10px;
+    }
+
+    #holdRequestBtn svg {
+        width: 19px;
+        height: 19px;
+    }
+
+
+    /* =========================
+       BALCONY / FLOOR CONTROL
+    ========================= */
+
+    #balconyControls {
+        top: 50%;
+        right: 30px;
+
+        padding: 10px 12px;
+
+        border-radius: 14px;
+    }
+
+    #balconyControls label {
+        font-size: 11px;
+    }
+
+    #balconyFloorSelect {
+        min-width: 120px;
+
+        padding: 9px 30px 9px 11px;
+
+        font-size: 14px;
+    }
+
+
+    /* =========================
+       HOLD FORM
+    ========================= */
+
+    #holdCard {
+        width: 480px;
+
+        padding: 34px;
+
+        border-radius: 16px;
+    }
+
+    #holdCard h2 {
+        font-size: 27px;
+    }
+
+    #holdCard .hold-subtitle {
+        font-size: 13px;
+    }
+
+    .hold-field label {
+        font-size: 12px;
+    }
+
+    .hold-field input,
+    .hold-field select,
+    .hold-field textarea {
+        font-size: 14px;
+    }
+
+    #selectedRoom {
+        font-size: 13px;
+    }
+
+    #submitHoldBtn {
+        height: 50px;
+        font-size: 14px;
+    }
+}
+</style>
+
+<script>
+/* =========================================================
+   AUTO ARROW LOGIC
+   - No overflow  = no arrow
+   - Overflow      = arrow appears
+   - At the end     = arrow disappears
+   - Arrow click    = scrolls the existing bar
+   - Does NOT resize/rebuild the original bar
+   ========================================================= */
+(function () {
+    function initTourAutoArrow() {
+        const wrap = document.getElementById('tourNavWrap');
+        const nav = document.getElementById('tourNav');
+        const arrowRight = document.getElementById('scrollArrow');
+        const arrowLeft = document.getElementById('scrollArrowLeft');
+
+        if (!wrap || !nav || !arrowRight || !arrowLeft) return;
+
+        function updateArrow() {
+            const maxScroll = Math.max(0, nav.scrollWidth - nav.clientWidth);
+            const hasOverflow = maxScroll > 2;
+            const atStart = nav.scrollLeft <= 3;
+            const atEnd = nav.scrollLeft >= maxScroll - 3;
+
+            wrap.classList.toggle('has-overflow', hasOverflow);
+
+            // Right/forward arrow: hidden once you reach the end.
+            arrowRight.classList.toggle('hidden', !hasOverflow || atEnd);
+
+            // Left/back arrow: appears only after scrolling forward,
+            // disappears again once back at the very start.
+            arrowLeft.classList.toggle('hidden', !hasOverflow || atStart);
+        }
+
+        function scrollBy(direction) {
+            const amount = Math.max(
+                nav.clientWidth * 0.65,
+                180
+            );
+
+            nav.scrollBy({
+                left: direction * amount,
+                behavior: 'smooth'
+            });
+        }
+
+        arrowRight.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            scrollBy(1);
+        });
+
+        arrowLeft.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            scrollBy(-1);
+        });
+
+        nav.addEventListener('scroll', updateArrow, { passive: true });
+        window.addEventListener('resize', updateArrow);
+
+        if (window.ResizeObserver) {
+            const observer = new ResizeObserver(updateArrow);
+            observer.observe(nav);
+        }
+
+        /* Wait for fonts/layout to settle */
+        requestAnimationFrame(updateArrow);
+        setTimeout(updateArrow, 100);
+        setTimeout(updateArrow, 500);
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initTourAutoArrow);
+    } else {
+        initTourAutoArrow();
+    }
+})();
+</script>
+
+</head>
+
+<body>
+<!-- =========================================
+     REQUEST TO HOLD BUTTON
+========================================= -->
+
+<button id="holdRequestBtn">
+    <svg viewBox="0 0 24 24" fill="none"
+         xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="M6 4H18V20H6V4Z"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linejoin="round"/>
+        <path
+            d="M9 8H15"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"/>
+        <path
+            d="M9 12H15"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"/>
+    </svg>
+
+    <span>REQUEST TO HOLD</span>
+</button>
+
+
+<!-- =========================================
+     REQUEST TO HOLD OVERLAY
+========================================= -->
+
+<div id="holdOverlay">
+
+    <div id="holdCard">
+
+        <!-- Close -->
+        <button id="holdClose">
+
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round">
+
+                <path d="M6 6L18 18"/>
+                <path d="M18 6L6 18"/>
+
+            </svg>
+
+        </button>
+
+
+        <h2>Request to Hold</h2>
+
+        <p class="hold-subtitle">
+            Submit your details and our team will contact you
+            regarding the selected property.
+        </p>
+
+
+        <!-- Selected Room -->
+
+        <div id="selectedRoom">
+            Selected:
+            <strong id="holdRoomName">Lobby</strong>
+        </div>
+
+
+        <!-- Name -->
+
+        <div class="hold-field">
+
+            <label>Full Name</label>
+
+            <input
+                type="text"
+                id="holdName"
+                placeholder="Enter your full name"
+                autocomplete="name">
+
+        </div>
+
+
+        <!-- Phone -->
+
+        <div class="hold-field">
+
+            <label>Phone Number</label>
+
+            <input
+                type="tel"
+                id="holdPhone"
+                placeholder="Enter your phone number"
+                autocomplete="tel">
+
+        </div>
+
+
+        <!-- Email -->
+
+        <div class="hold-field">
+
+            <label>Email Address</label>
+
+            <input
+                type="email"
+                id="holdEmail"
+                placeholder="Enter your email"
+                autocomplete="email">
+
+        </div>
+
+
+        <!-- Message -->
+
+        <div class="hold-field">
+
+            <label>Message</label>
+
+            <textarea
+                id="holdMessage"
+                placeholder="Any specific requirement?"></textarea>
+
+        </div>
+
+
+        <!-- Submit -->
+
+        <button id="submitHoldBtn">
+            SUBMIT REQUEST
+        </button>
+
+    </div>
+
+</div>
+
+    <!-- Balcony floor selector: visible only while the balcony panorama is active -->
+    <div id="balconyControls">
+        <label for="balconyFloorSelect">BALCONY FLOOR</label>
+        <select id="balconyFloorSelect" aria-label="Select balcony floor">
+            <option value="1">Floor 1</option>
+            <option value="5">Floor 5</option>
+            <option value="10">Floor 10</option>
+            <option value="15">Floor 15</option>
+            <option value="20">Floor 20</option>
+            <option value="25">Floor 25</option>
+            <option value="32">Floor 32</option>
+        </select>
+    </div>
+
+
+
+
+
+
+    <button id="backBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+
+    <div id="roomInfoCard">
+        <div class="hud-name" id="cardName">Room</div>
+        <div class="hud-dims">
+            <span id="cardLength">0</span><span class="hud-accent"> </span>
+            &nbsp;×&nbsp;
+            <span id="cardWidth">0</span><span class="hud-accent"></span>
+        </div>
+    </div>
+
+    <div id="viewer"></div>
+
+    <!-- Bottom panel with room navigation pills -->
+    <div class="tour-nav-wrap" id="tourNavWrap">
+    <div class="tour-nav" id="tourNav">
+
+        <button class="tour-pill active" onclick="goToRoom('lobby', this)">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M4 10L12 4L20 10V20H4V10Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
+            </svg>
+            <span>Lobby</span>
+        </button>
+
+        <button class="tour-pill" onclick="goToRoom('dinning', this)">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M6 4V10" stroke="currentColor" stroke-width="1.8" />
+                <path d="M4 7H8" stroke="currentColor" stroke-width="1.8" />
+                <path d="M6 10V20" stroke="currentColor" stroke-width="1.8" />
+                <path d="M17 4V20" stroke="currentColor" stroke-width="1.8" />
+            </svg>
+            <span>Dinning & Bar</span>
+        </button>
+
+        <button class="tour-pill" onclick="goToRoom('kitchen', this)">
+            <svg viewBox="0 0 24 24" fill="none">
+                <rect x="5" y="5" width="14" height="14" stroke="currentColor" stroke-width="1.8" />
+                <path d="M8 9H16" stroke="currentColor" stroke-width="1.8" />
+            </svg>
+            <span>Kitchen</span>
+        </button>
+     <button class="tour-pill" onclick="goToRoom('room_4', this)">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M3 12V8H21V12" stroke="currentColor" stroke-width="1.8" />
+                <path d="M3 12H21V20H3V12Z" stroke="currentColor" stroke-width="1.8" />
+            </svg>
+            <span>Master Bedroom</span>
+        </button>
+
+   
+        <button class="tour-pill" onclick="goToRoom('room_2', this)">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M3 12V8H21V12" stroke="currentColor" stroke-width="1.8" />
+                <path d="M3 12H21V20H3V12Z" stroke="currentColor" stroke-width="1.8" />
+            </svg>
+            <span>Kids Room</span>
+        </button>
+
+        <button class="tour-pill" onclick="goToRoom('room_3', this)">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M3 12V8H21V12" stroke="currentColor" stroke-width="1.8" />
+                <path d="M3 12H21V20H3V12Z" stroke="currentColor" stroke-width="1.8" />
+            </svg>
+            <span>Grandparent's Room</span>
+        </button>
+
+           <button class="tour-pill" onclick="goToRoom('room_1', this)">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M3 12V8H21V12" stroke="currentColor" stroke-width="1.8" />
+                <path d="M3 12H21V20H3V12Z" stroke="currentColor" stroke-width="1.8" />
+            </svg>
+            <span>Guest Room</span>
+        </button>
+
+           <button class="tour-pill" onclick="goToRoom('bathroom_1', this)">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M3 12V8H21V12" stroke="currentColor" stroke-width="1.8" />
+                <path d="M3 12H21V20H3V12Z" stroke="currentColor" stroke-width="1.8" />
+            </svg>
+            <span>Bathroom 1</span>
+        </button>        
+           <button class="tour-pill" onclick="goToRoom('bathroom_2', this)">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M3 12V8H21V12" stroke="currentColor" stroke-width="1.8" />
+                <path d="M3 12H21V20H3V12Z" stroke="currentColor" stroke-width="1.8" />
+            </svg>
+            <span>Bathroom 2</span>
+        </button>      
+             <button class="tour-pill" onclick="goToRoom('bathroom_3', this)">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M3 12V8H21V12" stroke="currentColor" stroke-width="1.8" />
+                <path d="M3 12H21V20H3V12Z" stroke="currentColor" stroke-width="1.8" />
+            </svg> 
+            <span>Bathroom 3</span>
+        </button>     
+        
+        <button class="tour-pill" onclick="goToRoom('bathroom_4', this)">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M3 12V8H21V12" stroke="currentColor" stroke-width="1.8" />
+                <path d="M3 12H21V20H3V12Z" stroke="currentColor" stroke-width="1.8" />
+            </svg>
+            <span>Bathroom 4</span>
+        </button>
+                <button class="tour-pill" onclick="goToRoom('pool', this)">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M3 12V8H21V12" stroke="currentColor" stroke-width="1.8" />
+                <path d="M3 12H21V20H3V12Z" stroke="currentColor" stroke-width="1.8" />
+            </svg>
+            <span>Pool</span>
+        </button>
+
+
+        <button class="tour-pill" onclick="goToRoom('balcony', this)">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M3 12V8H21V12" stroke="currentColor" stroke-width="1.8" />
+                <path d="M3 12H21V20H3V12Z" stroke="currentColor" stroke-width="1.8" />
+            </svg>
+            <span>Balcony</span>
+        </button>
+
+    </div>
+    <button class="scroll-arrow scroll-arrow-left hidden" id="scrollArrowLeft" aria-label="Show previous rooms">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 6 9 12 15 18"/></svg>
+    </button>
+    <button class="scroll-arrow scroll-arrow-right hidden" id="scrollArrow" aria-label="Show more rooms">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+    </button>
+    </div>
+
+    
+
+    <div id="fadeOverlay"></div>
+
+<script>
+/* Request-to-Hold is handled by JS/HeroHomesLeadCaptureGlobal.js. */
+</script>
+
+<script>
+const selectedFloor = sessionStorage.getItem("selectedFloor") || "01";
+
+        // ── Arrow hotspot icon ──
+        function createArrowSVG() {
+            const svg = `
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+  <radialGradient id="glassFill" cx="50%" cy="40%" r="60%">
+    <stop offset="0%" stop-color="rgba(255,255,255,0.28)"/>
+    <stop offset="55%" stop-color="rgba(255,255,255,0.10)"/>
+    <stop offset="100%" stop-color="rgba(255,255,255,0.04)"/>
+  </radialGradient>
+
+  <linearGradient id="glassHighlight" x1="50%" y1="0%" x2="50%" y2="100%">
+    <stop offset="0%" stop-color="rgba(255,255,255,0.35)"/>
+    <stop offset="45%" stop-color="rgba(255,255,255,0)"/>
+  </linearGradient>
+
+  <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+    <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+    <feOffset dx="0" dy="2" result="offsetblur"/>
+    <feComponentTransfer>
+      <feFuncA type="linear" slope="0.45"/>
+    </feComponentTransfer>
+    <feMerge>
+      <feMergeNode/>
+      <feMergeNode in="SourceGraphic"/>
+    </feMerge>
+  </filter>
+</defs>
+
+<g filter="url(#softShadow)">
+  <circle cx="64" cy="64" r="44"
+    fill="#ffffff"
+    stroke="rgba(0,0,0,0.22)"
+    stroke-width="1.2"/>
+
+  <circle cx="64" cy="64" r="44"
+    fill="url(#glassHighlight)"
+    opacity="0.9"/>
+
+  <circle cx="64" cy="64" r="38"
+    fill="none"
+    stroke="rgba(0,0,0,0.08)"
+    stroke-width="1"/>
+</g>
+
+<circle cx="64" cy="64" r="6.5" fill="#000000"/>
+<circle cx="64" cy="64" r="14" fill="#000000"/>
+  </svg>`;
+            return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+        }
+
+        const ARROW_ICON = createArrowSVG();
+
+        // Read initial room from URL
+        const params = new URLSearchParams(window.location.search);
+        const initialRoom = params.get("room") || "lobby";
+        // Balcony type is supplied by the clicked OFF-state SVG: B or F.
+        let balconyType = (params.get("balconyType") || sessionStorage.getItem("balconyType") || "F").toUpperCase() === "B" ? "B" : "F";
+
+        // ── Viewer setup ──
+        const viewer = new PANOLENS.Viewer({
+            container: document.getElementById("viewer"),
+            controlBar: false
+        });
+        viewer.camera.fov = 100;
+        viewer.camera.updateProjectionMatrix();
+
+        // ── Progressive room panoramas ──
+        // WebP loads first for speed. JPG replaces it when the full-resolution
+        // texture finishes loading. The filenames below match the image names
+        // used by this tour.
+    // ── Progressive panorama loader ──
+// WebP loads first.
+// JPG loads in the background and replaces WebP
+// while preserving the original color/brightness.
+
+function createRoomPanorama(webpFile, jpgFile) {
+
+    const webpPath = `images/${webpFile}`;
+    const jpgPath  = `images/${jpgFile}`;
+
+    // 1. Load WebP first
+    const panorama = new PANOLENS.ImagePanorama(webpPath);
+
+    // 2. Wait until WebP is ready
+    panorama.addEventListener("load", function () {
+
+        const loader = new THREE.TextureLoader();
+
+        loader.load(
+            jpgPath,
+
+            function (jpgTexture) {
+
+                if (!panorama.material) return;
+
+                const webpTexture = panorama.material.map;
+
+                // -----------------------------------------
+                // PRESERVE WEBP COLOR / TEXTURE SETTINGS
+                // -----------------------------------------
+
+                if (webpTexture) {
+
+                    // Preserve color encoding
+                    if ("encoding" in webpTexture) {
+                        jpgTexture.encoding =
+                            webpTexture.encoding ||
+                            THREE.sRGBEncoding;
+                    }
+
+                    // Preserve orientation
+                    jpgTexture.flipY = webpTexture.flipY;
+
+                    // Preserve wrapping
+                    jpgTexture.wrapS = webpTexture.wrapS;
+                    jpgTexture.wrapT = webpTexture.wrapT;
+
+                    // Preserve filtering
+                    jpgTexture.minFilter = webpTexture.minFilter;
+                    jpgTexture.magFilter = webpTexture.magFilter;
+
+                    // Preserve anisotropy
+                    if ("anisotropy" in webpTexture) {
+                        jpgTexture.anisotropy =
+                            webpTexture.anisotropy;
+                    }
+                }
+
+                // For Three.js r124
+                if (
+                    "encoding" in jpgTexture &&
+                    !jpgTexture.encoding
+                ) {
+                    jpgTexture.encoding = THREE.sRGBEncoding;
+                }
+
+                jpgTexture.needsUpdate = true;
+
+                // -----------------------------------------
+                // REPLACE WEBP WITH JPG
+                // -----------------------------------------
+
+                panorama.material.map = jpgTexture;
+                panorama.material.needsUpdate = true;
+
+                // Free old WebP texture
+                if (webpTexture) {
+                    webpTexture.dispose();
+                }
+
+                console.log(
+                    "WEBP → JPG COMPLETE:",
+                    jpgPath
+                );
+            },
+
+            undefined,
+
+            function (error) {
+
+                console.error(
+                    "JPG FAILED TO LOAD:",
+                    jpgPath,
+                    error
+                );
+
+            }
+        );
+
+    });
+
+    return panorama;
+}
+        const rooms = {
+            lobby:       createRoomPanorama("Lobby.webp", "Lobby.jpg"),
+            dinning:     createRoomPanorama("Dining.webp", "Dining.jpg"),
+            room_1:      createRoomPanorama("room_1.webp", "room_1.jpg"),
+            room_2:      createRoomPanorama("kids.webp", "kids.jpg"),
+            room_3:      createRoomPanorama("room-3.webp", "room-3.jpg"),
+            room_4:      createRoomPanorama("room-4.webp", "room-4.jpg"),
+            kitchen:     createRoomPanorama("Kitchen.webp", "Kitchen.jpg"),
+            pool:        createRoomPanorama("Pool.webp", "Pool.jpg"),
+            bathroom_1:  createRoomPanorama("Bathroom-1.webp", "Bathroom-1.jpg"),
+            bathroom_2:  createRoomPanorama("Bathroom-2.webp", "Bathroom-2.jpg"),
+            bathroom_3:  createRoomPanorama("Bathroom-3.webp", "Bathroom-3.jpg"),
+            bathroom_4:  createRoomPanorama("Bathroom-4.webp", "Bathroom-4.jpg")
+        };
+
+        // ── Balcony floor system ──
+        // Balcony type is selected by the OFF-state SVG that opened this viewer.
+        // B and F files are both supported.
+        const BALCONY_FLOORS = [1, 5, 10, 15, 20, 25, 32];
+        const balconyFloorSelect = document.getElementById("balconyFloorSelect");
+        let currentBalconyFloor = getInitialBalconyFloor();
+
+        function getInitialBalconyFloor() {
+            const requested = parseInt(params.get("balconyFloor") || selectedFloor, 10);
+            if (!Number.isFinite(requested)) return 1;
+            // If the actual apartment floor is not one of the balcony renders,
+            // start at the closest available balcony render.
+            return BALCONY_FLOORS.reduce((best, f) =>
+                Math.abs(f - requested) < Math.abs(best - requested) ? f : best, BALCONY_FLOORS[0]);
+        }
+
+        function getBalconyTowerFolder() {
+            const tower = String(params.get("tower") || sessionStorage.getItem("selectedTower") || "9")
+                .toUpperCase().replace(/[-_ ]/g, "");
+            if (tower === "12A" || tower === "C12A") return "Floor_12A";
+            if (["9", "10", "11", "12"].includes(tower)) return `Floor_${tower}`;
+            // Keep Tower-B independent; its floor images can use the same floor set.
+            return "Floor_9";
+        }
+
+        function createBalconyPanorama(floor) {
+    const towerFolder = getBalconyTowerFolder();
+    const baseName = `${balconyType} Floor ${floor}`;
+
+    const webpPath = `../../balcony/360/${towerFolder}/${baseName}.webp`;
+    const pngPath  = `../../balcony/360/${towerFolder}/${baseName}.png`;
+
+    // WebP loads first for fast display.
+    // PNG replaces WebP in the background.
+    // Existing image colors/brightness are preserved.
+    const panorama = new PANOLENS.ImagePanorama(webpPath);
+
+    panorama.userData = {
+        isBalconyPanorama: true,
+        balconyFloor: floor,
+        balconyType,
+        webpPath,
+        pngPath
+    };
+
+    panorama.addEventListener("load", function () {
+        const loader = new THREE.TextureLoader();
+
+        loader.load(
+            pngPath,
+
+            function (pngTexture) {
+                if (!panorama.material) {
+                    pngTexture.dispose();
+                    return;
+                }
+
+                const webpTexture = panorama.material.map;
+
+                // Copy the WebP texture settings exactly.
+                // Three.js r124 uses "encoding".
+                if (webpTexture) {
+                    if ("encoding" in webpTexture && "encoding" in pngTexture) {
+                        pngTexture.encoding = webpTexture.encoding;
+                    }
+
+                    pngTexture.flipY = webpTexture.flipY;
+                    pngTexture.wrapS = webpTexture.wrapS;
+                    pngTexture.wrapT = webpTexture.wrapT;
+                    pngTexture.minFilter = webpTexture.minFilter;
+                    pngTexture.magFilter = webpTexture.magFilter;
+
+                    if ("anisotropy" in webpTexture) {
+                        pngTexture.anisotropy = webpTexture.anisotropy;
+                    }
+
+                    if ("premultiplyAlpha" in webpTexture) {
+                        pngTexture.premultiplyAlpha = webpTexture.premultiplyAlpha;
+                    }
+
+                    if ("unpackAlignment" in webpTexture) {
+                        pngTexture.unpackAlignment = webpTexture.unpackAlignment;
+                    }
+                }
+
+                pngTexture.needsUpdate = true;
+
+                // Replace WebP with PNG.
+                // Do not modify material color, exposure, tone, etc.
+                panorama.material.map = pngTexture;
+                panorama.material.needsUpdate = true;
+
+                if (webpTexture) {
+                    webpTexture.dispose();
+                }
+
+                console.log("BALCONY WEBP → PNG COMPLETE:", pngPath);
+            },
+
+            undefined,
+
+            function (error) {
+                console.error("BALCONY PNG FAILED TO LOAD:", pngPath, error);
+                // Keep WebP visible if PNG fails.
+            }
+        );
+    });
+
+    return panorama;
+}
+
+        rooms.balcony = createBalconyPanorama(currentBalconyFloor);
+
+        // Add all panoramas
+        Object.values(rooms).forEach(p => viewer.add(p));
+        Object.values(rooms).forEach(r => { r.fadeDuration = 1200; });
+
+        function updateFloorIndicator() {
+            if (balconyFloorSelect) balconyFloorSelect.value = String(currentBalconyFloor);
+        }
+
+        function updateBalconyControls(roomName) {
+            const controls = document.getElementById("balconyControls");
+            if (!controls) return;
+            const isBalcony = roomName === "balcony";
+            controls.style.display = isBalcony ? "flex" : "none";
+            if (isBalcony) updateFloorIndicator();
+        }
+
+        function addBalconyHotspots(panorama) {
+            const spot = new PANOLENS.Infospot(500, ARROW_ICON);
+            const r = 5000;
+            const yaw = -130;
+            const pitch = -6;
+            const phi = THREE.MathUtils.degToRad(90 - pitch);
+            const theta = THREE.MathUtils.degToRad(yaw);
+            spot.position.set(
+                r * Math.sin(phi) * Math.cos(theta),
+                r * Math.cos(phi),
+                r * Math.sin(phi) * Math.sin(theta)
+            );
+            spot.addHoverText("Master Bedroom");
+            spot.addEventListener("click", () => {
+                viewer.setPanorama(rooms.room_1);
+                updateBalconyControls("room_1");
+            });
+            panorama.add(spot);
+        }
+
+        function changeBalconyFloor(floor) {
+            floor = parseInt(floor, 10);
+            if (!BALCONY_FLOORS.includes(floor)) return;
+            currentBalconyFloor = floor;
+            sessionStorage.setItem("balconyType", balconyType);
+            const oldBalcony = rooms.balcony;
+            const panorama = createBalconyPanorama(currentBalconyFloor);
+            panorama.fadeDuration = 1200;
+            addBalconyHotspots(panorama);
+            viewer.add(panorama);
+            rooms.balcony = panorama;
+            viewer.setPanorama(panorama);
+            updateBalconyControls("balcony");
+
+            // Remove the previous dynamically-created panorama when PANOLENS exposes remove().
+            if (oldBalcony && oldBalcony !== rooms.balcony && typeof viewer.remove === "function") {
+                try { viewer.remove(oldBalcony); } catch (e) {}
+            }
+        }
+
+        if (balconyFloorSelect) {
+            balconyFloorSelect.addEventListener("change", () => {
+                changeBalconyFloor(balconyFloorSelect.value);
+            });
+        }
+        updateFloorIndicator();
+
+        // ── Helpers ──
+        function addHotspot(from, to, yaw, pitch, text) {
+            const spot = new PANOLENS.Infospot(500, ARROW_ICON);
+            const r = 5000;
+            const phi = THREE.MathUtils.degToRad(90 - pitch);
+            const theta = THREE.MathUtils.degToRad(yaw);
+            spot.position.set(
+                r * Math.sin(phi) * Math.cos(theta),
+                r * Math.cos(phi),
+                r * Math.sin(phi) * Math.sin(theta)
+            );
+            spot.addHoverText(text);
+            spot.addEventListener("click", () => {
+                const overlay = document.getElementById("fadeOverlay");
+                viewer.tweenControlCenter(spot.position);
+                setTimeout(() => {
+                    let fov = viewer.camera.fov;
+                    function zoom() {
+                        if (fov > 60) {
+                            fov -= 1.2;
+                            viewer.camera.fov = fov;
+                            viewer.camera.updateProjectionMatrix();
+                            requestAnimationFrame(zoom);
+                        } else {
+                            overlay.style.opacity = 0.25;
+                            viewer.setPanorama(rooms[to]);
+                            viewer.camera.fov = 100;
+                            viewer.camera.updateProjectionMatrix();
+                            setTimeout(() => { overlay.style.opacity = 0; }, 300);
+                            // sync nav pill
+                            document.querySelectorAll('.tour-pill').forEach(p => {
+                                p.classList.remove('active');
+                                const oc = p.getAttribute('onclick');
+                                if (oc && oc.includes("'" + to + "'")) p.classList.add('active');
+                            });
+                            showInfoCard(to);
+                            updateBalconyControls(to);
+                        }
+                    }
+                    zoom();
+                }, 400);
+            });
+            rooms[from].add(spot);
+        }
+
+        // ── Room data ──
+        const roomData = {
+            lobby: { name: "Lobby", L: 21.10, W: 20 },
+            dinning: { name: "Dining Room", L: 11.10, W: 14.6 },
+            kitchen: { name: "Kitchen", L: 10.2, W: 14.2 },
+            room_1: { name: "Bedroom 1", L:12, W: 15.1 },
+            room_2: { name: "Bedroom 2", L: 12, W: 15.2 },
+            room_3: { name: "Bedroom 3", L: 13.8, W: 13.2 },
+            room_4: { name: "Bedroom 4", L: 14.2, W: 18.6},
+            bathroom_1: { name: "Bathroom 1", L: 6.2, W: 9.2 },
+            bathroom_2: { name: "Bathroom 2", L: 6.2, W: 9.2 },
+            bathroom_3: { name: "Bathroom 3", L: 8.2, W: 6.2 },
+            bathroom_4: { name: "Bathroom 4", L: 11.2, W: 7.6 },
+              pool: { name: "Pool", L: 6, W: 8 },
+        };
+        function showInfoCard(roomKey) {
+            const data = roomData[roomKey];
+            const card = document.getElementById("roomInfoCard");
+            if (!data) { card.classList.remove("visible"); return; }
+            document.getElementById("cardName").textContent = data.name;
+            document.getElementById("cardLength").textContent = data.L;
+            document.getElementById("cardWidth").textContent = data.W;
+            card.classList.remove("visible");
+            setTimeout(() => card.classList.add("visible"), 80);
+        }
+
+        // ── Nav pill navigation ──
+ // ── Nav pill navigation ──
+function goToRoom(roomName, btn) {
+
+    // Add room to history only during normal navigation
+    if (!isGoingBack) {
+        if (roomHistory[roomHistory.length - 1] !== roomName) {
+            roomHistory.push(roomName);
+        }
+    }
+
+    document.querySelectorAll('.tour-pill')
+        .forEach(p => p.classList.remove('active'));
+
+    if (btn) btn.classList.add('active');
+
+    // If navigating through Back button, activate the correct pill
+    if (!btn) {
+        document.querySelectorAll('.tour-pill').forEach(p => {
+            const oc = p.getAttribute('onclick');
+
+            if (oc && oc.includes("'" + roomName + "'")) {
+                p.classList.add('active');
+            }
+        });
+    }
+
+    const overlay =
+        document.getElementById("fadeOverlay");
+
+    overlay.style.opacity = 0.25;
+
+    setTimeout(() => {
+
+        viewer.setPanorama(rooms[roomName]);
+
+        // Apply saved starting camera angle
+        setTimeout(() => {
+            applyCameraAngle(roomName);
+        }, 50);
+
+        overlay.style.opacity = 0;
+
+        showInfoCard(roomName);
+
+        updateBalconyControls(roomName);
+
+    }, 300);
+}
+
+        // ── Hotspots ──
+             addHotspot("lobby", "dinning", -26, -2, "Dinning & Bar");
+        addHotspot("lobby", "balcony", 30, -9, "Balcony");
+        addHotspot("lobby", "room_4", -39, -9, "Master Bedroom");
+        addHotspot("lobby", "room_2", -39, -5, "Kids Room");
+        addHotspot("lobby", "room_3", -39, -1, "Grandparent's Room");
+        addHotspot("lobby", "room_1", -39, 3, "Guest Room");
+      
+
+        addHotspot("dinning", "lobby", -2, -5, "Lobby");
+         addHotspot("dinning", "room_2", 32, -5, "Kids Room");
+
+addHotspot("room_4", "bathroom_4", 63, -9, "Bathroom");
+addHotspot("bathroom_4", "room_4", 225, -9, "Master Bedroom");
+
+
+
+addHotspot("room_2", "bathroom_2", 66, -9, "Bathroom");
+addHotspot("bathroom_2", "room_2", 225, -9, "Kids Room");
+
+
+addHotspot("room_3", "bathroom_3", 20, -9, "Bathroom");
+addHotspot("bathroom_3", "room_3", 225, -9, "Grandparent's Room");
+
+addHotspot("room_1", "bathroom_1", 42, -9, "Bathroom");
+addHotspot("bathroom_1", "room_1", 210, -9, "Guest Room");
+
+       
+        addHotspot("kitchen", "dinning", -90, -6, "Dinning");
+        
+       
+         addHotspot("room_1", "balcony", 10, -6, "Balcony");
+         addHotspot("room_2", "balcony", 20, -6, "Balcony");
+           addHotspot("room_3", "balcony", 50, -6, "Balcony");
+             addHotspot("room_4", "balcony", -40, -6, "Balcony");
+        addHotspot("room_1", "lobby", -200, -6, "Lobby");
+        addHotspot("room_3", "lobby", -155, -6, "Lobby");
+         addHotspot("room_4", "lobby",150, -10, "Lobby");
+
+   
+        addHotspot("room_2", "lobby", -100, -4, "Lobby");
+    
+
+        addHotspot("balcony", "room_1", -130, -6, "Master Bedroom");
+        // ── Init ──
+        const startRoom = rooms[initialRoom] ? initialRoom : "lobby";
+        viewer.setPanorama(rooms[startRoom]);
+        showInfoCard(startRoom);
+        updateBalconyControls(startRoom);
+        document.querySelectorAll('.tour-pill').forEach(p => {
+            p.classList.remove('active');
+            const oc = p.getAttribute('onclick');
+            if (oc && oc.includes("'" + startRoom + "'")) p.classList.add('active');
+        });
+// ── Room navigation history ──
+let roomHistory = [startRoom];
+let isGoingBack = false;
+
+document.getElementById("backBtn").addEventListener("click", () => {
+
+    if (roomHistory.length <= 1) {
+        return;
+    }
+
+    // Remove current room
+    roomHistory.pop();
+
+    const previousRoom =
+        roomHistory[roomHistory.length - 1];
+
+    if (!previousRoom || !rooms[previousRoom]) {
+        return;
+    }
+
+    isGoingBack = true;
+
+    goToRoom(previousRoom);
+
+    isGoingBack = false;
+});
+</script>
+
+
+</body>
+
+</html>

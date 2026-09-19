@@ -1,0 +1,200 @@
+.tower-pin__btn {
+    position: relative;
+    z-index: 1;
+}
+
+.tower-pin__dot {
+    position: relative;
+    z-index: 2;
+}
+
+/* was missing position */
+.tower-pin__label {
+    position: relative;
+    z-index: 3;
+}
+
+
+/* tower-pins.css */
+.tower-pin {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    pointer-events: auto;
+    z-index: 5;
+    /* --pin-color: #ff6a00; */
+    --pin-color: #009bf7;
+    --pulse-color: rgba(255, 255, 255, .7);
+    isolation: isolate;
+}
+
+.tower-pin__stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.tower-pin__btn {
+    position: relative;
+    /* anchor for pseudo elements */
+    overflow: visible;
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(255, 255, 255, .18);
+    background: rgba(255, 255, 255, 0.72); 
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .35);
+    z-index: 1;
+}
+
+.tower-pin__btn:hover {
+    background: rgba(24, 24, 28, .8);
+}
+
+.tower-pin__dot {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #ff6a00;
+    box-shadow: 0 0 0 3px #1f1f22 inset;
+    z-index: 2;
+}
+
+.tower-pin__label {
+    padding: 6px 10px;
+    border-radius: 10px;
+    color: rgba(20, 20, 22, .58);
+    background: #fff;
+    font: 600 12px/1.1 system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    white-space: nowrap;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+
+/* two expanding rings */
+.tower-pin__btn::before,
+.tower-pin__btn::after {
+    content: "";
+    position: absolute;
+    inset: -3px;
+    /* start a bit outside the button */
+    border-radius: 999px;
+    background: var(--pulse-color);
+    filter: blur(1px);
+    transform: translateY(3px) scale(0.55);
+    opacity: 0;
+    animation: tp-pulse 2.6s ease-out infinite;
+    /* <- run the pulse */
+    animation-delay: 0s !important;
+    /* <- same timing for all */
+    pointer-events: none;
+}
+
+
+/* BACK ring (behind the button & dot) */
+.tower-pin__btn::before {
+    z-index: 0;
+    /* sits behind the button/dot */
+    animation-delay: 0s;
+    /* starts first */
+}
+
+/* FRONT ring (over everything) */
+.tower-pin__btn::after {
+    z-index: 3;
+    /* on top of dot/label */
+    animation-delay: .9s;
+    /* starts a bit later for “passes through” feel */
+}
+
+/* subtle breathing of the inner dot */
+.tower-pin__dot {
+    animation: tp-breathe 1.8s ease-in-out infinite;
+    background: var(--pin-color);
+}
+
+/* hover = stronger focus, pause the waves if you like */
+.tower-pin__btn:hover::before,
+.tower-pin__btn:hover::after {
+    animation-play-state: paused;
+    /* remove if you want them to keep going */
+}
+
+.tower-pin__btn:hover .tower-pin__dot {
+    transform: scale(1.05);
+}
+
+@media (max-width:600px) {
+    .tower-pin__btn {
+        width: 25px;
+        height: 25px;
+    }
+
+    .tower-pin__dot {
+        width: 10px;
+        height: 10px;
+    }
+}
+
+/* keyframes */
+@keyframes tp-pulse {
+    0% {
+        transform: scale(0.6);
+        opacity: .55;
+    }
+
+    60% {
+        transform: scale(1.45);
+        opacity: .18;
+    }
+
+    100% {
+        transform: scale(1.9);
+        opacity: 0;
+    }
+}
+
+@keyframes tp-breathe {
+
+    0%,
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 106, 0, .0);
+    }
+
+    50% {
+        transform: scale(1.08);
+        box-shadow: 0 0 10px 2px rgba(255, 106, 0, .35);
+    }
+}
+
+
+
+
+
+.tower-pin__label {
+    transition: opacity .25s ease, transform .25s ease;
+    opacity: .95;
+}
+
+.tower-pin__btn:hover+.tower-pin__label {
+    transform: translateY(-1px);
+    opacity: 1;
+}
+
+
+/* accessibility: respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+
+    .tower-pin__btn::before,
+    .tower-pin__btn::after,
+    .tower-pin__dot {
+        animation: none !important;
+    }
+}

@@ -1,0 +1,812 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    user-select: none;
+}
+
+
+
+
+
+/* ABOUT – MINIMAL NAV STYLE */
+
+
+/* SINGLE HEADER CONTAINER */
+
+
+/* shared button style */
+
+
+/* About = subtle / glass */
+
+
+
+
+/* Contact = highlighted */
+
+
+
+
+/* Mobile */
+
+
+/* Contact button position (same style) */
+
+
+/* GOLD LINE */
+
+
+/* HOVER */
+
+
+
+
+/* MOBILE */
+
+
+
+
+
+/* ────────────────────────────────
+   WhatsApp Floating Button (Clean)
+   ──────────────────────────────── */
+
+
+
+
+
+/* Icon inside the circle */
+
+
+/* ────────────────────────────────
+   Mobile Responsive (≤ 600px)
+   ──────────────────────────────── */
+
+
+/* ────────────────────────────────
+   Label (optional small tooltip)
+   ──────────────────────────────── */
+
+
+
+
+
+
+/* Floor hover tooltip */
+.floortip {
+    position: fixed;
+    /* place by viewport coords */
+    left: 0;
+    top: 0;
+    transform: translate(-50%, -100%);
+    /* center horizontally, sit above */
+    padding: 6px 10px;
+    font: 600 12px/1.2 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.75);
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    pointer-events: none;
+    /* never blocks clicks */
+    opacity: 0;
+    z-index: 12050;
+    /* above your overlays */
+    transition: opacity .15s ease;
+    white-space: nowrap;
+}
+
+/* small arrow */
+.floortip::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -6px;
+    width: 0;
+    height: 0;
+    transform: translateX(-50%);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid rgba(0, 0, 0, 0.75);
+}
+
+.floortip.is-visible {
+    opacity: 1;
+}
+
+/* quick, soft placeholder look */
+.blur-up {
+    filter: blur(10px);
+    transform: scale(1.02);
+    transition: filter .45s ease, transform .45s ease, opacity .35s ease;
+}
+
+/* once the full image is in */
+.blur-up.is-loaded {
+    filter: blur(0);
+    transform: scale(1);
+    opacity: 1;
+}
+
+
+#ui-hint {
+    position: fixed;
+    top: 40px;
+    /* default desktop position */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+}
+
+/* 📱 Mobile (below 600px width) */
+@media (max-width: 600px) {
+    #ui-hint {
+        top: 100px;
+        /* remove from top */
+        bottom: Auto;
+        /* move near bottom */
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.image-wrapper,
+.Cutout {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(var(--scene-scale, 1));
+    width: 90vmin;
+    aspect-ratio: 3840 / 5830;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    z-index: 1;
+}
+
+
+.image-wrapper img,
+.Cutout svg {
+    user-select: none;
+    pointer-events: none;
+    transition: transform 0.1s linear;
+    object-fit: contain;
+}
+
+
+/* === Running SVG highlight === */
+.Cutout path[data-link] {
+    stroke: rgba(255,255,255,0.98);
+    stroke-width: 8px;
+    filter: drop-shadow(0 0 6px rgba(255,255,255,0.98)) drop-shadow(0 0 14px rgba(255,255,255,0.98));
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    stroke-dasharray: 28 18;
+    stroke-dashoffset: 0;
+    animation: svgRunningDash 1.2s linear infinite;
+}
+
+@keyframes svgRunningDash {
+    to {
+        stroke-dashoffset: -92px;
+    }
+}
+
+.Cutout path[data-link]:hover,
+.Cutout path[data-link].selected {
+    stroke: rgba(255,255,255,0.98);
+    filter: drop-shadow(0 0 8px rgba(255,255,255,0.98)) drop-shadow(0 0 18px rgba(255,255,255,0.98));
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .Cutout path[data-link] {
+        animation: none;
+    }
+}
+
+.Cutout path {
+    fill: transparent;
+    pointer-events: auto;
+    cursor: pointer;
+    stroke: transparent;
+    stroke-width: 8px;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    transition: stroke 0.3s ease, fill 0.3s ease;
+}
+
+
+.Cutout path:hover {
+    /* stroke: rgb(141, 127, 205);
+    fill: rgba(0, 0, 255, 0.2); */
+    /* stroke: #004771; */
+    stroke: #a3845d;
+    /* fill: rgba(0, 71, 113, 0.4); */
+    fill: rgba(186, 167, 145, 0.4);
+}
+
+
+.Cutout path.selected {
+    /* stroke: rgb(255, 140, 0); */
+    /* stroke: rgb(233, 182, 59); */
+    /* stroke: #00629b; */
+    stroke: #8d7252;
+    /* Orange */
+    /* fill: rgba(0, 71, 113, 0.5); */
+    fill: rgba(163, 146, 128, 0.5);
+}
+
+
+
+/* shared */
+
+/* per-button positions */
+
+
+/* add more: .hs-lobby { top: 46%; left: 62%; } ... */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Hover effect */
+
+
+
+
+
+
+/* Modal Background */
+
+
+
+
+
+
+
+/* Replace existing .enquiry-btn styles */
+.enquiry-btn {
+    position: fixed;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%) rotate(90deg);
+    transform-origin: right center;
+    margin: 0;
+    padding: 12px 20px;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    border: 0;
+    border-radius: 8px 8px 0 0;
+    background: #C9A87C;
+    color: #fff;
+    cursor: pointer;
+    z-index: 10001;
+    white-space: nowrap;
+    box-shadow: -2px 0 12px rgba(0, 0, 0, 0.2);
+    transition: background 0.2s ease;
+}
+
+.enquiry-btn:hover {
+    background: #b8936a;
+}
+
+@media (max-width: 600px) {
+    .enquiry-btn {
+        padding: 10px 16px;
+        font-size: 12px;
+    }
+}
+
+
+/* overlay must be above close button */
+.enquiry .overlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, .55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 10000;
+}
+
+/* modal + internals */
+.enquiry .modal {
+    width: min(560px, 94vw);
+    background: rgba(26, 27, 30, .92);
+    border: 1px solid rgba(255, 255, 255, .08);
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .5);
+    position: relative;
+}
+
+/* Make "Request Callback" white */
+.enquiry .modal-header .title {
+
+    color: #fff;
+
+    /* white */
+}
+
+
+
+.enquiry .modal-header {
+    padding: 16px 16px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    color: #fff;
+}
+
+.enquiry .title {
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: .2px;
+}
+
+.enquiry .close {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    border: 1px solid #2a2c31;
+    border-radius: 8px;
+    background: #141417;
+    color: #d7d7db;
+    cursor: pointer;
+}
+
+.enquiry .close:hover {
+    background: #191a1e;
+}
+
+.enquiry .modal-body {
+    padding: 12px 16px 16px;
+}
+
+/* form controls (scoped!) */
+.enquiry .form {
+    display: grid;
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.enquiry .two {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.enquiry .input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.enquiry .input,
+.enquiry .select,
+.enquiry .phone {
+    width: 100%;
+    background: #e9eaed;
+    border: 1px solid #cfd2d8;
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 15px;
+    color: #0f0f11;
+}
+
+.enquiry .input::placeholder {
+    color: #b9bcc4;
+}
+
+.enquiry .select {
+    appearance: none;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" width=\"18\" height=\"18\"><path d=\"M7 10l5 5 5-5\" fill=\"none\" stroke=\"%23555\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+}
+
+.enquiry .phone {
+    display: flex;
+    padding: 0;
+}
+
+.enquiry .phone select {
+    appearance: none;
+    border: none;
+    border-right: 1px solid #cfd2d8;
+    padding: 0 10px;
+    min-width: 84px;
+    background: transparent;
+    color: #3a3a3f;
+}
+
+.enquiry .phone input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 12px;
+}
+
+.enquiry .agree {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 13px;
+    color: #d7d7db;
+}
+
+.enquiry .agree a {
+    color: #009bf7;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.enquiry .submit {
+    margin-top: 4px;
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-weight: 700;
+    font-size: 16px;
+    /* background: #ff7a1a; */
+    background: #009bf7;
+    color: #111;
+    cursor: pointer;
+}
+
+.enquiry .submit:hover {
+    /* background: #ff6a00; */
+    background: #0078be;
+}
+
+@media (max-width:560px) {
+    .enquiry .two {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Button loading state */
+.submit[aria-busy="true"] {
+    position: relative;
+    pointer-events: none;
+    opacity: .8;
+}
+
+.submit[aria-busy="true"]::after {
+    content: "";
+    position: absolute;
+    right: 12px;
+    /* keep some space from text */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    animation: spin .7s linear infinite;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* Non-interactive label styled like the button */
+
+
+
+
+
+
+/* Card Body */
+
+
+
+
+
+.close-btn {
+    position: fixed;
+    top: 50px;
+    /* Push down from the top */
+    left: 60px;
+    /* Push right from the left */
+    width: 40px;
+    height: 40px;
+    background-color: #2c2c2c;
+    border-radius: 12px;
+    border: none;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease;
+    z-index: 9999;
+}
+
+.close-btn:hover {
+    background-color: #444;
+    /* Slightly lighter on hover */
+}
+
+/* Card Title */
+
+
+/* Placeholder for Image */
+
+
+
+
+
+
+
+
+
+
+/* Explore Button */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* === Hotspot button (uses your round 360 image) === */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ═══════════════════════════════════════════════
+   JUMPBAR — macOS Dock Style
+   ═══════════════════════════════════════════════ */
+.dock-wrap {
+    position: fixed !important;
+    bottom: 20px !important;
+    left: 50% !important;
+    translate: -50% 0;
+    z-index: 11000 !important;
+    display: flex !important;
+    align-items: flex-end;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    animation: dock-bounce .7s cubic-bezier(.34,1.56,.64,1) both;
+    animation-delay: .2s;
+}
+
+
+
+
+
+.dock-wrap:hover .dock-shelf {
+    height: 112px;
+    left: -24px;
+    right: -24px;
+    border-radius: 28px;
+    border-color: rgba(201,168,124,0.35);
+    box-shadow: 0 12px 50px rgba(0,0,0,0.7), 0 2px 0 rgba(201,168,124,0.12) inset, 0 0 80px rgba(201,168,124,0.1);
+    animation: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media (max-width: 520px) {
+    .dock-wrap { bottom: 14px !important; }
+    
+    
+    
+    .dock-wrap:hover .dock-shelf { height: 98px; }
+    
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media (max-width: 600px) {
+
+
+    
+
+    
+
+    
+
+    .close-btn {
+        top: 20px;
+        left: 10px;
+    }
+
+
+}
+
+/* Portrait — fit height */
+@media (max-aspect-ratio: 3840/5830) {
+
+
+    .image-wrapper img {
+        width: auto;
+        height: 100%;
+    }
+
+    .Cutout {
+        width: auto;
+        height: 100%;
+    }
+
+    .Cutout svg {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+/* Landscape — fit width */
+@media (min-aspect-ratio: 3840/5830) {
+    .image-wrapper img {
+        width: 100%;
+        height: auto;
+    }
+
+    .Cutout {
+        width: 100vw;
+        height: auto;
+    }
+
+    .Cutout svg {
+        width: 100%;
+        height: 100%;
+    }
+
+
+}
+
+@media (max-width: 600px) {
+    .Front {
+        position: fixed;
+        /* make .Front itself the viewport-anchored box */
+        top: 50%;
+        left: 45%;
+        transform: translate(-50%, -50%) scale(1.2);
+        transform-origin: center center;
+        /* scale from the middle */
+        z-index: 1;
+        /* keep it beneath overlays if needed */
+    }
+}
+@media (max-width: 768px) and (orientation: portrait) {
+
+    #dotPinInfoCard {
+        transform: scale(0.65);
+        transform-origin: bottom right;
+
+        bottom: 20px !important;
+        right: 20px !important;
+
+        top: auto !important;
+        left: auto !important;
+    }
+
+}
+
+/* OMAXE — mobile logo position */
+@media (max-width: 768px) and (orientation: portrait) {
+    .dot-pin[data-pin-id="Omaxe"] .dot-pin__logo {
+        transform: translate(0px, 0px);
+    }
+}
