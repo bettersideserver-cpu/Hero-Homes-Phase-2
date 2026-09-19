@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Typical Tour</title>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.105.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.124.0/build/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/panolens@0.12.0/build/panolens.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap');
@@ -2064,8 +2064,8 @@ function applyCameraAngle(roomName, delay = 0) {
 
     if (!angle) return;
 
-    const yaw = THREE.Math.degToRad(angle.yaw);
-    const pitch = THREE.Math.degToRad(angle.pitch);
+    const yaw = THREE.MathUtils.degToRad(angle.yaw);
+    const pitch = THREE.MathUtils.degToRad(angle.pitch);
 
     const radius = 5000;
 
@@ -2077,16 +2077,17 @@ function applyCameraAngle(roomName, delay = 0) {
         radius * cosPitch * Math.sin(yaw)
     );
 
-    // IMPORTANT:
-    // Do NOT delay this call. On a hosted server the panorama can finish
-    // loading after the old timeout, causing the camera to visibly jump.
-    viewer.tweenControlCenter(
-        target,
-        0
-    );
+    setTimeout(() => {
 
-    viewer.camera.fov = 100;
-    viewer.camera.updateProjectionMatrix();
+        viewer.tweenControlCenter(
+            target,
+            0
+        );
+
+        viewer.camera.fov = 100;
+        viewer.camera.updateProjectionMatrix();
+
+    }, delay);
 }
 
         // =========================================
@@ -2335,8 +2336,8 @@ const rooms = {
             const r = 5000;
             const yaw = -130;
             const pitch = -6;
-            const phi = THREE.Math.degToRad(90 - pitch);
-            const theta = THREE.Math.degToRad(yaw);
+            const phi = THREE.MathUtils.degToRad(90 - pitch);
+            const theta = THREE.MathUtils.degToRad(yaw);
             spot.position.set(
                 r * Math.sin(phi) * Math.cos(theta),
                 r * Math.cos(phi),
@@ -2382,8 +2383,8 @@ const rooms = {
             
             const spot = new PANOLENS.Infospot(500, ARROW_ICON);
             const r = 5000;
-            const phi = THREE.Math.degToRad(90 - pitch);
-            const theta = THREE.Math.degToRad(yaw);
+            const phi = THREE.MathUtils.degToRad(90 - pitch);
+            const theta = THREE.MathUtils.degToRad(yaw);
             spot.position.set(
                 r * Math.sin(phi) * Math.cos(theta),
                 r * Math.cos(phi),
@@ -2402,16 +2403,13 @@ const rooms = {
                             viewer.camera.updateProjectionMatrix();
                             requestAnimationFrame(zoom);
                         } else {
-                            overlay.style.opacity = 1;
+                            overlay.style.opacity = 0.25;
+               viewer.setPanorama(rooms[to]);
 
-// Set the destination camera BEFORE changing panoramas.
-// This prevents the hosted version from showing the panorama
-// correctly and then jumping 180° when the delayed camera call runs.
-applyCameraAngle(to);
-
-viewer.setPanorama(rooms[to]);
-
-setTimeout(() => { overlay.style.opacity = 0; }, 350);
+setTimeout(() => {
+    applyCameraAngle(to);
+}, 50);
+                            setTimeout(() => { overlay.style.opacity = 0; }, 300);
                             // sync nav pill
                             document.querySelectorAll('.tour-pill').forEach(p => {
                                 p.classList.remove('active');
@@ -2456,13 +2454,8 @@ setTimeout(() => { overlay.style.opacity = 0; }, 350);
             setTimeout(() => card.classList.add("visible"), 80);
         }
 
-        // ── Room navigation history ──
-        // Declare these BEFORE goToRoom so inline button handlers
-        // can never encounter the temporal-dead-zone.
-        let roomHistory = [];
-        let isGoingBack = false;
-
         // ── Nav pill navigation ──
+// ── Nav pill navigation ──
 function goToRoom(roomName, btn) {
 
     // Add room to history only during normal navigation
@@ -2491,23 +2484,18 @@ function goToRoom(roomName, btn) {
     const overlay =
         document.getElementById("fadeOverlay");
 
-    // Keep the screen covered while the camera is positioned.
-    // This prevents a hosted-page 180° camera jump from being visible.
-    overlay.style.opacity = 1;
-
-    // IMPORTANT:
-    // Position the camera BEFORE switching panoramas.
-    // The old 50ms delayed call allowed the panorama to appear first,
-    // then rotated the camera after the hosted image finished loading.
-    applyCameraAngle(roomName);
+    overlay.style.opacity = 0.25;
 
     setTimeout(() => {
 
         viewer.setPanorama(rooms[roomName]);
 
+        // Apply saved starting camera angle
         setTimeout(() => {
-            overlay.style.opacity = 0;
-        }, 350);
+            applyCameraAngle(roomName);
+        }, 50);
+
+        overlay.style.opacity = 0;
 
         showInfoCard(roomName);
 
@@ -2523,36 +2511,60 @@ function goToRoom(roomName, btn) {
          addHotspot("lobby", "room_2", 55, 2, "Grandparent's Room");
          addHotspot("lobby", "room_3", 46, -6, "Kids Room");
          addHotspot("lobby", "room_3", 47, 2, "Guest Room");
-         addHotspot("dinning", "room_4", -94, 3, "Room 4");   
+
+
+
+
+
+
+
+           addHotspot("dinning", "room_4", -94, 3, "Room 4");
+
+
+
+       
  addHotspot("kitchen", "dinning", -50, -10, "Dinning");
+
+
+
 addHotspot("room_4", "balcony", 80, -6, "balcony ");
 addHotspot("room_3", "balcony", -75, -6, "balcony ");
 addHotspot("room_2", "balcony", -75, -6, "balcony ");
 addHotspot("room_1", "balcony", -75, -6, "balcony ");
+
 addHotspot("bathroom_2", "room_1", -150, -6, "Master Bedroom ");
-       addHotspot("room_1", "bathroom_2", -121, -6, "Bathroom ");
+       
+addHotspot("room_1", "bathroom_2", -121, -6, "Bathroom ");
         addHotspot("room_1", "lobby", 100, -6, "Lobby");
+
 addHotspot("room_3", "bathroom_3", -219, -6, "Bathroom ");
         addHotspot("room_3", "lobby", 105, -10, "Lobby");
          addHotspot("room_4", "lobby", -135, -10, "Lobby");
          addHotspot("room_4", "bathroom_4", -79, -6, "Bathroom ");
           addHotspot("bathroom_4", "room_4", -145, -6, "Guest Room");
+
 addHotspot("bathroom_3", "room_3", -70, -6, "Kids Room ");
-  addHotspot("bathroom_1", "room_2", -70, -6, "Grandparent's Room ");
+
+
+
+
+   addHotspot("bathroom_1", "room_2", -70, -6, "Grandparent's Room ");
    
    addHotspot("room_2", "bathroom_1", -209, -6, "Bathroom ");
         addHotspot("room_2", "lobby", 100, -6, "Lobby");
-      addHotspot("balcony", "room_1", -130, -6, "Master Bedroom");
+    
+
+        addHotspot("balcony", "room_1", -130, -6, "Master Bedroom");
 
         // ── Init ──
 const startRoom =
     rooms[initialRoom] ? initialRoom : "lobby";
 
-// Position the starting camera BEFORE displaying the panorama.
-// This prevents a delayed camera rotation on hosted servers.
-applyCameraAngle(startRoom);
-
 viewer.setPanorama(rooms[startRoom]);
+
+setTimeout(() => {
+    applyCameraAngle(startRoom);
+}, 100);
 
 showInfoCard(startRoom);
 updateBalconyControls(startRoom);
@@ -2564,7 +2576,8 @@ updateBalconyControls(startRoom);
         });
 
     // ── Room navigation history ──
-roomHistory = [startRoom];
+let roomHistory = [startRoom];
+let isGoingBack = false;
 
 document.getElementById("backBtn").addEventListener("click", () => {
 
