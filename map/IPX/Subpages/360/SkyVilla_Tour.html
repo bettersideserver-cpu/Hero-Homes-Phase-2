@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Terrace</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.124.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/panolens@0.12.0/build/panolens.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap');
+
+        html,
+        body {
+            margin: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        #fadeOverlay {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .5s ease;
+            z-index: 9999;
+        }
+
+        #viewer {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* ── Tour Nav (pill bar) ── */
+        .tour-nav {
+            position: fixed;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+
+            display: flex;
+            align-items: center;
+            gap: 6px;
+
+            padding: 6px;
+
+            background: rgba(70, 70, 70, .35);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: 18px;
+
+            z-index: 10000;
+        }
+
+        .tour-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+
+            height: 34px;
+            padding: 0 12px;
+
+            background: #2b2b2b;
+            color: #fff;
+
+            border: none;
+            border-radius: 10px;
+
+            font-family: 'Jost', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+
+            cursor: pointer;
+            white-space: nowrap;
+            transition: .25s;
+        }
+
+        .tour-pill svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+            display: block;
+        }
+
+        .tour-pill:hover {
+            background: #353535;
+            transform: translateY(-1px);
+        }
+
+        .tour-pill.active {
+            background: #111;
+        }
+
+        /* ── Back Button ── */
+        #backBtn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 10000;
+
+            border: none;
+            border-radius: 30px;
+
+            padding: 12px 20px;
+
+            background: rgba(0, 0, 0, .5);
+            color: white;
+
+            backdrop-filter: blur(10px);
+
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #backBtn:hover {
+            background: white;
+            color: black;
+        }
+
+        #roomInfoCard {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+
+            font-family: 'Jost', sans-serif;
+            text-align: right;
+
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 14px;
+            padding: 14px 18px;
+
+            opacity: 0;
+            transform: translateY(-8px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            pointer-events: none;
+        }
+
+        #roomInfoCard.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        #roomInfoCard .hud-name {
+            font-size: 30px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 0.02em;
+            margin-bottom: 8px;
+        }
+
+        #roomInfoCard .hud-dims {
+            font-size: 20px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.80);
+            letter-spacing: 0.04em;
+            margin-bottom: 4px;
+        }
+
+        #roomInfoCard .hud-sqft {
+            font-size: 18px;
+            font-weight: 400;
+            color: rgba(255,255,255,0.60);
+            letter-spacing: 0.04em;
+        }
+
+        #roomInfoCard .hud-accent {
+            color: #ffffff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <button id="backBtn">← Back</button>
+<!-- 
+     <div id="roomInfoCard">
+        <div class="hud-name" id="cardName">Room</div>
+        <div class="hud-dims">
+            <span id="cardLength">0</span><span class="hud-accent"> ft</span>
+            &nbsp;×&nbsp;
+            <span id="cardWidth">0</span><span class="hud-accent"> ft</span>
+        </div>
+        <div class="hud-sqft"><span id="cardSqft">0</span> sq ft</div>
+    </div>
+
+    <div id="viewer"></div>
+
+     Bottom panel with room navigation pills -->
+    <!-- <div class="tour-nav" id="tourNav">
+
+        <button class="tour-pill active" onclick="goToRoom('Lobby', this)">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M4 10L12 4L20 10V20H4V10Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
+            </svg>
+            <span>Lobby</span>
+        </button>
+
+        <button class="tour-pill" onclick="goToRoom('Dinning', this)">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M6 4V10" stroke="currentColor" stroke-width="1.8" />
+                <path d="M4 7H8" stroke="currentColor" stroke-width="1.8" />
+                <path d="M6 10V20" stroke="currentColor" stroke-width="1.8" />
+                <path d="M17 4V20" stroke="currentColor" stroke-width="1.8" />
+            </svg>
+            <span>Dining</span>
+        </button>
+
+        <button class="tour-pill" onclick="goToRoom('Kitchen', this)">
+            <svg viewBox="0 0 24 24" fill="none">
+                <rect x="5" y="5" width="14" height="14" stroke="currentColor" stroke-width="1.8" />
+                <path d="M8 9H16" stroke="currentColor" stroke-width="1.8" />
+            </svg>
+            <span>Kitchen</span>
+        </button>
+
+        <button class="tour-pill" onclick="goToRoom('Room_1', this)">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M3 12V8H21V12" stroke="currentColor" stroke-width="1.8" />
+                <path d="M3 12H21V20H3V12Z" stroke="currentColor" stroke-width="1.8" />
+            </svg>
+            <span>Master Bedroom</span>
+        </button>
+
+        <button class="tour-pill" onclick="goToRoom('Room_2', this)">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M3 12V8H21V12" stroke="currentColor" stroke-width="1.8" />
+                <path d="M3 12H21V20H3V12Z" stroke="currentColor" stroke-width="1.8" />
+            </svg>
+            <span>Kids's Room</span>
+        </button>
+
+        <button class="tour-pill" onclick="goToRoom('Room_3', this)">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M3 12V8H21V12" stroke="currentColor" stroke-width="1.8" />
+                <path d="M3 12H21V20H3V12Z" stroke="currentColor" stroke-width="1.8" />
+            </svg>
+            <span>Guest's Room</span>
+        </button>
+
+        <button class="tour-pill" onclick="goToRoom('Garden_1', this)">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M12 20V12" stroke="currentColor" stroke-width="1.8" />
+                <path d="M5 12C5 8 8 5 12 5C16 5 19 8 19 12H5Z" stroke="currentColor" stroke-width="1.8" />
+            </svg>
+            <span>Garden</span>
+        </button>
+
+        <button class="tour-pill" onclick="goToRoom('Garden_2', this)">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M12 20V12" stroke="currentColor" stroke-width="1.8" />
+                <path d="M5 12C5 8 8 5 12 5C16 5 19 8 19 12H5Z" stroke="currentColor" stroke-width="1.8" />
+            </svg>
+            <span>Back Garden</span>
+        </button>
+
+        <button class="tour-pill" onclick="goToRoom('Garden_Sitting', this)">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M4 16H20" stroke="currentColor" stroke-width="1.8" />
+                <path d="M6 16V19" stroke="currentColor" stroke-width="1.8" />
+                <path d="M18 16V19" stroke="currentColor" stroke-width="1.8" />
+                <path d="M4 12V10C4 8.9 4.9 8 6 8H18C19.1 8 20 8.9 20 10V12" stroke="currentColor" stroke-width="1.8" />
+            </svg>
+            <span>Sitout</span>
+        </button>
+
+    </div>  -->
+
+    <script>
+        function createArrowSVG() {
+            const svg = `
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+    <defs>
+      <radialGradient id="glassFill" cx="50%" cy="40%" r="60%">
+        <stop offset="0%"  stop-color="rgba(255,255,255,0.28)"/>
+        <stop offset="55%" stop-color="rgba(255,255,255,0.10)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0.04)"/>
+      </radialGradient>
+      <linearGradient id="glassHighlight" x1="50%" y1="0%" x2="50%" y2="100%">
+        <stop offset="0%"  stop-color="rgba(255,255,255,0.35)"/>
+        <stop offset="45%" stop-color="rgba(255,255,255,0)"/>
+      </linearGradient>
+      <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+        <feOffset dx="0" dy="2" result="offsetblur"/>
+        <feComponentTransfer>
+          <feFuncA type="linear" slope="0.45"/>
+        </feComponentTransfer>
+        <feMerge>
+          <feMergeNode/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+      <radialGradient id="dotFill" cx="50%" cy="45%" r="50%">
+        <stop offset="0%"  stop-color="#123a8a"/>
+        <stop offset="100%" stop-color="#0A1F44"/>
+      </radialGradient>
+    </defs>
+    <g filter="url(#softShadow)">
+      <circle cx="64" cy="64" r="44"
+              fill="url(#glassFill)"
+              stroke="rgba(255,255,255,0.22)"
+              stroke-width="1.2"/>
+      <circle cx="64" cy="64" r="44"
+              fill="url(#glassHighlight)"
+              opacity="0.9"/>
+      <circle cx="64" cy="64" r="38"
+              fill="none"
+              stroke="rgba(255,255,255,0.08)"
+              stroke-width="1"/>
+    </g>
+    <circle cx="64" cy="64" r="6.5" fill="url(#dotFill)"/>
+    <circle cx="64" cy="64" r="14" fill="#3b3b3b"/>
+  </svg>`;
+
+            return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+        }
+
+        const ARROW_ICON = createArrowSVG();
+
+        const viewer = new PANOLENS.Viewer({
+            container: document.getElementById("viewer"),
+            controlBar: false
+        });
+        viewer.camera.fov = 100;
+        viewer.camera.updateProjectionMatrix();
+
+        const rooms = {
+            Lobby: new PANOLENS.ImagePanorama("tower.jpg"),
+            
+        };
+
+        Object.values(rooms).forEach(p => viewer.add(p));
+        Object.values(rooms).forEach(room => { room.fadeDuration = 1200; });
+
+        function lookAtYaw(yaw, pitch = 0) {
+            const r = 5000;
+            const phi = THREE.MathUtils.degToRad(90 - pitch);
+            const theta = THREE.MathUtils.degToRad(yaw);
+            viewer.tweenControlCenter(
+                new THREE.Vector3(
+                    r * Math.sin(phi) * Math.cos(theta),
+                    r * Math.cos(phi),
+                    r * Math.sin(phi) * Math.sin(theta)
+                )
+            );
+        }
+
+        function addHotspot(from, to, yaw, pitch, text) {
+            const spot = new PANOLENS.Infospot(500, ARROW_ICON);
+            const r = 5000;
+            const phi = THREE.MathUtils.degToRad(90 - pitch);
+            const theta = THREE.MathUtils.degToRad(yaw);
+            spot.position.set(
+                r * Math.sin(phi) * Math.cos(theta),
+                r * Math.cos(phi),
+                r * Math.sin(phi) * Math.sin(theta)
+            );
+            spot.addHoverText(text);
+            spot.addEventListener("click", () => {
+                const overlay = document.getElementById("fadeOverlay");
+                viewer.tweenControlCenter(spot.position);
+                setTimeout(() => {
+                    let fov = viewer.camera.fov;
+                    function zoom() {
+                        if (fov > 60) {
+                            fov -= 1.2;
+                            viewer.camera.fov = fov;
+                            viewer.camera.updateProjectionMatrix();
+                            requestAnimationFrame(zoom);
+                        } else {
+                            overlay.style.opacity = 0.25;
+                            viewer.setPanorama(rooms[to]);
+                            viewer.camera.fov = 100;
+                            viewer.camera.updateProjectionMatrix();
+                            setTimeout(() => { overlay.style.opacity = 0; }, 300);
+                            showInfoCard(to);
+                        }
+                    }
+                    zoom();
+                }, 400);
+            });
+            rooms[from].add(spot);
+        }
+
+        const roomData = {
+            Lobby:          { name: "Lobby",           L: 0,  W: 0  },
+            Dinning:        { name: "Dining Room",     L: 0,  W: 0  },
+            Kitchen:        { name: "Kitchen",         L: 0,  W: 0  },
+            Room_1:         { name: "Master Bedroom",  L: 0,  W: 0  },
+            Room_2:         { name: "Kid's Room",     L: 0,  W: 0  },
+            Room_3:         { name: "Guest's Room",   L: 0,  W: 0  },
+            Garden_1:       { name: "Garden",          L: 0,  W: 0  },
+            Garden_2:       { name: "Back Garden",     L: 0,  W: 0  },
+            Garden_Sitting: { name: "Sitout",          L: 0,  W: 0  },
+        };
+
+        function showInfoCard(roomKey) {
+            const data = roomData[roomKey];
+            const card = document.getElementById("roomInfoCard");
+            if (!data) { card.classList.remove("visible"); return; }
+            const sqft = (data.L * data.W).toFixed(2);
+            document.getElementById("cardName").textContent   = data.name;
+            document.getElementById("cardLength").textContent = data.L;
+            document.getElementById("cardWidth").textContent  = data.W;
+            document.getElementById("cardSqft").textContent   = sqft;
+            card.classList.remove("visible");
+            setTimeout(() => card.classList.add("visible"), 80);
+        }
+
+        function goToRoom(roomName, btn) {
+            // Update active pill
+            document.querySelectorAll('.tour-pill').forEach(p => p.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            const overlay = document.getElementById("fadeOverlay");
+            overlay.style.opacity = 0.25;
+            setTimeout(() => {
+                viewer.setPanorama(rooms[roomName]);
+                viewer.camera.fov = 100;
+                viewer.camera.updateProjectionMatrix();
+                overlay.style.opacity = 0;
+                showInfoCard(roomName);
+            }, 300);
+        }
+
+        // Hotspots
+        // addHotspot("Lobby", "Dinning", 150, -3, "Dining");
+
+        // addHotspot("Dinning", "Lobby", -190, -10, "Lobby");
+        // addHotspot("Dinning", "Room_1", -85, -10, "Master Bedroom");
+        // addHotspot("Dinning", "Room_2", -120, -10, "Kid's Room");
+        // addHotspot("Dinning", "Room_3", 102, -4, "Guest's Room");
+        // addHotspot("Dinning", "Garden_1", -93, -4, "Garden");
+        // addHotspot("Dinning", "Kitchen", 43, 0, "Kitchen");
+
+        // addHotspot("Kitchen", "Lobby", 95, -10, "Lobby");
+        // addHotspot("Kitchen", "Dinning", 170, -10, "Dinning");
+        // addHotspot("Kitchen", "Room_2", -226, -5, "Kid's Room");
+
+        // addHotspot("Room_1", "Lobby", -220, -10, "Lobby");
+        // addHotspot("Room_3", "Lobby", -95, -10, "Lobby");
+        // addHotspot("Room_2", "Lobby", 100, -10, "Lobby");
+
+        // addHotspot("Garden_1", "Garden_2", 95, -10, "Decorative");
+        // addHotspot("Garden_1", "Lobby", 176, -5, "Lobby");
+        // addHotspot("Garden_1", "Garden_Sitting", 3, -2, "Sitting Area");
+
+        // addHotspot("Garden_Sitting", "Lobby", 3, -3, "Lobby");
+
+        // addHotspot("Garden_2", "Lobby", 195, -5, "Lobby");
+        // addHotspot("Garden_2", "Garden_Sitting", -41, -2, "Sitting Area");
+
+        // viewer.setPanorama(rooms.Lobby);
+        // showInfoCard("Lobby");
+
+        document.getElementById("backBtn").addEventListener("click", () => {
+            window.history.back();
+        });
+    </script>
+
+    <div id="fadeOverlay"></div>
+
+</body>
+
+</html>

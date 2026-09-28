@@ -1,0 +1,20 @@
+HERO HOMES - SVG CLICK FIX
+
+FIXES INCLUDED
+1. Disabled the legacy OFF-mode navigation in available-toggle.js that was competing with data-page-link.
+2. Normal room SVGs now use data-page-link as their navigation source.
+3. Appartment 1 and Appartment 2 existing data-link navigation was left untouched.
+4. Balcony B/F navigation was left untouched; normal data-page-link navigation now skips balcony paths.
+5. Fixed the malformed SVG attribute for "1 Washroom 6".
+
+HOW TO EDIT A ROOM LINK
+Find a room path such as:
+<path id="1 Kitchen" data-page-link="YOUR-PAGE.html" ...>
+
+Change only:
+data-page-link="YOUR-PAGE.html"
+
+Example:
+data-page-link="../Kitchen/Kitchen.html"
+
+Do not change the Appartment 1 / Appartment 2 data-link attributes.

@@ -1,0 +1,358 @@
+/* ═══════════════════════════════════════════════════════════════
+   BRAND LOGO — animated Hero Homes mark + "Phase 2", pinned to the plan
+   ---------------------------------------------------------------
+   Sits just OUTSIDE the right edge of the glowing plot outline,
+   joined to it by a short connector and an anchor dot — so the
+   outline itself is never covered.
+
+   Position comes from JS/PlotBrand.js (left/top in %), because the
+   map image is letterboxed inside .image-wrapper on desktop and a
+   raw percentage would resolve against the wrapper, not the image.
+
+   NESTING — this is the whole trick, don't flatten it:
+     .plot-brand           anchor point, zero-size, in MAP space.
+                           Inherits the 90deg rotation on mobile.
+     .plot-brand__upright  counter-rotates, so its local axes are
+                           SCREEN-aligned again. Everything inside is
+                           therefore upright AND offset in screen space.
+     .plot-brand__body     laid out rightward from the anchor.
+
+   Size is in px, never %, so the logo never shrinks with the map.
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+    /* 0 on desktop: .map-rotate-frame is display:contents there, so no
+       rotation is applied and nothing needs undoing. */
+    --brand-counter: 0deg;
+    --brand-logo-w: 80px;
+    --brand-gap: 32px;
+    --brand-gold: rgba(232, 190, 110, 0.95);
+    /* white backing plate */
+    --brand-plate-bg: #fff;
+    --brand-plate-pad-x: 14px;
+    --brand-plate-pad-y: 11px;
+    --brand-plate-radius: 10px;
+
+    /* ═══ HERO HOMES PHASE 2 ═══ */
+    --hh-red: #C6202A;
+    --hh-ink: #221F20;
+    --brand-phase-gap: 7px;
+    --brand-phase-size: 11px;
+    --brand-phase-track: 2.6px;
+    --brand-phase-rule-w: 34px;
+    --brand-phase-rule-h: 2px;
+}
+
+.plot-brand {
+    position: absolute;
+    left: 18.9%;
+    /* JS overwrites */
+    top: 60.32%;
+    width: 0;
+    height: 0;
+    z-index: 28;
+    /* above .Cutout (2), below the dot pins (30) */
+    pointer-events: none;
+    -webkit-user-select: none;
+    user-select: none;
+
+    /* fade in only once JS has resolved the true anchor, so it never
+       flashes at the wrong spot on first paint */
+    opacity: 0;
+    transition: opacity .45s ease .15s;
+}
+
+.plot-brand.is-placed {
+    opacity: 1;
+}
+
+.plot-brand__upright {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 0;
+    transform-origin: 0 0;
+    transform: rotate(var(--brand-counter));
+}
+
+/* anchor dot, sits exactly on the outline edge */
+.plot-brand__dot {
+    position: absolute;
+    left: -4px;
+    top: -4px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 0 2px var(--brand-gold), 0 1px 4px rgba(0, 0, 0, .45);
+}
+
+.plot-brand__body {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: flex;
+    align-items: center;
+    width: max-content;
+    /* the anchor is zero-width; without this the flex row
+       shrink-to-fits to 0 and collapses the logo */
+    transform: translateY(-50%);
+    /* centre on the anchor */
+}
+
+.plot-brand__line {
+    flex: 0 0 auto;
+    width: var(--brand-gap);
+    height: 2px;
+    background: linear-gradient(90deg, var(--brand-gold), rgba(232, 190, 110, .25));
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .4);
+}
+
+/* ═══ DIRECTION VARIANTS — --left / --up / --down ═══
+   The default (no modifier) lays the assembly out RIGHTWARD: dot on the
+   outline, then connector, then plate.
+
+   Page 2's plot is a diagonal band, so no single direction is clear of it
+   at every viewport -- laying out leftward misses it on desktop but crosses
+   it once the map rotates for mobile portrait. PlotBrand.js therefore picks
+   a direction by MEASUREMENT on each layout pass and applies one of these
+   classes. Do not hardcode a direction; set data-side as a preference.
+
+   In each case the reverse/translate pair keeps the DOT (not the plate) on
+   the anchor point, and the connector gradient fades away from the plate. */
+.plot-brand--left .plot-brand__body {
+    flex-direction: row-reverse;
+    transform: translate(-100%, -50%);
+}
+
+.plot-brand--left .plot-brand__line {
+    background: linear-gradient(270deg, var(--brand-gold), rgba(232, 190, 110, .25));
+}
+
+.plot-brand--down .plot-brand__body {
+    flex-direction: column;
+    align-items: center;
+    transform: translateX(-50%);
+}
+
+.plot-brand--up .plot-brand__body {
+    flex-direction: column-reverse;
+    align-items: center;
+    transform: translate(-50%, -100%);
+}
+
+/* the connector has to stand up for the vertical variants */
+.plot-brand--down .plot-brand__line,
+.plot-brand--up .plot-brand__line {
+    width: 2px;
+    height: var(--brand-gap);
+}
+
+.plot-brand--down .plot-brand__line {
+    background: linear-gradient(180deg, var(--brand-gold), rgba(232, 190, 110, .25));
+}
+
+.plot-brand--up .plot-brand__line {
+    background: linear-gradient(0deg, var(--brand-gold), rgba(232, 190, 110, .25));
+}
+
+/* Specificity note: wbn05d6fbh.css has `.image-wrapper img` (0,1,1) setting
+   width/height to 100%/auto per orientation. A bare `.plot-brand__img` (0,1,0)
+   LOSES to it — portrait gave the logo its natural 2016px, landscape collapsed
+   it to 26px. Scoping with the parent class (0,2,0) wins, and both width and
+   height must be restated because each orientation branch sets a different one. */
+.plot-brand .plot-brand__svg,
+.plot-brand .plot-brand__img {
+    display: block;
+    flex: 0 0 auto;
+    width: var(--brand-logo-w);
+    height: auto;
+    /* An inline <svg> has no intrinsic pixel box once width/height attrs are
+       removed, so height:auto alone can collapse it. This MUST match the
+       inlined SVG's viewBox, which is tight to the ink (3817 x 1335 for the
+       Hero Homes lockup). If the logo ever renders stretched-tall, this line
+       is out of step with the SVG in index.html. */
+    aspect-ratio: 3817 / 1335;   /* Hero Homes viewBox 3817x1335 (was 1476/916) */
+    overflow: visible;
+}
+
+/* ═══ PLATE BECOMES A COLUMN ═══
+   It used to hold one child; it now stacks logo -> rule -> PHASE 2. */
+.plot-brand__plate {
+    flex-direction: column;
+    gap: var(--brand-phase-gap);
+    padding-bottom: calc(var(--brand-plate-pad-y) * 0.85);
+}
+
+/* ═══ PHASE 2 CAPTION ═══
+   A DOM element rather than baked into the SVG: the plate scales the
+   artwork by --brand-logo-w (158px desktop, 94px small phone), so a
+   caption inside the viewBox would scale with it and land near 6px.
+   As its own element it holds a legible size at every breakpoint. */
+.plot-brand__phase {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--brand-phase-gap);
+    font-family: var(--font-ui, "Outfit", sans-serif);
+    font-size: var(--brand-phase-size);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: var(--brand-phase-track);
+    text-transform: uppercase;
+    /* trailing letter-spacing lands on the last glyph too, which throws
+       centring off by half a track; pull it back */
+    text-indent: var(--brand-phase-track);
+    color: var(--hh-ink, #221F20);
+    white-space: nowrap;
+}
+
+.plot-brand__phase::before {
+    content: "";
+    width: var(--brand-phase-rule-w);
+    height: var(--brand-phase-rule-h);
+    border-radius: 2px;
+    background: var(--hh-red, #C6202A);
+}
+
+/* PlotBrand.js adds .go to the SVG itself, not to an ancestor, so the
+   caption -- a following sibling -- is gated with `~`. No JS / no .go
+   leaves it simply visible, matching the SVG's own behaviour. */
+.plot-brand__plate .evlogo.go ~ .plot-brand__phase {
+    opacity: 0;
+    animation: hhPhaseRise .6s cubic-bezier(.22, .61, .36, 1) .62s both;
+}
+
+@keyframes hhPhaseRise {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ═══ WHITE BACKING PLATE ═══
+   Requested for readability: the aerial map runs from washed-out pale
+   fields to dark tree cover, and no single artwork colour survives both.
+   A solid white card fixes contrast outright.
+
+   This is WHY the Hero Homes wordmark is inlined in its dark colourway
+   (--hh-ink) rather than a reversed/white one — white type on a white
+   plate is invisible. If you ever drop the plate, swap the fills.
+
+   Padding is slightly tighter at the bottom (see the column rule above)
+   because the PHASE 2 caption adds its own gap. */
+.plot-brand__plate {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--brand-plate-pad-y) var(--brand-plate-pad-x);
+    background: var(--brand-plate-bg);
+    border-radius: var(--brand-plate-radius);
+    /* hairline gold edge ties it to the connector and the dot */
+    box-shadow:
+        0 0 0 1px rgba(232, 190, 110, .55),
+        0 2px 6px rgba(0, 0, 0, .28),
+        0 8px 22px rgba(0, 0, 0, .22);
+    /* the entrance animation overshoots the viewBox slightly; let it
+       breathe instead of getting clipped by the rounded corners */
+    overflow: visible;
+}
+
+/* ═══ TABLET / SMALL LAPTOP ═══ */
+@media (max-width: 1024px) {
+    :root {
+        --brand-phase-gap: 6px;
+        --brand-phase-size: 10px;
+        --brand-phase-track: 2.2px;
+        --brand-phase-rule-w: 30px;
+        --brand-logo-w: 132px;
+        --brand-gap: 26px;
+        --brand-plate-pad-x: 12px;
+        --brand-plate-pad-y: 9px;
+        --brand-plate-radius: 9px;
+    }
+}
+
+/* ═══ MOBILE PORTRAIT — map is rotated 90deg, so undo it here ═══
+   Mirrors the counter-rotation .dot-pin__button uses in Map-Rotate.css.
+   Driving it off --map-rotate means flipping that one variable to -90deg
+   keeps the logo upright automatically. */
+@media (max-width: 768px) and (orientation: portrait) {
+    :root {
+        --brand-phase-gap: 5px;
+        --brand-phase-size: 9px;
+        --brand-phase-track: 1.8px;
+        --brand-phase-rule-w: 24px;
+        --brand-phase-rule-h: 1.5px;
+        --brand-counter: calc(-1 * var(--map-rotate, 90deg));
+        /* 110px = 112 * 0.98 — requested 2% reduction, mobile only.
+           Desktop (158px) and tablet (132px) are deliberately unchanged. */
+        --brand-logo-w: 70px;
+        --brand-gap: 20px;
+        --brand-plate-pad-x: 10px;
+        --brand-plate-pad-y: 8px;
+        --brand-plate-radius: 8px;
+    }
+
+    .plot-brand__dot {
+        left: -3.5px;
+        top: -3.5px;
+        width: 7px;
+        height: 7px;
+    }
+
+    .plot-brand__line {
+        height: 1.5px;
+    }
+}
+
+/* ═══ VERY SMALL PHONES ═══
+   At <=380px the anchor lands high on the screen and running the logo
+   rightward drove it straight into .prop-address (top-right). Standing the
+   connector vertical drops the logo BELOW the outline instead, which clears
+   the address card completely and keeps dot -> line -> logo visually joined. */
+@media (max-width: 380px) and (orientation: portrait) {
+    :root {
+        --brand-phase-gap: 4px;
+        --brand-phase-size: 9px;
+        --brand-phase-track: 1.6px;
+        --brand-phase-rule-w: 20px;
+        /* 94px = 96 * 0.98 — same 2% reduction as the block above */
+        --brand-logo-w: 94px;
+        --brand-gap: 16px;
+        --brand-plate-pad-x: 9px;
+        --brand-plate-pad-y: 7px;
+        --brand-plate-radius: 7px;
+    }
+
+    /* NOTE: this block used to force flex-direction: column here, to stop the
+       logo running rightward into .prop-address on the narrowest screens.
+       That is now handled properly -- PlotBrand.js measures the obstacles
+       (.prop-address included) and picks a direction, so hardcoding one here
+       would just override its choice. Only the size vars remain. */
+}
+
+/* ═══ LANDSCAPE PHONES — map is NOT rotated, keep counter at 0 ═══ */
+@media (max-width: 900px) and (orientation: landscape) and (max-height: 480px) {
+    :root {
+        --brand-phase-gap: 5px;
+        --brand-phase-size: 9px;
+        --brand-phase-track: 1.7px;
+        --brand-phase-rule-w: 22px;
+        --brand-phase-rule-h: 1.5px;
+        --brand-counter: 0deg;
+        --brand-logo-w: 104px;
+        --brand-gap: 18px;
+        --brand-plate-pad-x: 10px;
+        --brand-plate-pad-y: 8px;
+        --brand-plate-radius: 8px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .plot-brand {
+        transition: none;
+    }
+}

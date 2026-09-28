@@ -1,0 +1,318 @@
+/* ────────────────────────────────
+   WhatsApp Floating Button (Clean)
+   ──────────────────────────────── */
+
+.wa-fab {
+    position: fixed;
+    right: calc(env(safe-area-inset-right, 0px) + 20px);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
+    z-index: 13000;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #25D366;
+    display: grid;
+    place-items: center;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+    transition: transform .12s ease, box-shadow .12s ease;
+}
+
+.wa-fab:active {
+    transform: scale(.96);
+}
+
+/* Floor hover tooltip */
+.floortip {
+    position: fixed;
+    /* place by viewport coords */
+    left: 0;
+    top: 0;
+    transform: translate(-50%, -100%);
+    /* center horizontally, sit above */
+    padding: 6px 10px;
+    font: 600 12px/1.2 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.75);
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    pointer-events: none;
+    /* never blocks clicks */
+    opacity: 0;
+    z-index: 12050;
+    /* above your overlays */
+    transition: opacity .15s ease;
+    white-space: nowrap;
+}
+
+/* small arrow */
+.floortip::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -6px;
+    width: 0;
+    height: 0;
+    transform: translateX(-50%);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid rgba(0, 0, 0, 0.75);
+}
+
+.floortip.is-visible {
+    opacity: 1;
+}
+
+/* Icon inside the circle */
+.wa-fab .wa-icon,
+.wa-fab svg,
+.wa-fab img.wa-icon-img {
+    width: 34px;
+    height: 34px;
+    display: block;
+    pointer-events: none;
+    /* ensures click passes to button */
+}
+
+/* ────────────────────────────────
+   Mobile Responsive (≤ 600px)
+   ──────────────────────────────── */
+@media (max-width: 600px) {
+    .wa-fab {
+        width: 52px;
+        height: 52px;
+        right: calc(env(safe-area-inset-right, 0px) + 10px);
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 70px);
+    }
+
+    .wa-fab .wa-icon,
+    .wa-fab svg,
+    .wa-fab img.wa-icon-img {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+/* ────────────────────────────────
+   Label (optional small tooltip)
+   ──────────────────────────────── */
+.wa-label {
+    position: fixed;
+    right: calc(env(safe-area-inset-right, 0px) + 92px);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 28px);
+    z-index: 12999;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 13px;
+    display: none;
+    pointer-events: none;
+}
+
+.wa-label.show {
+    display: block;
+}
+
+
+
+
+
+
+.callback-enquiry .callback-overlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    /* JS toggles this to flex */
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, .55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 10001;
+}
+
+/* === Modal + internals === */
+.callback-enquiry .callback-modal {
+    width: min(560px, 94vw);
+    background: rgba(26, 27, 30, .92);
+    border: 1px solid rgba(255, 255, 255, .08);
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .5);
+    position: relative;
+}
+
+.callback-enquiry .callback-modal-header {
+    padding: 16px 16px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    color: #fff;
+}
+
+.callback-enquiry .callback-title {
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: .2px;
+    color: #fff;
+    /* make “Request Callback” white */
+}
+
+.callback-enquiry .callback-close {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    border: 1px solid #2a2c31;
+    border-radius: 8px;
+    background: #141417;
+    color: #d7d7db;
+    cursor: pointer;
+}
+
+.callback-enquiry .callback-close:hover {
+    background: #191a1e;
+}
+
+.callback-enquiry .callback-modal-body {
+    padding: 12px 16px 16px;
+}
+
+/* === Form controls (scoped) === */
+.callback-enquiry .callback-form {
+    display: grid;
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.callback-enquiry .callback-two {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.callback-enquiry .callback-input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.callback-enquiry .callback-input,
+.callback-enquiry select,
+.callback-enquiry .callback-phone {
+    width: 100%;
+    background: #e9eaed;
+    border: 1px solid #cfd2d8;
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 15px;
+    color: #0f0f11;
+}
+
+.callback-enquiry .callback-input::placeholder {
+    color: #b9bcc4;
+}
+
+.callback-enquiry select {
+    appearance: none;
+    cursor: pointer;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path d="M7 10l5 5 5-5" fill="none" stroke="%23555" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+}
+
+.callback-enquiry .callback-phone {
+    display: flex;
+    padding: 0;
+    /* we set inner paddings on children */
+}
+
+.callback-enquiry .callback-phone select {
+    appearance: none;
+    border: none;
+    border-right: 1px solid #cfd2d8;
+    padding: 0 10px;
+    min-width: 84px;
+    background: transparent;
+    color: #3a3a3f;
+}
+
+.callback-enquiry .callback-phone input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 12px;
+}
+
+.callback-enquiry .callback-agree {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 13px;
+    color: #d7d7db;
+}
+
+.callback-enquiry .callback-agree a {
+    color: #f7901e;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+/* submit button (class is `.submit` in your HTML) */
+.callback-enquiry .submit {
+    margin-top: 4px;
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-weight: 700;
+    font-size: 16px;
+    background: #ff7a1a;
+    color: #111;
+    cursor: pointer;
+}
+
+.callback-enquiry .submit:hover {
+    background: #ff6a00;
+}
+
+@media (max-width:560px) {
+    .callback-enquiry .callback-two {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Button loading state */
+.callback-enquiry .submit[aria-busy="true"] {
+    position: relative;
+    pointer-events: none;
+    opacity: .8;
+}
+
+.callback-enquiry .submit[aria-busy="true"]::after {
+    content: "";
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    animation: spin .7s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: translateY(-50%) rotate(360deg);
+    }
+}

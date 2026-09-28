@@ -1,0 +1,16 @@
+HERO HOMES ADMIN ACCESS
+
+Every authenticated Supabase user is treated as an admin in this version.
+
+Admin login:
+- Any registered Supabase email/password account can log in.
+- No admin_users allow-list check is performed by the UI.
+
+Database:
+- hero_homes_setup.sql defines is_admin() as auth.uid() is not null,
+  so authenticated users can manage apartments, statuses, visitors and hold requests.
+
+IMPORTANT:
+This means anyone who has a valid account in Supabase Auth has full admin access.
+If you later want different roles (owner/admin/staff/viewer), use an admin_roles table
+instead of this open authenticated-admin setup.

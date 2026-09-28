@@ -1,0 +1,2669 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hero Homes</title>
+    <link rel="stylesheet" href="wbn05d6fbh.css">
+    <link rel="stylesheet" href="JS/TowerpinCSS.css">
+    <link rel="stylesheet" href="JS/Notification/UI_Hint-CSS.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        /* ═══════════════════════════════════════════════
+           DESIGN TOKENS — Unified Premium System
+           ═══════════════════════════════════════════════ */
+        :root {
+    /* ——— WHITE / EDITORIAL THEME ——— */
+    --bg-0: #F5F2EB;
+    --bg-tint: #EDE8DD;
+
+    --surface-1: rgba(255, 255, 255, 0.72);
+    --surface-2: rgba(255, 255, 255, 0.88);
+    --surface-3: rgba(255, 255, 255, 0.98);
+
+    --ink: #17181D;
+    --ink-soft: rgba(23, 24, 29, 0.62);
+    --ink-mid: rgba(23, 24, 29, 0.62);
+    --ink-dim: rgba(23, 24, 29, 0.40);
+    --ink-faint: rgba(23, 24, 29, 0.22);
+    --ink-trace: rgba(23, 24, 29, 0.09);
+
+    --line: rgba(23, 24, 29, 0.07);
+    --line-hi: rgba(23, 24, 29, 0.12);
+
+    --gold: #A8782A;
+    --gold-light: #C89A3F;
+    --gold-dark: #7A561B;
+    --gold-soft: rgba(168, 120, 42, 0.09);
+    --gold-tint: rgba(168, 120, 42, 0.14);
+
+    --glass: rgba(255, 255, 255, 0.80);
+    --glass-border: rgba(23, 24, 29, 0.08);
+    --glass-border-hover: rgba(168, 120, 42, 0.35);
+
+    --text: #17181D;
+    --text-muted: rgba(23, 24, 29, 0.55);
+
+    --shadow-sm: 0 2px 8px rgba(23, 24, 29, 0.08);
+    --shadow-md: 0 8px 24px rgba(23, 24, 29, 0.10);
+    --shadow-lg: 0 16px 48px rgba(23, 24, 29, 0.13);
+
+    --font-display: 'Cormorant Garamond', serif;
+    --font-ui: 'Outfit', sans-serif;
+    --ease-out: cubic-bezier(0.22, 0.68, 0, 1.04);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --blur: blur(28px) saturate(1.5);
+}
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* ═══════════════════════════════════════════════
+           ORIGINAL STYLES (preserved)
+           ═══════════════════════════════════════════════ */
+        .mdb { display: flex; align-items: center; justify-content: center; }
+        .pdf-icon { width: 50px; height: auto; object-fit: contain; }
+        .fallback-text { margin-left: 6px; font-weight: 600; color: white; }
+
+        .info-card {
+            top: -100px; left: -50px; position: fixed;
+            background-color: transparent; z-index: 8999;
+            pointer-events: none; transform: scale(.9);
+        }
+
+        @media (max-width: 600px) {
+            /* .Front override moved to mobile overhaul block below */
+            .info-card, .info-content { transform: scale(0.7); top: -50px; left: -30px; }
+        }
+
+        body.splash-active { overflow: hidden; touch-action: none; }
+
+        body { background: var(--bg-0); color: var(--ink); }
+
+        /* ═══════════════════════════════════════════════
+           SPLASH — Elevated
+           ═══════════════════════════════════════════════ */
+        .splash {
+            position: fixed; inset: 0; z-index: 12000; display: grid; place-items: center;
+            pointer-events: auto; opacity: 1; transition: opacity .7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .splash__backdrop {
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse at center, rgba(245,242,235,0.92), rgba(237,232,221,0.98));
+            backdrop-filter: blur(20px) saturate(1.2);
+        }
+        .splash__content {
+            position: relative; display: flex; flex-direction: column; align-items: center;
+            gap: 16px; transform: translateY(8px); animation: splash-pop .6s cubic-bezier(0.22, 0.68, 0, 1.04) forwards;
+            pointer-events: none;
+        }
+        .splash__text {
+            font: 500 16px/1.2 var(--font-ui); color: rgba(255,255,255,0.8);
+            letter-spacing: 1.5px; text-transform: uppercase;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, .5);
+        }
+        .splash__text strong {
+            color: var(--gold);
+            font-weight: 600;
+        }
+        @keyframes splash-pop {
+            from { opacity: 0; transform: translateY(20px) scale(.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .splash.is-hidden { opacity: 0; }
+
+        /* ═══════════════════════════════════════════════
+           LEFT PANEL — Residences
+           ═══════════════════════════════════════════════ */
+        .left-panel {
+            position: fixed;
+            top: 50%;
+            left: 24px;
+            transform: translateY(-50%);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 248px;
+            opacity: 0;
+            animation: slide-in-left 0.9s var(--ease-out) 0.6s forwards;
+        }
+
+        @keyframes slide-in-left {
+            from { opacity: 0; transform: translateY(-50%) translateX(-24px); }
+            to { opacity: 1; transform: translateY(-50%) translateX(0); }
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 6px 12px;
+            border-bottom: 1px solid rgba(168, 120, 42, 0.18);
+            margin-bottom: 4px;
+        }
+
+        .panel-header::before {
+            content: '';
+            width: 22px;
+            height: 1.5px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            flex-shrink: 0;
+        }
+
+        .panel-label {
+            font-family: var(--font-ui);
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold);
+            text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+        }
+
+        .property-type {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 18px;
+            background: var(--surface-2);
+            border: 1px solid rgba(168, 120, 42, 0.2);
+            border-radius: 16px;
+            backdrop-filter: blur(32px) saturate(1.6);
+            -webkit-backdrop-filter: blur(32px) saturate(1.6);
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.4s var(--ease-out);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 0 0 rgba(168, 120, 42, 0);
+        }
+
+        .property-type::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--gold-light), var(--gold), var(--gold-dark));
+            transform: scaleY(0);
+            transition: transform 0.45s var(--ease-out);
+            transform-origin: center;
+            border-radius: 0 2px 2px 0;
+        }
+
+        .property-type::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(168, 120, 42, 0.08) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .property-type:hover {
+            border-color: rgba(168, 120, 42, 0.4);
+            transform: translateX(6px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 40px rgba(168, 120, 42, 0.1);
+            background: var(--surface-2);
+        }
+
+        .property-type:hover::before { transform: scaleY(1); }
+        .property-type:hover::after { opacity: 1; }
+
+        /* Shimmer edge effect on hover */
+        .property-type .pt-shimmer {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(168, 120, 42, 0.06), transparent);
+            transition: left 0.6s ease;
+            pointer-events: none;
+        }
+        .property-type:hover .pt-shimmer { left: 100%; }
+
+        .pt-icon {
+            flex-shrink: 0;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(145deg, rgba(168, 120, 42, 0.16), rgba(168, 120, 42, 0.04));
+            border: 1px solid rgba(168, 120, 42, 0.2);
+            display: grid;
+            place-items: center;
+            transition: all 0.4s var(--ease-out);
+            position: relative;
+        }
+
+        /* Subtle pulse ring on icon */
+        .pt-icon::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 14px;
+            border: 1px solid rgba(168, 120, 42, 0);
+            transition: all 0.4s ease;
+        }
+
+        .property-type:hover .pt-icon {
+            background: linear-gradient(145deg, rgba(168, 120, 42, 0.32), rgba(168, 120, 42, 0.1));
+            border-color: rgba(168, 120, 42, 0.55);
+            box-shadow: 0 0 20px rgba(168, 120, 42, 0.15), inset 0 1px 0 rgba(23, 24, 29, 0.08);
+        }
+
+        .property-type:hover .pt-icon::after {
+            border-color: rgba(168, 120, 42, 0.15);
+        }
+
+        .pt-icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--gold);
+            transition: all 0.4s var(--ease-out);
+            filter: drop-shadow(0 1px 3px rgba(168, 120, 42, 0.2));
+        }
+
+        .property-type:hover .pt-icon svg {
+            transform: scale(1.1);
+            filter: drop-shadow(0 2px 6px rgba(168, 120, 42, 0.3));
+        }
+
+        .pt-text { display: flex; flex-direction: column; gap: 4px; }
+
+        .pt-name {
+            font-family: var(--font-display);
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--ink);
+            letter-spacing: 0.3px;
+            line-height: 1.15;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .pt-sub {
+            font-family: var(--font-ui);
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--ink-mid);
+            transition: all 0.3s ease;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+        }
+
+        .property-type:hover .pt-name { color: var(--ink); }
+        .property-type:hover .pt-sub { color: var(--gold-light); letter-spacing: 2.2px; }
+
+        /* Arrow indicator on hover */
+        .pt-arrow {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%) translateX(-6px);
+            opacity: 0;
+            transition: all 0.35s var(--ease-out);
+        }
+        .pt-arrow svg {
+            width: 16px;
+            height: 16px;
+            stroke: var(--gold);
+            stroke-width: 2;
+        }
+        .property-type:hover .pt-arrow {
+            opacity: 0.7;
+            transform: translateY(-50%) translateX(0);
+        }
+
+        /* ═══════════════════════════════════════════════
+           RIGHT TOP CONTROLS — Gallery / Walkthrough / Menu
+           ═══════════════════════════════════════════════ */
+        .top-controls {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0;
+            animation: slide-in-right 0.9s var(--ease-out) 0.6s forwards;
+        }
+
+        @keyframes slide-in-right {
+            from { opacity: 0; transform: translateX(24px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .control-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 20px;
+            background: var(--surface-2);
+            border: 1px solid rgba(168, 120, 42, 0.18);
+            border-radius: 12px;
+            backdrop-filter: blur(32px) saturate(1.6);
+            -webkit-backdrop-filter: blur(32px) saturate(1.6);
+            color: var(--ink-soft);
+            font-family: var(--font-ui);
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.35s var(--ease-out);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .control-btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(168, 120, 42, 0.1), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .control-btn svg {
+            width: 16px;
+            height: 16px;
+            stroke: var(--gold);
+            transition: transform 0.35s var(--ease-spring);
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 1px 3px rgba(168, 120, 42, 0.2));
+        }
+
+        .control-btn span {
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+        }
+
+        .control-btn:hover {
+            border-color: rgba(168, 120, 42, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45), 0 0 30px rgba(168, 120, 42, 0.1);
+            color: var(--ink);
+            background: var(--surface-2);
+        }
+
+        .control-btn:hover::after { opacity: 1; }
+        .control-btn:hover svg { transform: scale(1.15); }
+
+        /* Hamburger button */
+        .menu-btn {
+            width: 42px;
+            height: 42px;
+            padding: 0;
+            display: grid;
+            place-items: center;
+            background: var(--surface-2);
+            border: 1px solid rgba(168, 120, 42, 0.18);
+            border-radius: 12px;
+            backdrop-filter: blur(32px) saturate(1.6);
+            -webkit-backdrop-filter: blur(32px) saturate(1.6);
+            cursor: pointer;
+            transition: all 0.35s var(--ease-out);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+        }
+
+        .menu-btn:hover {
+            border-color: rgba(168, 120, 42, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45), 0 0 30px rgba(168, 120, 42, 0.1);
+            background: var(--surface-2);
+        }
+
+        .menu-btn-lines {
+            width: 18px;
+            height: 13px;
+            position: relative;
+        }
+
+        .menu-btn-lines span {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 1.5px;
+            background: var(--gold);
+            border-radius: 2px;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .menu-btn-lines span:nth-child(1) { top: 0; }
+        .menu-btn-lines span:nth-child(2) { top: 50%; transform: translateY(-50%); width: 65%; }
+        .menu-btn-lines span:nth-child(3) { bottom: 0; }
+
+        .menu-btn.is-open .menu-btn-lines span:nth-child(1) {
+            top: 50%;
+            transform: translateY(-50%) rotate(45deg);
+        }
+        .menu-btn.is-open .menu-btn-lines span:nth-child(2) { opacity: 0; transform: translateX(-16px); }
+        .menu-btn.is-open .menu-btn-lines span:nth-child(3) {
+            bottom: 50%;
+            transform: translateY(50%) rotate(-45deg);
+        }
+
+        /* ═══════════════════════════════════════════════
+           DROPDOWN MENU — Refined
+           ═══════════════════════════════════════════════ */
+        .dropdown-menu {
+            position: fixed;
+            top: 80px;
+            right: 24px;
+            z-index: 10001;
+            width: 270px;
+            background: var(--surface-3);
+            border: 1px solid rgba(168, 120, 42, 0.18);
+            border-radius: 16px;
+            backdrop-filter: blur(40px) saturate(1.8);
+            -webkit-backdrop-filter: blur(40px) saturate(1.8);
+            box-shadow: var(--shadow-lg), 0 0 60px rgba(168, 120, 42, 0.06);
+            padding: 6px;
+            opacity: 0;
+            transform: translateY(-12px) scale(0.95);
+            pointer-events: none;
+            transition: all 0.35s var(--ease-out);
+        }
+
+        .dropdown-menu.is-open {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        .dropdown-menu::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            right: 16px;
+            width: 12px;
+            height: 12px;
+            background: var(--surface-3);
+            border-top: 1px solid var(--glass-border);
+            border-left: 1px solid var(--glass-border);
+            transform: rotate(45deg);
+        }
+
+        .dropdown-header {
+            padding: 14px 16px 12px;
+            border-bottom: 1px solid rgba(168, 120, 42, 0.08);
+            margin-bottom: 4px;
+        }
+
+        .dropdown-header-label {
+            font-family: var(--font-ui);
+            font-size: 8px;
+            font-weight: 600;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--gold);
+            opacity: 0.8;
+        }
+
+        .dropdown-header-title {
+            font-family: var(--font-display);
+            font-size: 19px;
+            font-weight: 600;
+            color: var(--ink);
+            margin-top: 3px;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 14px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--ink);
+            font-family: var(--font-ui);
+            font-size: 14px;
+            font-weight: 400;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(168, 120, 42, 0.08);
+            color: var(--ink);
+        }
+
+        .dropdown-item-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
+            background: linear-gradient(145deg, rgba(168, 120, 42, 0.1), rgba(168, 120, 42, 0.02));
+            border: 1px solid rgba(168, 120, 42, 0.12);
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-item:hover .dropdown-item-icon {
+            background: linear-gradient(145deg, rgba(168, 120, 42, 0.22), rgba(168, 120, 42, 0.06));
+            border-color: rgba(168, 120, 42, 0.4);
+        }
+
+        .dropdown-item-icon svg {
+            width: 15px;
+            height: 15px;
+            stroke: var(--gold);
+        }
+
+        .dropdown-item-text { flex: 1; }
+
+        .dropdown-item-title {
+            display: block;
+            font-size: 13.5px;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+        }
+
+        .dropdown-item-sub {
+            display: block;
+            font-size: 9.5px;
+            font-weight: 400;
+            color: var(--text-muted);
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        .dropdown-item:hover .dropdown-item-sub { color: var(--gold-light); }
+
+        .dropdown-item-arrow {
+            stroke: var(--text-muted);
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+
+        .dropdown-item:hover .dropdown-item-arrow {
+            stroke: var(--gold);
+            opacity: 1;
+            transform: translateX(3px);
+        }
+
+        /* ═══════════════════════════════════════════════
+           MOBILE — Left/Right Panel adjustments
+           ═══════════════════════════════════════════════ */
+        @media (max-width: 768px) {
+            .left-panel {
+                top: auto;
+                bottom: 110px;
+                left: 12px;
+                right: 12px;
+                transform: none;
+                width: auto;
+                flex-direction: row;
+                gap: 8px;
+                animation: slide-in-bottom 0.8s var(--ease-out) 0.6s forwards;
+            }
+
+            @keyframes slide-in-bottom {
+                from { opacity: 0; transform: translateY(24px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+
+            .panel-header { display: none; }
+
+            .property-type {
+                flex: 1;
+                padding: 12px 14px;
+                gap: 10px;
+                background: var(--surface-2);
+            }
+
+            .property-type:hover { transform: none; background: var(--surface-3); }
+
+            .pt-icon { width: 36px; height: 36px; }
+            .pt-icon svg { width: 18px; height: 18px; }
+            .pt-name { font-size: 15px; }
+            .pt-sub { font-size: 9px; letter-spacing: 1.4px; }
+            .pt-arrow { display: none; }
+
+            .top-controls {
+                top: 12px;
+                right: 12px;
+                gap: 6px;
+            }
+
+            .control-btn {
+                padding: 10px;
+                width: 38px;
+                height: 38px;
+                justify-content: center;
+            }
+
+            .control-btn span { display: none; }
+
+            .menu-btn { width: 38px; height: 38px; }
+
+            .dropdown-menu {
+                top: 60px;
+                right: 12px;
+                width: calc(100vw - 24px);
+                max-width: 300px;
+            }
+        }
+
+        /* ═══════════════════════════════════════════════
+           RERA / Enquiry / Forms (preserved + refined)
+           ═══════════════════════════════════════════════ */
+        .rera-blueprint {
+            position: fixed; top: 26px; left: 30px; z-index: 1000;
+            padding-left: 14px; border-left: 2px solid rgba(255, 255, 255, 0.35);
+        }
+        .bp-label {
+            display: block; font-size: 10px; letter-spacing: 1.2px;
+            text-transform: uppercase; color: rgba(0, 0, 0, 0.55);
+        }
+        .bp-id { font-size: 14px; font-weight: 700; letter-spacing: 1px; color: #000000; }
+
+        @media (max-width: 600px) {
+            .rera-blueprint { left: 10px; transform: scale(.7); }
+            /* .Front override moved to mobile overhaul block */
+        }
+
+        .enquiry-btn {
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+            top: auto;
+            left: auto;
+            z-index: 10001;
+            writing-mode: horizontal-tb !important;
+            text-orientation: mixed !important;
+            padding: 16px 36px;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark));
+            color: var(--ink);
+            font-family: var(--font-ui);
+            font-weight: 700; font-size: 11px; letter-spacing: 2.5px;
+            text-transform: uppercase;
+            border: none; border-radius: 50px;
+            cursor: pointer; white-space: nowrap;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3), 0 2px 12px rgba(168, 120, 42, 0.18);
+            transition: all 0.35s var(--ease-out);
+        }
+        .enquiry-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent 40%, transparent 60%, rgba(255,255,255,0.05));
+            pointer-events: none;
+        }
+        .enquiry-btn.is-hidden { opacity: 0; pointer-events: none; }
+        .enquiry-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 36px rgba(0, 0, 0, 0.35), 0 2px 20px rgba(168, 120, 42, 0.25);
+        }
+
+        @media (max-width: 600px) {
+            .enquiry-btn { font-size: 10px; padding: 13px 28px; letter-spacing: 1.5px; right: 12px; bottom: 14px; border-radius: 50px; }
+        }
+
+        /* CURRENT STATUS BUTTON */
+        .current-status-btn {
+            position: fixed; left: 24px; bottom: 24px;
+            z-index: 10001;
+            display: flex; align-items: center; gap: 9px;
+            padding: 13px 20px;
+            background: var(--surface-2);
+            border: 1px solid rgba(168, 120, 42, 0.25);
+            border-radius: 12px;
+            backdrop-filter: blur(32px) saturate(1.6);
+            -webkit-backdrop-filter: blur(32px) saturate(1.6);
+            color: var(--ink);
+            font-family: var(--font-ui);
+            font-weight: 600; font-size: 11px; letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer; white-space: nowrap;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            transition: all 0.35s var(--ease-out);
+            overflow: hidden;
+        }
+        .current-status-btn::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(168, 120, 42, 0.08), transparent 60%);
+            opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+        }
+        .current-status-btn:hover {
+            border-color: rgba(168, 120, 42, 0.45);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2), 0 0 24px rgba(168, 120, 42, 0.10);
+        }
+        .current-status-btn:hover::after { opacity: 1; }
+        .current-status-btn .csb-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: #4CAF50;
+            box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.5);
+            animation: csb-pulse 2s ease-in-out infinite;
+            flex-shrink: 0; position: relative; z-index: 1;
+        }
+        @keyframes csb-pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.5); }
+            50% { box-shadow: 0 0 0 6px rgba(76, 175, 80, 0); }
+        }
+        .current-status-btn svg {
+            width: 15px; height: 15px; stroke: var(--gold);
+            flex-shrink: 0; position: relative; z-index: 1;
+        }
+        .current-status-btn span { position: relative; z-index: 1; }
+        @media (max-width: 600px) {
+            .current-status-btn { left: 12px; bottom: 14px; font-size: 10px; padding: 11px 14px; gap: 7px; }
+        }
+
+        .call-btn {
+            display: block; width: 100%; text-align: center; padding: 11px 1px;
+            border-radius: 8px; font-weight: 600; font-size: 14px; text-decoration: none;
+            background: var(--gold); color: #111;
+            border: 1px solid rgba(23, 24, 29, 0.08);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s ease;
+        }
+        .call-btn:hover { background: #0078be; color: var(--ink); }
+
+        /* Enquiry modal (preserved) */
+        .enquiry .overlay {
+            position: fixed; inset: 0; display: flex; align-items: stretch; justify-content: flex-end;
+            background: rgba(0, 0, 0, 0); backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px);
+            z-index: 99999; pointer-events: none;
+            transition: background 0.4s ease, backdrop-filter 0.4s ease;
+        }
+        .enquiry .overlay.is-open {
+            background: rgba(0, 0, 0, 0.55); backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px); pointer-events: auto;
+        }
+        .enquiry .modal {
+            width: min(400px, 100vw); height: 100%;
+            background: var(--surface-3);
+            border-left: 1px solid rgba(168, 120, 42, 0.12);
+            box-shadow: -16px 0 48px rgba(0, 0, 0, 0.5);
+            display: flex; flex-direction: column; justify-content: center;
+            transform: translateX(100%);
+            transition: transform 0.45s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        .enquiry .overlay.is-open .modal { transform: translateX(0); }
+        .enquiry .modal-header {
+            padding: 22px 22px 14px; display: flex; align-items: center; gap: 10px;
+            border-bottom: 1px solid rgba(168, 120, 42, 0.1);
+        }
+        .enquiry .modal-header::before {
+            content: ''; flex-shrink: 0; width: 3px; height: 22px;
+            background: linear-gradient(180deg, var(--gold-light), var(--gold));
+            border-radius: 2px;
+        }
+        .enquiry .modal-header .title {
+            flex: 1; color: var(--ink); font-weight: 600; font-size: 18px; letter-spacing: 0.3px;
+            font-family: var(--font-ui);
+        }
+        .enquiry .close {
+            flex-shrink: 0; width: 34px; height: 34px; display: grid; place-items: center;
+            border: 1px solid rgba(23, 24, 29, 0.18); border-radius: 8px;
+            background: rgba(23, 24, 29, 0.06); color: var(--ink);
+            cursor: pointer; font-size: 14px; transition: all 0.25s ease;
+        }
+        .enquiry .close:hover { background: rgba(23, 24, 29, 0.10); border-color: rgba(168, 120, 42, 0.4); color: var(--gold); }
+        .enquiry .modal-body { padding: 22px; overflow-y: auto; flex: 1; }
+        .enquiry .form { display: grid; gap: 12px; width: 100%; box-sizing: border-box; }
+        .enquiry .input, .enquiry .select, .enquiry .phone {
+            width: 100%; box-sizing: border-box;
+            background: rgba(23, 24, 29, 0.04);
+            border: 1px solid rgba(23, 24, 29, 0.08); border-radius: 10px; padding: 13px 16px;
+            font-size: 14px; color: var(--ink);
+            font-family: var(--font-ui);
+            transition: border-color 0.25s ease, background 0.25s ease;
+        }
+        .enquiry .input:focus, .enquiry .select:focus {
+            outline: none;
+            border-color: rgba(168, 120, 42, 0.5);
+            background: rgba(168, 120, 42, 0.04);
+        }
+        .enquiry .input::placeholder { color: var(--ink-faint); }
+        .enquiry .select {
+            appearance: none; cursor: pointer; color: var(--ink-mid);
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path d="M7 10l5 5 5-5" fill="none" stroke="%23C9A87C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+            background-repeat: no-repeat; background-position: right 14px center;
+        }
+        .enquiry .phone {
+            display: flex; padding: 0;
+            background: rgba(23, 24, 29, 0.04);
+        }
+        .enquiry .phone select {
+            appearance: none; border: none; border-right: 1px solid rgba(255,255,255,0.1);
+            padding: 0 12px; min-width: 72px; background: transparent; color: var(--ink-mid);
+            font-size: 14px; font-family: var(--font-ui);
+        }
+        .enquiry .phone input {
+            flex: 1; border: none; background: transparent; padding: 13px 14px;
+            font-size: 14px; color: var(--ink); font-family: var(--font-ui);
+        }
+        .enquiry .phone input::placeholder { color: var(--ink-faint); }
+        .enquiry .phone input:focus { outline: none; }
+        .enquiry .agree {
+            display: flex; align-items: flex-start; gap: 8px; font-size: 12px;
+            color: var(--ink-faint); font-family: var(--font-ui);
+        }
+        .enquiry .agree a { color: var(--gold); text-decoration: underline; }
+        .enquiry .submit {
+            width: 100%; border: none; border-radius: 10px; padding: 14px;
+            font-weight: 600; font-size: 14px; letter-spacing: 0.5px;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold));
+            color: var(--ink); cursor: pointer; margin-top: 6px;
+            transition: all 0.3s ease;
+            font-family: var(--font-ui);
+            box-shadow: 0 4px 16px rgba(168, 120, 42, 0.25);
+        }
+        .enquiry .submit:hover {
+            background: linear-gradient(135deg, #EDD5AB, var(--gold-light));
+            box-shadow: 0 6px 24px rgba(168, 120, 42, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .submit[aria-busy="true"] { position: relative; pointer-events: none; opacity: .8; }
+        .submit[aria-busy="true"]::after {
+            content: ""; position: absolute; right: 14px; top: 50%;
+            transform: translateY(-50%); width: 16px; height: 16px;
+            border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent;
+            animation: spin .7s linear infinite;
+        }
+        @keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
+
+        @media (max-width: 560px) { .enquiry .modal { width: 100vw; } }
+
+        .enquiry .modal, .enquiry .form, .enquiry .input, .enquiry .select,
+        .enquiry .phone, .enquiry .title, .enquiry .submit, .enquiry .agree {
+            font-family: var(--font-ui);
+        }
+
+        /* ═══════════════════════════════════════════════
+           BOTTOM JUMPBAR — Premium Redesign
+           ═══════════════════════════════════════════════ */
+        .jumpbar {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 11000;
+            display: flex;
+            align-items: center;
+            gap: 0;
+            padding: 5px;
+            background: var(--surface-2);
+            border: 1px solid rgba(168, 120, 42, 0.18);
+            border-radius: 100px;
+            backdrop-filter: blur(40px) saturate(1.8);
+            -webkit-backdrop-filter: blur(40px) saturate(1.8);
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.55),
+                0 0 80px rgba(168, 120, 42, 0.06),
+                inset 0 1px 0 rgba(23, 24, 29, 0.04);
+            opacity: 0;
+            animation: jumpbar-rise 0.9s var(--ease-out) 0.8s forwards;
+        }
+
+        @keyframes jumpbar-rise {
+            from { opacity: 0; transform: translateX(-50%) translateY(24px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        .jumpbar::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 100px;
+            padding: 1px;
+            background: linear-gradient(135deg,
+                rgba(168, 120, 42, 0.35),
+                transparent 35%,
+                transparent 65%,
+                rgba(168, 120, 42, 0.15));
+            /* -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); */
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .jumpbar-brand {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0 20px 0 22px;
+            border-right: 1px solid rgba(168, 120, 42, 0.12);
+            height: 42px;
+            user-select: none;
+        }
+
+        .jumpbar-brand-line {
+            font-family: var(--font-ui);
+            font-size: 7.5px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold);
+            line-height: 1;
+            opacity: 0.8;
+        }
+
+        .jumpbar-brand-name {
+            font-family: var(--font-display);
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--ink);
+            letter-spacing: 0.5px;
+            line-height: 1.1;
+            margin-top: 2px;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .jumpbar-nav {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            padding: 0 4px;
+        }
+
+        .jumpbar-item {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 10px 18px;
+            border-radius: 100px;
+            text-decoration: none;
+            color: var(--ink-mid);
+            font-family: var(--font-ui);
+            font-size: 11.5px;
+            font-weight: 500;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            transition: all 0.35s var(--ease-out);
+            cursor: pointer;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .jumpbar-item svg {
+            width: 14px;
+            height: 14px;
+            stroke: currentColor;
+            transition: all 0.35s ease;
+        }
+
+        .jumpbar-item:hover {
+            color: var(--gold-light);
+            background: rgba(168, 120, 42, 0.07);
+        }
+
+        .jumpbar-item:hover svg { transform: scale(1.08); }
+
+        .jumpbar-item.is-active {
+            color: var(--ink);
+            background: linear-gradient(135deg, var(--gold-light), var(--gold));
+            box-shadow:
+                0 4px 18px rgba(168, 120, 42, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.25);
+            font-weight: 600;
+        }
+
+        .jumpbar-item.is-active:hover { color: var(--ink); }
+
+        .jumpbar-dot {
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--gold);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Click ripple for jumpbar items */
+        .jumpbar-ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(168, 120, 42, 0.25);
+            transform: scale(0);
+            animation: jb-rip 0.6s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes jb-rip {
+            to { transform: scale(4); opacity: 0; }
+        }
+
+        @media (max-width: 768px) {
+            .jumpbar {
+                bottom: 14px;
+                padding: 4px;
+                gap: 0;
+            }
+
+            .jumpbar-brand {
+                padding: 0 12px 0 14px;
+                height: 36px;
+            }
+
+            .jumpbar-brand-line { font-size: 7px; letter-spacing: 2.5px; }
+            .jumpbar-brand-name { font-size: 13px; }
+
+            .jumpbar-item {
+                padding: 8px 12px;
+                gap: 0;
+            }
+
+            .jumpbar-item span { display: none; }
+
+            .jumpbar-item svg { width: 16px; height: 16px; }
+        }
+
+        @media (max-width: 420px) {
+            .jumpbar-brand { display: none; }
+            .jumpbar-item { padding: 8px 10px; }
+        }
+
+        /* Hide old dock if still present */
+        .dock-wrap { display: none !important; }
+
+        /* ═══════════════════════════════════════════════
+           SUBTLE AMBIENT GLOW — Corner Accents
+           ═══════════════════════════════════════════════ */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -150px;
+            left: -150px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(168, 120, 42, 0.05), transparent 65%);
+            pointer-events: none;
+            z-index: 9999;
+            animation: ambient-pulse 6s ease-in-out infinite alternate;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -100px;
+            right: -100px;
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(168, 120, 42, 0.04), transparent 65%);
+            pointer-events: none;
+            z-index: 9999;
+            animation: ambient-pulse 8s ease-in-out 2s infinite alternate;
+        }
+
+        @keyframes ambient-pulse {
+            from { opacity: 0.6; }
+            to { opacity: 1; }
+        }
+
+        /* Floating gold particles effect */
+        .ambient-particles {
+            position: fixed;
+            inset: 0;
+            z-index: 9998;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .ambient-particles .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--gold);
+            border-radius: 50%;
+            opacity: 0;
+            animation: particle-float linear infinite;
+        }
+        @keyframes particle-float {
+            0% { opacity: 0; transform: translateY(100vh) scale(0); }
+            10% { opacity: 0.4; }
+            90% { opacity: 0.2; }
+            100% { opacity: 0; transform: translateY(-10vh) scale(1); }
+        }
+
+        /* ═══════════════════════════════════════════════
+           SMOOTH SCROLLBAR & SELECTION
+           ═══════════════════════════════════════════════ */
+        ::selection {
+            background: rgba(168, 120, 42, 0.3);
+            color: var(--ink);
+        }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(168, 120, 42, 0.3);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(168, 120, 42, 0.5); }
+
+    
+                /* DAY-TIME SLIDER (ADDED) */
+        .day-slider-wrap {
+            position: fixed;
+            bottom: 96px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(500px, 80vw);
+            z-index: 11001;
+            background: rgba(255,255,255,0.18);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(168,120,42,0.2);
+            border-radius: 100px;
+            padding: 8px 18px;
+        }
+        .day-slider-wrap input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+            accent-color: var(--gold);
+            display: block;
+        }
+        .day-img-overlay {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1;
+            object-fit: fill;
+        }
+        @media (max-width: 768px) {
+            .day-slider-wrap { bottom: 82px; }
+        }
+
+/* ═══════════════════════════════════════════════
+           GALLERY LIGHTBOX (ADDED)
+           ═══════════════════════════════════════════════ */
+        .gallery-overlay {
+            position: fixed; inset: 0; z-index: 13000;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .gallery-overlay.is-open { opacity: 1; pointer-events: auto; }
+        .gallery-close {
+            position: absolute; top: 24px; right: 24px; width: 44px; height: 44px;
+            border-radius: 50%; border: 1px solid rgba(255,255,255,0.30);
+            background: rgba(255,255,255,0.12); color: #fff; font-size: 20px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: all 0.25s ease; z-index: 2;
+        }
+        .gallery-close:hover { background: rgba(255,255,255,0.22); border-color: rgba(168, 120, 42,0.6); color: var(--gold); }
+        .gallery-counter {
+            position: absolute; top: 30px; left: 50%; transform: translateX(-50%);
+            font-family: var(--font-ui); font-size: 12px; font-weight: 500;
+            letter-spacing: 2px; color: rgba(255,255,255,0.70); z-index: 2;
+        }
+        .gallery-main {
+            position: relative; width: 100%; flex: 1; display: flex;
+            align-items: center; justify-content: center; padding: 80px 60px 120px;
+            box-sizing: border-box;
+        }
+        .gallery-main img {
+            max-width: 100%; max-height: 100%; object-fit: contain;
+            border-radius: 8px; box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            transition: opacity 0.3s ease;
+        }
+        .gallery-nav {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            width: 48px; height: 48px; border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.28); background: rgba(255,255,255,0.10);
+            color: #fff; font-size: 22px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.25s ease; z-index: 2;
+        }
+        .gallery-nav:hover { background: rgba(168, 120, 42,0.25); border-color: rgba(168, 120, 42,0.6); color: var(--gold); }
+        .gallery-prev { left: 20px; }
+        .gallery-next { right: 20px; }
+        .gallery-thumbs {
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 8px; padding: 8px 12px;
+            background: rgba(0,0,0,0.6); border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.08); z-index: 2;
+            max-width: 90vw; overflow-x: auto; scrollbar-width: none;
+        }
+        .gallery-thumbs::-webkit-scrollbar { display: none; }
+        .gallery-thumb {
+            width: 52px; height: 36px; border-radius: 6px; overflow: hidden;
+            border: 2px solid transparent; cursor: pointer; flex-shrink: 0;
+            opacity: 0.5; transition: all 0.25s ease;
+        }
+        .gallery-thumb.is-active { border-color: var(--gold); opacity: 1; }
+        .gallery-thumb:hover { opacity: 0.85; }
+        .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        @media (max-width: 600px) {
+            .gallery-main { padding: 70px 16px 100px; }
+            .gallery-nav { width: 36px; height: 36px; font-size: 16px; }
+            .gallery-prev { left: 8px; } .gallery-next { right: 8px; }
+            .gallery-thumb { width: 40px; height: 28px; }
+        }
+
+        /* ═══════════════════════════════════════════════
+           WALKTHROUGH VIDEO MODAL (ADDED)
+           ═══════════════════════════════════════════════ */
+        .walkthrough-overlay {
+            position: fixed; inset: 0; z-index: 13000;
+            background: rgba(0, 0, 0, 0.94);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .walkthrough-overlay.is-open { opacity: 1; pointer-events: auto; }
+        .walkthrough-close {
+            position: absolute; top: 24px; right: 24px; width: 44px; height: 44px;
+            border-radius: 50%; border: 1px solid rgba(255,255,255,0.30);
+            background: rgba(255,255,255,0.12); color: #fff; font-size: 20px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: all 0.25s ease; z-index: 2;
+        }
+        .walkthrough-close:hover { background: rgba(255,255,255,0.22); border-color: rgba(168, 120, 42,0.6); color: var(--gold); }
+        .walkthrough-video-wrap {
+            width: 90vw; max-width: 960px; aspect-ratio: 16/9;
+            border-radius: 12px; overflow: hidden;
+            box-shadow: 0 20px 80px rgba(0,0,0,0.6);
+            border: 1px solid rgba(168, 120, 42,0.15);
+        }
+        .walkthrough-video-wrap video {
+            width: 100%; height: 100%; object-fit: contain; background: #000;
+        }
+        @media (max-width: 600px) {
+            .walkthrough-video-wrap { width: 96vw; border-radius: 8px; }
+        }
+
+    </style>
+    <style>
+        /* FORCE ENQUIRY BUTTON HORIZONTAL — overrides any external CSS */
+        #enquiryBtn,
+        .enquiry-btn {
+            writing-mode: horizontal-tb !important;
+            text-orientation: mixed !important;
+            transform: none !important;
+            position: fixed !important;
+            right: 24px !important;
+            bottom: 24px !important;
+            top: auto !important;
+            left: auto !important;
+        }
+        /* Mobile: lift above jumpbar */
+        @media (max-width: 768px) {
+            #enquiryBtn,
+            .enquiry-btn {
+                right: 10px !important;
+                bottom: 72px !important;
+            }
+        }
+        @media (max-width: 900px) and (orientation: landscape) {
+            #enquiryBtn,
+            .enquiry-btn {
+                bottom: 60px !important;
+                right: 10px !important;
+            }
+        }
+    </style>
+    <style>
+        /* ═══════════════════════════════════════════════
+           EXPLORE SCREEN
+           ═══════════════════════════════════════════════ */
+        #explore-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 20000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            cursor: default;
+        }
+        /* BG image layer */
+        .explore-bg {
+            position: absolute;
+            inset: 0;
+            background-image: url("images/Home.jpg"); /* ← replace with your image path */
+            background-size: cover;
+            background-position: center;
+            filter: blur(5px) brightness(0.45) saturate(0.8);
+            transform: scale(1.08); /* prevents blur edge bleed */
+            z-index: 0;
+        }
+        /* Dark vignette + gold tint over the image */
+        #explore-screen::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 30% 40%, rgba(168, 120, 42, 0.14) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 60%, rgba(168, 120, 42, 0.08) 0%, transparent 55%),
+                linear-gradient(160deg, rgba(13,12,10,0.72) 0%, rgba(26,23,17,0.60) 40%, rgba(15,14,12,0.75) 100%);
+            z-index: 1;
+        }
+
+        /* ── explore layout: centered, compact ── */
+        #explore-screen {
+            align-items: center;
+            justify-content: center;
+        }
+        .explore-content {
+            position: relative; z-index: 3;
+            display: flex; flex-direction: column; align-items: center;
+            gap: 6px; text-align: center;
+            padding: 0 24px;
+            animation: explore-fadein 1.2s cubic-bezier(0.22, 0.68, 0, 1.04) forwards;
+        }
+        @keyframes explore-fadein {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .explore-eyebrow {
+            font-family: var(--font-ui); font-size: 9px; font-weight: 600;
+            letter-spacing: 4px; text-transform: uppercase; color: rgba(168, 120, 42, 0.75);
+            margin-bottom: 2px; text-align: center;
+        }
+        .explore-title {
+            font-family: var(--font-display);
+            font-size: clamp(28px, 3.8vw, 52px);
+            font-weight: 600; color: #F5F2EB; letter-spacing: 1px; line-height: 1.05;
+        }
+        .explore-title span { color: var(--gold); }
+        .explore-tagline {
+            font-family: var(--font-ui);
+            font-size: 10px;
+            font-weight: 300; letter-spacing: 2.5px; text-transform: uppercase;
+            color: rgba(245, 242, 235, 0.32); margin-top: 2px;
+        }
+        .explore-divider {
+            width: 40px; height: 1px;
+            background: linear-gradient(90deg, var(--gold), transparent);
+            margin: 14px 0 8px;
+        }
+        .explore-btn {
+            position: relative; margin-top: 8px;
+            padding: 13px 36px;
+            border: 1px solid rgba(168, 120, 42, 0.50);
+            border-radius: 100px; background: transparent; color: #F5F2EB;
+            font-family: var(--font-ui); font-size: 10px; font-weight: 600;
+            letter-spacing: 3.5px; text-transform: uppercase;
+            cursor: pointer; overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.22, 0.68, 0, 1.04);
+        }
+        .explore-btn::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark));
+            opacity: 0; transition: opacity 0.4s ease;
+        }
+        .explore-btn:hover {
+            color: #111; border-color: var(--gold); transform: translateY(-1px);
+            box-shadow: 0 0 30px rgba(168, 120, 42, 0.3), 0 6px 20px rgba(0,0,0,0.35);
+        }
+        .explore-btn:hover::before { opacity: 1; }
+        .explore-btn span { position: relative; z-index: 1; }
+        .explore-btn-ring {
+            position: absolute; inset: -6px; border-radius: 100px;
+            border: 1px solid rgba(168, 120, 42, 0.18); pointer-events: none;
+            animation: explore-ring-pulse 2.8s ease-in-out infinite;
+        }
+        @keyframes explore-ring-pulse {
+            0%, 100% { opacity: 0.35; transform: scale(1); }
+            50%       { opacity: 0;    transform: scale(1.06); }
+        }
+        .explore-sound-hint {
+            margin-top: 20px; display: flex; align-items: center; gap: 7px;
+            font-family: var(--font-ui); font-size: 9px; letter-spacing: 2px;
+            text-transform: uppercase; color: rgba(245, 242, 235, 0.22);
+        }
+        .explore-sound-hint svg { width: 12px; height: 12px; stroke: rgba(168, 120, 42, 0.45); }
+
+        /* ── Mute / Unmute button (fixed, always visible after explore) ── */
+        #music-toggle {
+            position: fixed;
+            bottom: 80px;
+            left: 24px;
+            z-index: 11500;
+            display: none; /* shown after explore dismiss */
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: var(--surface-2);
+            border: 1px solid rgba(168, 120, 42, 0.22);
+            border-radius: 100px;
+            backdrop-filter: blur(32px) saturate(1.6);
+            -webkit-backdrop-filter: blur(32px) saturate(1.6);
+            cursor: pointer;
+            font-family: var(--font-ui);
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--ink-mid);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+        }
+        #music-toggle:hover {
+            border-color: rgba(168, 120, 42, 0.45);
+            color: var(--ink);
+            box-shadow: 0 6px 24px rgba(0,0,0,0.2), 0 0 20px rgba(168,120,42,0.08);
+            transform: translateY(-1px);
+        }
+        #music-toggle svg {
+            width: 14px; height: 14px;
+            stroke: var(--gold); flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+        @media (max-width: 600px) {
+            #music-toggle { bottom: 70px; left: 12px; padding: 9px 13px; }
+            #music-toggle span { display: none; }
+        }
+
+        /* ── top-right: project logo / rera badge ── */
+        .explore-badge {
+            position: absolute; top: 36px; right: 40px; z-index: 3;
+            display: flex; flex-direction: column; align-items: flex-end; gap: 3px;
+            animation: explore-fadein 1.4s cubic-bezier(0.22, 0.68, 0, 1.04) 0.2s both;
+        }
+        .explore-badge-label {
+            font-family: var(--font-ui); font-size: 8px; font-weight: 600;
+            letter-spacing: 3px; text-transform: uppercase;
+            color: rgba(168, 120, 42, 0.6);
+        }
+        .explore-badge-name {
+            font-family: var(--font-display); font-size: 20px; font-weight: 600;
+            color: rgba(245,242,235,0.88); letter-spacing: 0.5px;
+        }
+
+        /* mobile adjustments */
+        @media (max-width: 600px) {
+            .explore-content { padding: 0 0 40px 28px; }
+            .explore-badge { top: 24px; right: 20px; }
+        }
+        #explore-screen.is-leaving {
+            animation: explore-leave 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            pointer-events: none;
+        }
+        @keyframes explore-leave {
+            0%   { opacity: 1; transform: scale(1); }
+            60%  { opacity: 1; transform: scale(1.04); }
+            100% { opacity: 0; transform: scale(1.08); }
+        }
+    </style>
+
+    <!-- ═══════════════════════════════════════════════
+         MOBILE RESPONSIVE OVERHAUL
+         ═══════════════════════════════════════════════ -->
+    <style>
+        /* ── Base: ensure full viewport coverage ── */
+        html, body {
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* ── .Front — main building image container ── */
+        .Front {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #mainImage {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        /* ── Mobile-specific layout adjustments ── */
+        @media (max-width: 768px) {
+
+            /* Full-screen building image — fill height on portrait */
+            .Front {
+                top: 0;
+                left: 0;
+                transform: none;
+                width: 100vw;
+                height: 100dvh;
+                align-items: flex-start;
+                justify-content: center;
+            }
+
+            .image-wrapper {
+                width: 100vw;
+                height: 100dvh;
+                align-items: center;
+                overflow: hidden;
+            }
+
+            #mainImage {
+                width: 100vw;
+                height: 100dvh;
+                object-fit: cover;
+                object-position: center top;
+            }
+
+            /* SVG cutout matches the image */
+            .Cutout {
+                position: absolute;
+                inset: 0;
+                width: 100% !important;
+                height: 100% !important;
+            }
+
+            .Cutout svg {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+
+            /* ── RERA badge — smaller + reposition ── */
+            .rera-blueprint {
+                top: 14px;
+                left: 12px;
+                transform: none;
+                padding-left: 10px;
+                border-left-width: 1.5px;
+            }
+            .bp-label { font-size: 8px; }
+            .bp-id { font-size: 11px; }
+
+            /* ── Top controls — compact icon row ── */
+            .top-controls {
+                top: 10px;
+                right: 10px;
+                gap: 6px;
+            }
+
+            .control-btn {
+                width: 36px;
+                height: 36px;
+                padding: 0;
+                justify-content: center;
+            }
+            .control-btn span { display: none; }
+            .control-btn svg { width: 15px; height: 15px; }
+
+            .menu-btn { width: 36px; height: 36px; }
+
+            /* Dropdown full-width on mobile */
+            .dropdown-menu {
+                top: 56px;
+                right: 10px;
+                width: calc(100vw - 20px);
+                max-width: 320px;
+            }
+
+            /* ── Enquiry button — repositioned above jumpbar ── */
+            #enquiryBtn,
+            .enquiry-btn {
+                right: 10px !important;
+                bottom: 72px !important;
+                font-size: 10px !important;
+                padding: 11px 22px !important;
+                letter-spacing: 1.5px !important;
+                border-radius: 50px !important;
+            }
+
+            /* ── Current Status button — above jumpbar on left ── */
+            .current-status-btn {
+                left: 10px;
+                bottom: 72px;
+                font-size: 9px;
+                padding: 10px 12px;
+                gap: 6px;
+                border-radius: 10px;
+            }
+            .current-status-btn svg { width: 12px; height: 12px; }
+
+            /* ── Music toggle — clear of bottom elements ── */
+            #music-toggle {
+                bottom: 130px;
+                left: 10px;
+                padding: 8px 12px;
+                font-size: 9px;
+                gap: 6px;
+            }
+            #music-toggle span { display: none; }
+
+            /* ── Day-time slider — sits just above jumpbar ── */
+            .day-slider-wrap {
+                bottom: 70px;
+                width: calc(100vw - 24px);
+                padding: 6px 14px;
+            }
+
+            /* ── Jumpbar — full-width pill on mobile ── */
+            .jumpbar {
+                bottom: 12px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: calc(100vw - 24px);
+                max-width: 420px;
+                border-radius: 20px;
+                justify-content: space-around;
+                padding: 4px 6px;
+            }
+
+            .jumpbar-brand {
+                display: none;
+            }
+
+            .jumpbar-nav {
+                width: 100%;
+                justify-content: space-around;
+                padding: 0;
+            }
+
+            .jumpbar-item {
+                flex: 1;
+                justify-content: center;
+                padding: 9px 8px;
+                gap: 5px;
+                font-size: 9px;
+                letter-spacing: 1px;
+            }
+
+            /* Show labels on jumpbar for mobile (small text) */
+            .jumpbar-item span {
+                display: block;
+                font-size: 9px;
+                letter-spacing: 0.8px;
+            }
+
+            .jumpbar-item svg { width: 15px; height: 15px; }
+
+            /* ── Info card on mobile ── */
+            .info-card {
+                top: 50px;
+                left: 10px;
+                transform: scale(0.75);
+                transform-origin: top left;
+            }
+
+            /* ── Left panel (if visible) — bottom row ── */
+            .left-panel {
+                bottom: 130px;
+                left: 10px;
+                right: 10px;
+                top: auto;
+                transform: none;
+                width: auto;
+                flex-direction: row;
+                gap: 8px;
+            }
+
+            /* ── Explore screen mobile tweaks ── */
+            .explore-content {
+                padding: 0 20px 30px;
+                align-items: center;
+            }
+
+            .explore-title {
+                font-size: clamp(24px, 7vw, 38px);
+                text-align: center;
+            }
+
+            .explore-badge {
+                top: 20px;
+                right: 16px;
+            }
+
+            .explore-badge-name { font-size: 16px; }
+            .explore-badge-label { font-size: 7px; }
+
+            /* ── Gallery modal ── */
+            .gallery-close, .walkthrough-close {
+                top: 14px;
+                right: 14px;
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+            }
+
+            .gallery-counter { top: 18px; font-size: 11px; }
+
+            .gallery-main { padding: 55px 10px 90px; }
+
+            .gallery-prev { left: 6px; }
+            .gallery-next { right: 6px; }
+
+            .gallery-nav { width: 34px; height: 34px; font-size: 18px; }
+
+            .gallery-thumb { width: 38px; height: 26px; }
+
+            /* ── Walkthrough video — full width ── */
+            .walkthrough-video-wrap {
+                width: 98vw;
+                border-radius: 6px;
+            }
+
+            /* ── Splash screen ── */
+            .splash__content { padding: 0 20px; text-align: center; }
+
+            /* ── Enquiry modal full-screen ── */
+            .enquiry .modal { width: 100vw; border-radius: 0; }
+            .enquiry .modal-header { padding: 16px 16px 12px; }
+            .enquiry .modal-body { padding: 16px; }
+
+            /* ── UI hint position ── */
+            .ui-hint {
+                bottom: 80px;
+            }
+        }
+
+        /* ── Extra small phones ── */
+        @media (max-width: 390px) {
+            .jumpbar-item span { display: none; }
+            .jumpbar-item { padding: 10px 12px; }
+            .jumpbar-item svg { width: 17px; height: 17px; }
+
+            #enquiryBtn,
+            .enquiry-btn {
+                padding: 10px 16px !important;
+                font-size: 9px !important;
+            }
+
+            .current-status-btn {
+                font-size: 8px;
+                padding: 9px 10px;
+            }
+
+            .explore-title {
+                font-size: clamp(22px, 8vw, 32px);
+            }
+        }
+
+        /* ── Landscape phone ── */
+        @media (max-width: 900px) and (orientation: landscape) {
+            .Front {
+                top: 0;
+                left: 0;
+                transform: none;
+                width: 100vw;
+                height: 100dvh;
+            }
+
+            #mainImage {
+                width: 100vw;
+                height: 100dvh;
+                object-fit: contain;
+                object-position: center;
+            }
+
+            .jumpbar {
+                bottom: 8px;
+                padding: 3px 6px;
+            }
+
+            .jumpbar-item { padding: 6px 10px; }
+            .jumpbar-item span { display: none; }
+
+            #enquiryBtn,
+            .enquiry-btn {
+                bottom: 60px !important;
+                right: 10px !important;
+            }
+
+            .current-status-btn {
+                bottom: 60px;
+                left: 10px;
+            }
+
+            .day-slider-wrap { bottom: 58px; }
+
+            #music-toggle { bottom: 110px; left: 10px; }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ════ EXPLORE SCREEN ════ -->
+    <!-- Replace "YOUR_MUSIC_FILE.mp3" with your actual music path -->
+    <audio id="explore-audio" loop preload="auto">
+        <source src="bg.mp3" type="audio/mpeg"> <!-- Replace this path with your mp3 -->
+    </audio>
+
+    <div id="explore-screen">
+        <div class="explore-bg"></div>
+
+        <!-- Top-right badge -->
+        <div class="explore-badge">
+            <div class="explore-badge-label">Chandigarh · Lutyens' Zone</div>
+            <div class="explore-badge-name">Hero Homes</div>
+        </div>
+        <div class="explore-content">
+            <div class="explore-eyebrow">Ultra Luxury Residences</div>
+            <div class="explore-title">Where Legacy<br><span>Meets Living</span></div>
+            <div class="explore-tagline">An Address Like No Other</div>
+            <div class="explore-divider"></div>
+            <button class="explore-btn" id="explore-btn" onclick="dismissExplore()">
+                <div class="explore-btn-ring"></div>
+                <span>Explore</span>
+            </button>
+            <div class="explore-sound-hint">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                </svg>
+                Sound On
+            </div>
+        </div>
+    </div>
+
+    <!-- Music toggle button -->
+    <button id="music-toggle" onclick="toggleMusic()" title="Toggle Music">
+        <svg id="music-icon-on" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+        </svg>
+        <svg id="music-icon-off" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+            <line x1="23" y1="9" x2="17" y2="15"/>
+            <line x1="17" y1="9" x2="23" y2="15"/>
+        </svg>
+        <span id="music-label">Mute</span>
+    </button>
+
+    <script>
+        function dismissExplore() {
+            var screen = document.getElementById('explore-screen');
+            var audio  = document.getElementById('explore-audio');
+            screen.classList.add('is-leaving');
+
+            // Music: play immediately on user gesture (browser allows it here)
+            if (audio) {
+                audio.volume = 0;
+                var playPromise = audio.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(function() {
+                        // Fade in volume smoothly
+                        var vol = 0;
+                        var fadeIn = setInterval(function() {
+                            vol = Math.min(vol + 0.025, 0.65);
+                            audio.volume = vol;
+                            if (vol >= 0.65) clearInterval(fadeIn);
+                        }, 60);
+                    }).catch(function(e) {
+                        console.warn('Audio play blocked:', e);
+                        // Try again after interaction
+                        document.addEventListener('click', function retry() {
+                            audio.play().catch(function(){});
+                            document.removeEventListener('click', retry);
+                        }, { once: true });
+                    });
+                }
+            }
+
+            screen.addEventListener('animationend', function() {
+                screen.style.display = 'none';
+                runSplash();
+                // Show mute button
+                var btn = document.getElementById('music-toggle');
+                if (btn) btn.style.display = 'flex';
+                // Show day-time slider
+                var sliderWrap = document.getElementById('daySliderWrap');
+                if (sliderWrap) sliderWrap.style.display = 'block';
+            }, { once: true });
+        }
+
+        var _musicMuted = false;
+        var _savedVol   = 0.65;
+        function toggleMusic() {
+            var audio = document.getElementById('explore-audio');
+            var iconOn  = document.getElementById('music-icon-on');
+            var iconOff = document.getElementById('music-icon-off');
+            var label   = document.getElementById('music-label');
+            if (!audio) return;
+            if (_musicMuted) {
+                // Unmute — fade in
+                audio.muted = false;
+                var v = 0;
+                var fi = setInterval(function() {
+                    v = Math.min(v + 0.03, _savedVol);
+                    audio.volume = v;
+                    if (v >= _savedVol) clearInterval(fi);
+                }, 40);
+                iconOn.style.display  = '';
+                iconOff.style.display = 'none';
+                label.textContent = 'Mute';
+                _musicMuted = false;
+            } else {
+                // Mute — fade out
+                _savedVol = audio.volume || 0.65;
+                var fo = setInterval(function() {
+                    audio.volume = Math.max(audio.volume - 0.04, 0);
+                    if (audio.volume <= 0) { audio.muted = true; clearInterval(fo); }
+                }, 40);
+                iconOn.style.display  = 'none';
+                iconOff.style.display = '';
+                label.textContent = 'Unmute';
+                _musicMuted = true;
+            }
+        }
+    </script>
+
+
+    <!-- Splash -->
+    <div id="splash" class="splash" aria-live="polite" role="status">
+        <div class="splash__backdrop"></div>
+        <div class="splash__content" role="img" aria-label="Powered by BetterSide">
+            <div class="splash__text">Powered by <strong>BetterSide.in</strong></div>
+        </div>
+    </div>
+
+    <!-- UI Hint -->
+    <div id="ui-hint" class="ui-hint" aria-live="polite" role="status">
+        <div class="ui-hint__row ui-hint__desktop">
+            <svg width="18" height="24" viewBox="0 0 18 24" aria-hidden="true">
+                <path d="M9 1c3.9 0 7 3.1 7 7v8c0 3.9-3.1 7-7 7s-7-3.1-7-7V8c0-3.9 3.1-7 7-7z" fill="white" opacity=".18" />
+                <rect x="8" y="4" width="2" height="5" rx="1" fill="white" />
+                <rect x="5" y="10" width="8" height="9" rx="4" fill="white" opacity=".4" />
+            </svg>
+            <span>Click Tower's to Select Floors</span>
+        </div>
+        <div class="ui-hint__row ui-hint__touch">
+            <svg width="18" height="24" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2a4 4 0 014 4v4h1.2a2.8 2.8 0 012.8 2.8V16c0 3.3-2.7 6-6 6H9.5A5.5 5.5 0 014 16.5V11a3 3 0 016 0v3h1V6a4 4 0 011-2.7z" fill="white" opacity=".28" />
+                <rect x="11" y="5" width="2" height="9" rx="1" fill="white" />
+            </svg>
+            <span>Click on Tower's To Select Floor</span>
+        </div>
+    </div>
+
+    <!-- Info Card -->
+    <div id="infoCard" class="info-card">
+        <div class="info-details" id="details"></div>
+    </div>
+    <div id="floorTip" class="floortip"></div>
+
+    <!-- ═══════════════════════════════════════════════
+         LEFT PANEL — Residences
+         ═══════════════════════════════════════════════ -->
+    <!-- <aside class="left-panel" aria-label="Residence Types">
+        <div class="panel-header">
+            <span class="panel-label">Residences</span>
+        </div> -->
+<!-- 
+        <a class="property-type" href="Subpages/Skyvilla/360/Lobby.html" data-type="skyvilla">
+            <span class="pt-shimmer"></span>
+            <div class="pt-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 21V9l9-6 9 6v12" />
+                    <path d="M9 21V13h6v8" />
+                    <path d="M3 21h18" />
+                    <circle cx="12" cy="17" r="1" fill="currentColor" />
+                    <path d="M12 3v3" />
+                    <path d="M10 5l2-2 2 2" />
+                </svg>
+            </div>
+            <div class="pt-text">
+                <span class="pt-name">Skyvilla</span>
+                <span class="pt-sub">Ultra Luxury</span>
+            </div>
+            <div class="pt-arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 18l6-6-6-6" />
+                </svg>
+            </div>
+        </a> -->
+
+
+
+<!-- <a class="property-type" href="Subpages/Penthouse/360/Lobby.html" data-type="penthouse">
+            <span class="pt-shimmer"></span>
+            <div class="pt-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 21V9l9-6 9 6v12" />
+                    <path d="M9 21V13h6v8" />
+                    <path d="M3 21h18" />
+                    <circle cx="12" cy="17" r="1" fill="currentColor" />
+                    <path d="M12 3v3" />
+                    <path d="M10 5l2-2 2 2" />
+                </svg>
+            </div>
+            <div class="pt-text">
+                <span class="pt-name">Penthouse</span>
+                <span class="pt-sub">Ultra Luxury</span>
+            </div>
+            <div class="pt-arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 18l6-6-6-6" />
+                </svg>
+            </div>
+        </a>
+
+ -->
+
+
+ 
+    </aside>
+
+    <!-- ═══════════════════════════════════════════════
+         RIGHT TOP CONTROLS
+         ═══════════════════════════════════════════════ -->
+    <div class="top-controls">
+        <a class="control-btn" href="#" data-open-gallery id="galleryBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+                <circle cx="8.5" cy="8.5" r="1.5" />
+                <path d="M21 15l-5-5L5 21" />
+            </svg>
+            <span>Gallery</span>
+        </a>
+
+        <a class="control-btn" href="#" data-open-walkthrough id="walkthroughBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <polygon points="10 8 16 12 10 16 10 8" fill="currentColor" />
+            </svg>
+            <span>Walkthrough</span>
+        </a>
+
+        <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
+            <div class="menu-btn-lines">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </button>
+    </div>
+
+    <!-- Dropdown Menu -->
+    <div class="dropdown-menu" id="dropdownMenu" role="menu" aria-hidden="true">
+        <div class="dropdown-header">
+            <div class="dropdown-header-label">Explore</div>
+            <div class="dropdown-header-title">The Lutyens</div>
+        </div>
+
+        <a class="dropdown-item" href="The Lutyens Gatefold Brochure.pdf" download role="menuitem">
+            <div class="dropdown-item-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <path d="M12 18v-6" />
+                    <path d="M9 15l3 3 3-3" />
+                </svg>
+            </div>
+            <div class="dropdown-item-text">
+                <span class="dropdown-item-title">Download Brochure</span>
+                <span class="dropdown-item-sub">PDF · 4.2 MB</span>
+            </div>
+            <svg class="dropdown-item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+        </a>
+
+        <a class="dropdown-item" href="Subpages/About.html" role="menuitem">
+            <div class="dropdown-item-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 16v-4" />
+                    <path d="M12 8h.01" />
+                </svg>
+            </div>
+            <div class="dropdown-item-text">
+                <span class="dropdown-item-title">About the Project</span>
+                <span class="dropdown-item-sub">Vision · Developer</span>
+            </div>
+            <svg class="dropdown-item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+        </a>
+
+        <a class="dropdown-item" href="Subpages/Contact.html" role="menuitem">
+            <div class="dropdown-item-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" />
+                </svg>
+            </div>
+            <div class="dropdown-item-text">
+                <span class="dropdown-item-title">Contact Us</span>
+                <span class="dropdown-item-sub">Sales · Enquiry</span>
+            </div>
+            <svg class="dropdown-item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+        </a>
+    </div>
+
+    <!-- Main Image + Towers (preserved) -->
+    <div class="Front">
+        <div class="image-wrapper">
+            <link rel="preload" as="image" href="images/Home.jpg" />
+            <img id="mainImage" src="images/Thumbnail/Home_Low.webp" data-full="images/Home.jpg" alt="Home"
+                fetchpriority="high" decoding="async" width="3840" height="5830" class="blur-up" />
+            <!-- Day-Time overlay images -->
+            <img class="day-img-overlay" id="imgEvening" src="Evening.jpg" alt="Evening" style="opacity:0;" />
+            <img class="day-img-overlay" id="imgNight" src="Night.jpg" alt="Night" style="opacity:0;" />
+            <div class="Cutout">
+                <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" viewBox="0 0 3840 5830">
+                    <path id="Tower_A" data-link="Subpages/Tower_A.html" data-name="Tower_A"
+                        data-img="images/Thumbnail/Tower_A.jpg"
+                        d="m693.2 2402 46.7 22.7 16.2 812.4 19.8 13.1v26.2l-29.5 13.8 109.1 57.7 165.1-65.1 5.3 3.3 43.3-16.7-.7-9.9-2.2-.2-.4-21.8 9-4.4v10.3l7.2-2.2-1.2-10.8 33.8-14.1-.6 11.1 6.9-2-1.1-11.2 50.8-21.3v9.5l7.4-1.3-1-9.9 52.8-22.6v9.6l7.5-1.4-.3-11.6 31.4-12.9.8 9.4 6.2-1v-11.4l26.7-10.8v10.3l6.9-1.2v-11.8l4.4-.4-1.2 15.2 20.2 7.8 39.7-14.8-1.3-34.6 101.9-42 .4 8.8 6.5-.3v-11.1l52.1-21.5.6 9.2 7.3-1.5v-10.8l29.3-12.4v9.2l7.3-1.2v-10.9l26.5-11.2v9.1l5.6-.3v-11l4.9-3.9-.8 18.9 17.4 8.2 42.2-18.5-.4-9.4-2.1-.2.3-21.4 10-3.3-1.1 9.1 6.5-1.9-1.3-9.8 31.6-12.8-.4 9.1 6.7-1.2v-10.1l77.2-33.3V2294l-110.9-70 .1-77.9 73.8-30.8-48.7-35.2-112.6-53.2-862.5 340.4z"
+                        class="st0" />
+                    <path id="Tower_B" data-link="Subpages/Tower_B.html" data-name="Tower_B"
+                        data-img="images/Thumbnail/Tower_B.jpg"
+                        d="m2025.4 2345.6-55.1 33.2 52 24.7v36.6l-52.8 22.7 6.3 3.8-.6 8.2-5.2 1v3.9l6 1.2-2.7 82.1-56.8-23.5-10.7 2-1.8-6.3-7.7-.3v-3.5l.8-3.8-1.8-1.3-2.8-5.3v-3.3s-3.7-1.3-4.3-1.7c-.7-.3-6.5-5.5-6.5-5.5l-6.8 2-6.5 4-3.2 4v6.8l-5.8 6.3-4.8 8.3-4 6.2-6.7 6.5v16.8l-4.5 1.3v4.5h-5.5l-1.3 3.7 2.7 646.7 18.6 9.8-.1 15.2 9.6-.5.2-9.9 43.6 23.5-.4 14.4 9.5-3-.1-8.2 30.3 14.6 29.2-12.4-2 31 35.9 18.1-.4-6.2 45.6 22.8-.7 13.8h9.4l1.4-9 43.9 21.2-1.4 15.8 9.3-3 1.1-7.2 37.4 19-.8 14.6 5 1.3 1-13.8 48.5 23.6v14.4h8.8l.4-10.1 4.6 2.6-.2 10.3 3.1.6v-10.3l7.1 5-.7 10.9h8.3l-1.7-9.1 10.9 5.3 29.7-12.4-2.2 31.3 82 35.9-.3 14.4 9.9-.8.9-9.7 44.8 23.9-.7 15.3 7-3.4.4-9.3 40.7 20.6.6 16.3 8.9-3.8-.8-8.3 45.3 22.6v15.9l9.9-4-1-7.7s32 16.1 32.4 16.1 30.7-13.6 30.7-13.6l-1.9 32.6 36.1 17.6v-4.6l46.7 23.3 1.2 15.8 9.2-2.3.4-8.3 49.3 23.6.4-11.3-3.3-6.7-8-4.4-.6-3.9 9-3.1.7-3.8-1.7-5.8 4.8-4.5 2-3.8 8.9-4.6s13.9 4 14.2 4 6.8 1.7 6.8 1.7l198.1-88.1v-4.7l4.4-8.2 7.3-3.6 9.8 2.9 8-1.3 16-6 13.2-646.8v-2.7l4.3-9.2s-3.5-4.7-4-5-4.8-2.3-4.8-2.3l-5.3-4.3-5.5-3.5s-9.7-4.3-10.5-4.3-1.8-.5-4.7-.8c-2.8-.3-4.2-5.5-4.2-5.5l-9.5-2-11.8-11-17.5-3-7.3 2.3s-6-6.5-6.8-6.5-12.2 8.7-12.2 8.7-11.7 5.2-12.5 5.2-2.3 8.5-2.3 8.5l-29.7-9.3-3-5.5-1.7-5.8-.5-121.3 4.8-2.2-.7-3.6-4.2-.5v-8.4h3.8l2.2-6.9 5.9-5.6-46.7-33.8 5.8-2.4v-5.6l-706.4-325.1-110.7 45.4z"
+                        class="st0" />
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- Current Status Button -->
+    <button class="current-status-btn" id="currentStatusBtn">
+        <span class="csb-dot"></span>
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="5 3 19 12 5 21 5 3" />
+        </svg>
+        <span>Current Status</span>
+    </button>
+
+    <!-- Enquiry Button -->
+    <button class="enquiry-btn" id="enquiryBtn">Enquiry</button>
+
+    <!-- Enquiry Modal (preserved) -->
+    <div class="enquiry">
+        <div class="overlay" id="enquiryOverlay" aria-hidden="true">
+            <div class="modal" role="dialog" aria-labelledby="enquiryTitle">
+                <div class="modal-header">
+                    <div id="enquiryTitle" class="title">Request Callback</div>
+                    <button class="close" id="closeBtn" aria-label="Close">&#x2715;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="enquiryForm" class="form" novalidate>
+                        <input class="input" name="fullName" placeholder="Full Name" required />
+                        <div class="phone">
+                            <select name="dialCode" aria-label="Country Code">
+                                <option>+91</option>
+                                <option>+971</option>
+                                <option>+44</option>
+                                <option>+1</option>
+                            </select>
+                            <input type="tel" name="phone" placeholder="Phone Number" maxlength="10" pattern="[0-9]{10}"
+                                inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'')" required />
+                        </div>
+                        <input class="input" name="city" placeholder="City" required />
+                        <input class="input" type="email" name="email" placeholder="Email Address"
+                            pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" required />
+                        <select class="input select" name="preferredTime" required>
+                            <option value="" disabled selected>Preferred Time to Call</option>
+                            <option value="morning">Morning</option>
+                            <option value="afternoon">Afternoon</option>
+                            <option value="evening">Evening</option>
+                        </select>
+                        <div class="g-recaptcha" data-sitekey="6Le6qZQsAAAAALlNrziohJHHqf43BSZvE1wfoxnl"></div>
+                        <button class="submit" type="submit">Request a Call Back</button>
+                        <a href="tel:+919876543210" class="call-btn">&#x1F4DE; Call Now</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         BOTTOM JUMPBAR — Premium
+         ═══════════════════════════════════════════════ -->
+    <nav class="jumpbar" id="jumpbar" aria-label="Primary navigation">
+        <div class="jumpbar-brand">
+            <span class="jumpbar-brand-line">MDB</span>
+            <span class="jumpbar-brand-name">The Lutyens</span>
+        </div>
+        <div class="jumpbar-nav">
+            <a class="jumpbar-item" href="Subpages/ClubHouse/360/Cafe.html" data-view="parking">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
+                <span>Clubhose</span>
+            </a>
+
+            <a class="jumpbar-item" href="Subpages/Tower_A.html" data-view="front">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
+                <span>Tower A</span>
+            </a>
+
+            <a class="jumpbar-item" href="Subpages/Tower_B.html" data-view="back">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12l-9-9-9 9" />
+                    <path d="M5 10v10h14V10" />
+                    <path d="M10 20v-6h4v6" />
+                </svg>
+                <span>Tower B</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Old dock (hidden via CSS, kept for script compatibility) -->
+    <div class="dock-wrap" id="dock" style="display:none">
+        <div class="dock-shelf"></div>
+        <div class="dock-items" id="dockItems"></div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         SCRIPTS
+         ═══════════════════════════════════════════════ -->
+
+    <script>
+        // Tower path click handler (preserved)
+        window.addEventListener('DOMContentLoaded', () => {
+            const detailsBox = document.getElementById('details');
+            if (detailsBox) detailsBox.innerHTML = ``;
+            const paths = document.querySelectorAll('.Cutout path');
+
+            paths.forEach(path => {
+                const link = path.getAttribute('data-link');
+                if (link) {
+                    path.addEventListener('click', () => {
+                        path.style.opacity = "0.6";
+                        setTimeout(() => { window.location.href = `${link}`; }, 800);
+                    });
+                }
+            });
+        });
+    </script>
+
+    <script>
+        // Image / hotspot sync (preserved)
+        (function () {
+            const img = document.querySelector('.image-wrapper img');
+            const layer = document.getElementById('hsLayer');
+            if (!img || !layer) return;
+
+            function doSync() {
+                const r = img.getBoundingClientRect();
+                layer.style.top = r.top + 'px';
+                layer.style.left = r.left + 'px';
+                layer.style.width = r.width + 'px';
+                layer.style.height = r.height + 'px';
+            }
+
+            function syncAfterLayout() {
+                requestAnimationFrame(() => requestAnimationFrame(doSync));
+            }
+
+            if (img.complete) syncAfterLayout();
+            else img.addEventListener('load', syncAfterLayout, { once: true });
+            window.addEventListener('load', syncAfterLayout, { once: true });
+            window.addEventListener('resize', syncAfterLayout);
+            window.addEventListener('orientationchange', () => {
+                syncAfterLayout();
+                setTimeout(syncAfterLayout, 250);
+            });
+
+            if ('ResizeObserver' in window) new ResizeObserver(syncAfterLayout).observe(img);
+        })();
+    </script>
+
+    <script src="JS/Notification/UI_Hint-2.js"></script>
+
+    <script>
+        // Tower pin positioning (preserved)
+        window.addEventListener('DOMContentLoaded', () => {
+            const mq = window.matchMedia('(max-width: 600px)');
+            const desktopPositions = {
+                Tower_A: { left: 35, top: 47 },
+                Tower_B: { left: 59, top: 52 }
+            };
+            const mobilePositions = {
+                Tower_A: { left: 35, top: 48 },
+                Tower_B: { left: 58, top: 53 }
+            };
+
+            function runPins() {
+                if (typeof initTowerPins !== 'function') return;
+                initTowerPins({
+                    svgSelector: '.Cutout svg',
+                    layerSelector: '#hsLayer',
+                    viewBox: [3840, 5830],
+                    positions: mq.matches ? mobilePositions : desktopPositions
+                });
+            }
+
+            runPins();
+            mq.addEventListener?.('change', runPins);
+            if (!mq.addEventListener) mq.addListener(runPins);
+            window.addEventListener('resize', () => requestAnimationFrame(runPins));
+            window.addEventListener('orientationchange', () => setTimeout(runPins, 250));
+        });
+    </script>
+
+    <script>
+        // Splash screen — triggered AFTER explore dismiss
+        function runSplash() {
+            const splash = document.getElementById("splash");
+            if (!splash) return;
+            document.body.classList.add("splash-active");
+            const SHOW_MS = 2000;
+            const FADE_MS = 600;
+            setTimeout(() => {
+                splash.classList.add("is-hidden");
+                setTimeout(() => {
+                    splash.remove();
+                    document.body.classList.remove("splash-active");
+                }, FADE_MS);
+            }, SHOW_MS);
+        }
+    </script>
+
+    <script>
+        // Hamburger Dropdown Menu
+        (function () {
+            const menuBtn = document.getElementById('menuBtn');
+            const dropdown = document.getElementById('dropdownMenu');
+            if (!menuBtn || !dropdown) return;
+
+            function openMenu() {
+                menuBtn.classList.add('is-open');
+                dropdown.classList.add('is-open');
+                menuBtn.setAttribute('aria-expanded', 'true');
+                dropdown.setAttribute('aria-hidden', 'false');
+            }
+
+            function closeMenu() {
+                menuBtn.classList.remove('is-open');
+                dropdown.classList.remove('is-open');
+                menuBtn.setAttribute('aria-expanded', 'false');
+                dropdown.setAttribute('aria-hidden', 'true');
+            }
+
+            menuBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                menuBtn.classList.contains('is-open') ? closeMenu() : openMenu();
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!dropdown.contains(e.target) && !menuBtn.contains(e.target)) closeMenu();
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeMenu();
+            });
+        })();
+    </script>
+
+    <script>
+        // Jumpbar Click Ripple & Active State
+        (function () {
+            const items = document.querySelectorAll('.jumpbar-item');
+            items.forEach(item => {
+                item.addEventListener('click', function (e) {
+                    items.forEach(i => i.classList.remove('is-active'));
+                    this.classList.add('is-active');
+
+                    const ripple = document.createElement('span');
+                    ripple.className = 'jumpbar-ripple';
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    ripple.style.width = ripple.style.height = size + 'px';
+                    ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+                    ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+                    this.appendChild(ripple);
+                    ripple.addEventListener('animationend', () => ripple.remove());
+                });
+            });
+        })();
+    </script>
+
+    <script>
+        // Enquiry button toggle
+        (function () {
+            const btn = document.getElementById('enquiryBtn');
+            const overlay = document.getElementById('enquiryOverlay');
+            const closeBtn = document.getElementById('closeBtn');
+            if (!btn || !overlay) return;
+
+            btn.addEventListener('click', () => {
+                overlay.classList.add('is-open');
+                overlay.setAttribute('aria-hidden', 'false');
+            });
+
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    overlay.classList.remove('is-open');
+                    overlay.setAttribute('aria-hidden', 'true');
+                });
+            }
+
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.classList.remove('is-open');
+                    overlay.setAttribute('aria-hidden', 'true');
+                }
+            });
+        })();
+    </script>
+
+    <!-- Ambient gold particles -->
+    <div class="ambient-particles" id="ambientParticles" aria-hidden="true"></div>
+
+    <script>
+        // Floating gold particles — subtle luxury ambient effect
+        (function () {
+            const container = document.getElementById('ambientParticles');
+            if (!container) return;
+            const count = 12;
+            for (let i = 0; i < count; i++) {
+                const p = document.createElement('span');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.animationDuration = (12 + Math.random() * 18) + 's';
+                p.style.animationDelay = (Math.random() * 15) + 's';
+                p.style.width = p.style.height = (1.5 + Math.random() * 1.5) + 'px';
+                container.appendChild(p);
+            }
+        })();
+    </script>
+
+    <script src="JS/imageloader.js"></script>
+    <script src="JS/FloorTIP.js"></script>
+    <script src="JS/InspectDisable.js"></script>
+    <!-- ═══ GALLERY LIGHTBOX (ADDED) ═══ -->
+    <div class="gallery-overlay" id="galleryOverlay">
+        <button class="gallery-close" id="galleryClose">&#x2715;</button>
+        <div class="gallery-counter"><span id="galleryCurrent">1</span> / <span id="galleryTotal">6</span></div>
+        <div class="gallery-main">
+            <button class="gallery-nav gallery-prev" id="galleryPrev">&#8249;</button>
+            <img id="galleryImage" src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80" alt="Gallery" />
+            <button class="gallery-nav gallery-next" id="galleryNext">&#8250;</button>
+        </div>
+        <div class="gallery-thumbs" id="galleryThumbs"></div>
+    </div>
+
+    <!-- ═══ WALKTHROUGH VIDEO MODAL (ADDED) ═══ -->
+    <div class="walkthrough-overlay" id="walkthroughOverlay">
+        <button class="walkthrough-close" id="walkthroughClose">&#x2715;</button>
+        <div class="walkthrough-video-wrap">
+            <video id="walkthroughModalVideo" controls preload="none" poster="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=960&q=80">
+                <source src="Video/MDB_The_Lutyens_Walkthrough.mp4" type="video/mp4">
+            </video>
+        </div>
+    </div>
+
+    <!-- ═══ GALLERY + WALKTHROUGH SCRIPTS (ADDED) ═══ -->
+    <script>
+        // Gallery Lightbox
+        (function () {
+            const images = [
+                'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80',
+                'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80',
+                'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80',
+                'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200&q=80',
+                'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&q=80',
+                'https://images.unsplash.com/photo-1600566753376-12c8ab7a5a1e?w=1200&q=80'
+            ];
+            let idx = 0;
+            const overlay = document.getElementById('galleryOverlay');
+            const img = document.getElementById('galleryImage');
+            const counter = document.getElementById('galleryCurrent');
+            const total = document.getElementById('galleryTotal');
+            const thumbsWrap = document.getElementById('galleryThumbs');
+            if (!overlay || !img) return;
+            total.textContent = images.length;
+
+            // Build thumbs
+            images.forEach((src, i) => {
+                const t = document.createElement('div');
+                t.className = 'gallery-thumb' + (i === 0 ? ' is-active' : '');
+                t.innerHTML = '<img src="' + src.replace('w=1200', 'w=120') + '" alt="">';
+                t.addEventListener('click', () => goTo(i));
+                thumbsWrap.appendChild(t);
+            });
+
+            function goTo(i) {
+                idx = i; img.src = images[idx]; counter.textContent = idx + 1;
+                thumbsWrap.querySelectorAll('.gallery-thumb').forEach((t, j) => t.classList.toggle('is-active', j === idx));
+            }
+            function open() { overlay.classList.add('is-open'); goTo(idx); }
+            function close() { overlay.classList.remove('is-open'); }
+
+            document.getElementById('galleryPrev').addEventListener('click', () => goTo((idx - 1 + images.length) % images.length));
+            document.getElementById('galleryNext').addEventListener('click', () => goTo((idx + 1) % images.length));
+            document.getElementById('galleryClose').addEventListener('click', close);
+            overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
+
+            // Wire all gallery buttons
+            document.querySelectorAll('[data-open-gallery]').forEach(btn => {
+                btn.addEventListener('click', e => { e.preventDefault(); open(); });
+            });
+            // Keyboard
+            document.addEventListener('keydown', e => {
+                if (!overlay.classList.contains('is-open')) return;
+                if (e.key === 'Escape') close();
+                if (e.key === 'ArrowLeft') goTo((idx - 1 + images.length) % images.length);
+                if (e.key === 'ArrowRight') goTo((idx + 1) % images.length);
+            });
+        })();
+    </script>
+    <script>
+        // Walkthrough Video Modal
+        (function () {
+            const overlay = document.getElementById('walkthroughOverlay');
+            const video = document.getElementById('walkthroughModalVideo');
+            if (!overlay || !video) return;
+            function open() { overlay.classList.add('is-open'); video.play().catch(() => {}); }
+            function close() { overlay.classList.remove('is-open'); video.pause(); video.currentTime = 0; }
+            document.getElementById('walkthroughClose').addEventListener('click', close);
+            overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
+            document.querySelectorAll('[data-open-walkthrough]').forEach(btn => {
+                btn.addEventListener('click', e => { e.preventDefault(); open(); });
+            });
+            // Current Status button opens walkthrough
+            const csBtn = document.getElementById('currentStatusBtn');
+            if (csBtn) csBtn.addEventListener('click', open);
+            document.addEventListener('keydown', e => { if (e.key === 'Escape' && overlay.classList.contains('is-open')) close(); });
+        })();
+    </script>
+
+
+    
+    <script>
+        // Robust sync: overlay follows mainImage pixel-perfectly
+        (function () {
+            var src   = document.getElementById('mainImage');
+            var ovls  = ['imgEvening','imgNight'].map(function(id){ return document.getElementById(id); });
+            if (!src) return;
+            var rafId = null;
+            var lastR = {};
+            function applyRect() {
+                var r = src.getBoundingClientRect();
+                ovls.forEach(function(o) {
+                    if (!o) return;
+                    o.style.top    = r.top    + window.scrollY + 'px';
+                    o.style.left   = r.left   + window.scrollX + 'px';
+                    o.style.width  = r.width  + 'px';
+                    o.style.height = r.height + 'px';
+                });
+                lastR = r;
+            }
+            function rafLoop(n) {
+                applyRect();
+                if (n > 0) requestAnimationFrame(function(){ rafLoop(n-1); });
+            }
+            function sync() { rafLoop(10); }
+            src.addEventListener('load', sync);
+            window.addEventListener('load', sync);
+            window.addEventListener('resize', sync);
+            window.addEventListener('scroll', applyRect);
+            window.addEventListener('orientationchange', function(){ setTimeout(sync,250); });
+            if ('ResizeObserver' in window) new ResizeObserver(sync).observe(src);
+            // Start immediately
+            rafLoop(30);
+        })();
+    </script>
+
+    <!-- DAY-TIME SLIDER (ADDED) -->
+    <div class="day-slider-wrap" id="daySliderWrap" style="display:none;">
+        <input type="range" id="daySlider" min="0" max="100" value="0" aria-label="Time of Day" />
+    </div>
+
+    <script>
+        (function () {
+            var slider  = document.getElementById('daySlider');
+            var morning = document.getElementById('mainImage');
+            var evening = document.getElementById('imgEvening');
+            var night   = document.getElementById('imgNight');
+            if (!slider || !morning || !evening || !night) return;
+            // Morning is the base (always underneath), Evening and Night overlay on top
+            morning.style.opacity = 1;
+            function updateImages(v) {
+                if (v <= 50) {
+                    var t = v / 50;
+                    evening.style.opacity = t;
+                    night.style.opacity   = 0;
+                } else {
+                    var t = (v - 50) / 50;
+                    evening.style.opacity = 1;
+                    night.style.opacity   = t;
+                }
+            }
+            slider.addEventListener('input', function(e) { updateImages(+e.target.value); });
+            updateImages(0);
+        })();
+    </script>
+</body>
+
+</html>

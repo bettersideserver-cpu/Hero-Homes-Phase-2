@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Hero Homes — Phase 2</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Manrope:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;1,500&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden
+        }
+
+        body {
+            background: #07100d;
+            color: #fff;
+            font-family: "DM Sans", sans-serif
+        }
+
+        .hero {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: #07100d
+        }
+
+        .bg {
+            position: absolute;
+            inset: 0;
+            background: url("assets/hero-render.jpg") center/cover no-repeat;
+            transform: scale(1.04);
+            animation: zoom 16s ease-out
+        }
+
+        @keyframes zoom {
+            from {
+                transform: scale(1.08)
+            }
+
+            to {
+                transform: scale(1.04)
+            }
+        }
+
+        .hero:after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, #020907d9 0%, #02090791 28%, #02090720 65%, #0209070d), linear-gradient(0deg, #020806b3, transparent 38%, #0208061c);
+            pointer-events: none
+        }
+
+        header {
+            position: absolute;
+            z-index: 5;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 110px;
+            padding: 0 4.8vw;
+            display: flex;
+            align-items: center;
+            justify-content: space-between
+        }
+
+        .logo-box {
+            width: 175px;
+            height: 78px;
+            padding: 10px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, .28);
+            transition: .3s ease
+        }
+
+        .logo-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 40px rgba(0, 0, 0, .34)
+        }
+
+        .logo {
+            width: 100%;
+            height: auto;
+            display: block
+        }
+
+        .nav {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 52px
+        }
+
+        .nav a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 12px;
+            letter-spacing: .12em;
+            opacity: .82
+        }
+
+        .nav a:hover,
+        .nav .active {
+            opacity: 1
+        }
+
+        .tag {
+            display: flex;
+            gap: 20px;
+            font-size: 10px;
+            letter-spacing: .3em;
+            text-transform: uppercase;
+            color: #fffc;
+            line-height: 1.7
+        }
+
+        .tag:before {
+            content: "";
+            width: 1px;
+            height: 44px;
+            background: #fff8
+        }
+
+        .content {
+            position: absolute;
+            z-index: 4;
+            left: 5.2vw;
+            top: 50%;
+            transform: translateY(-43%);
+            width: 650px;
+            max-width: 48vw
+        }
+
+        .welcome {
+            font-size: 12px;
+            letter-spacing: .42em;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+            color: #fff
+        }
+
+        h1 {
+            font: 500 clamp(58px, 6.7vw, 108px)/.82 "Playfair Display", serif;
+            letter-spacing: -.055em
+        }
+
+        h1 em {
+            display: block;
+            color: #e7d1aa;
+            font-style: italic;
+            font-size: .78em;
+            margin-top: 13px
+        }
+
+        .rule {
+            width: 80px;
+            height: 1px;
+            background: #fff;
+            margin: 31px 0 24px
+        }
+
+        .kicker {
+            font-size: 11px;
+            letter-spacing: .31em;
+            text-transform: uppercase;
+            color: #e7d1aa;
+            margin-bottom: 20px
+        }
+
+        .desc {
+            max-width: 450px;
+            color: #fffc;
+            font-size: 15px;
+            line-height: 1.65;
+            font-weight: 300
+        }
+
+        .explore {
+            margin-top: 34px;
+            width: 438px;
+            max-width: 100%;
+            height: 73px;
+            border: 1px solid #fff9;
+            border-radius: 50px;
+            background: #12130f5c;
+            backdrop-filter: blur(15px);
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 7px 8px 7px 41px;
+            font-size: 11px;
+            letter-spacing: .38em;
+            text-transform: uppercase;
+            transition: .4s
+        }
+
+        .explore:hover {
+            transform: translateY(-3px);
+            background: #fff2
+        }
+
+        .arrow {
+            width: 58px;
+            height: 58px;
+            border: 1px solid #fffa;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-size: 24px;
+            transition: .4s
+        }
+
+        .explore:hover .arrow {
+            transform: rotate(45deg)
+        }
+
+        .stats {
+            display: flex;
+            align-items: center;
+            gap: 27px;
+            margin-top: 56px
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            gap: 4px
+        }
+
+        .stat b {
+            font: 400 31px Manrope
+        }
+
+        .stat span {
+            font-size: 9px;
+            letter-spacing: .24em;
+            text-transform: uppercase;
+            color: #fff9
+        }
+
+        .divider {
+            height: 43px;
+            width: 1px;
+            background: #fff6
+        }
+
+        .community b {
+            font-size: 14px;
+            line-height: 1.2;
+            letter-spacing: .12em;
+            text-transform: uppercase
+        }
+
+        .side {
+            position: absolute;
+            z-index: 4;
+            right: 3.2vw;
+            top: 49%;
+            writing-mode: vertical-rl;
+            transform: translateY(-50%);
+            font-size: 9px;
+            letter-spacing: .43em;
+            text-transform: uppercase;
+            color: #fff9
+        }
+
+        .scroll {
+            position: absolute;
+            z-index: 5;
+            left: 5.2vw;
+            bottom: 28px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 9px;
+            letter-spacing: .3em;
+            text-transform: uppercase
+        }
+
+        .scroll i {
+            width: 42px;
+            height: 42px;
+            border: 1px solid #fff9;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-style: normal;
+            font-size: 16px
+        }
+
+        .video {
+            position: absolute;
+            z-index: 5;
+            right: 0;
+            bottom: 0;
+            width: 270px;
+            height: 132px;
+            background: #050907bf;
+            backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 25px
+        }
+
+        .play {
+            width: 43px;
+            height: 43px;
+            border: 1px solid #fff9;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-size: 11px
+        }
+
+        .video span {
+            font-size: 9px;
+            line-height: 1.7;
+            letter-spacing: .3em;
+            text-transform: uppercase
+        }
+
+        @media(max-width:900px) {
+            .nav {
+                gap: 22px
+            }
+
+            .nav a {
+                font-size: 10px
+            }
+
+            .tag {
+                display: none
+            }
+
+            .content {
+                max-width: 60vw
+            }
+        }
+
+        @media(max-width:700px) {
+            .hero .bg {
+                background-position: 60% center
+            }
+
+            .logo-box {
+                width: 130px;
+                height: 58px;
+                padding: 7px 13px;
+                border-radius: 14px
+            }
+
+            header {
+                height: 80px;
+                padding: 0 6vw
+            }
+
+            .nav,
+            .tag,
+            .side,
+            .video {
+                display: none
+            }
+
+            .content {
+                left: 7vw;
+                width: 86vw;
+                max-width: none;
+                top: 49%
+            }
+
+            h1 {
+                font-size: 17vw
+            }
+
+            .desc {
+                font-size: 13px
+            }
+
+            .explore {
+                height: 65px;
+                padding-left: 25px
+            }
+
+            .explore .arrow {
+                width: 51px;
+                height: 51px
+            }
+
+            .stats {
+                gap: 15px;
+                margin-top: 40px
+            }
+
+            .stat b {
+                font-size: 24px
+            }
+
+            .community {
+                display: none
+            }
+
+            .scroll {
+                left: 7vw
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="hero">
+        <div class="bg"></div>
+        <header>
+            <a class="logo-box" href="#"><img class="logo" src="assets/hero-homes-logo.png" alt="Hero Homes"></a>
+            <!-- <nav class="nav">
+                <a class="active" href="#">Home</a><a href="#project">The Project</a><a
+                    href="#amenities">Amenities</a><a href="#location">Location</a><a href="#gallery">Gallery</a>
+            </nav> -->
+            <div class="tag">A better<br>tomorrow</div>
+        </header>
+        <main class="content">
+            <div class="welcome">Welcome to</div>
+            <h1>Hero Homes<em>Phase 2</em></h1>
+            <div class="rule"></div>
+            <div class="kicker">Spaces for a brighter tomorrow</div>
+            <p class="desc">Thoughtfully designed homes, surrounded by nature, connected to everything that matters.</p>
+            <a class="explore" href="map/index.html"><span>Explore the project</span><span class="arrow">→</span></a>
+            <div class="stats">
+                <div class="stat"><b>5</b><span>Towers</span></div><i class="divider"></i>
+                <div class="stat"><b>32</b><span>Floors</span></div><i class="divider"></i>
+                <div class="stat community"><b>A brighter<br>community</b><span>A new chapter</span></div>
+            </div>
+        </main>
+        <div class="side">Modern living&nbsp;&nbsp; | &nbsp;&nbsp;Green tomorrow</div>
+        <!-- <div class="scroll"><i>↓</i><span>Scroll to discover</span></div> -->
+        <!-- <div class="video">
+            <div class="play">▶</div><span>Watch<br>the vision</span>
+        </div> -->
+    </div>
+</body>
+
+</html>

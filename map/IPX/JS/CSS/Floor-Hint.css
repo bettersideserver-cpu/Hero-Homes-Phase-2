@@ -1,0 +1,51 @@
+/* ===== Floor hint animation ===== */
+@keyframes floorHint {
+    0% {
+        fill-opacity: 0.25;
+    }
+
+    50% {
+        fill-opacity: 0.85;
+    }
+
+    100% {
+        fill-opacity: 0.25;
+    }
+}
+
+
+/* Initial hint state */
+.svg-hint {
+    animation: floorHint 1.2s ease-in-out 2;
+    pointer-events: auto;
+}
+
+/* Optional: subtle glow */
+.svg-hint {
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.35));
+}
+
+/* Stop animation after hint */
+.svg-hint.done {
+    animation: none;
+    filter: none;
+}
+
+/* ===== SVG floor hint ===== */
+.Cutout path.svg-hint {
+    fill: #baa791 !important;
+
+    /* stroke: #004771; */
+    stroke: #a3845d;
+    /* steel blue */
+    stroke-width: 5;
+
+    animation: floorHint 1.2s ease-in-out 2;
+}
+
+/* cleanup */
+.Cutout path.svg-hint.done {
+    animation: none;
+    fill: none !important;
+    stroke: none;
+}
