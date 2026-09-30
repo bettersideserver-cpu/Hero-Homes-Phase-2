@@ -152,7 +152,7 @@
                 },
                 info: {
                     name: "Iskon Temple",
-                    distance: "500 m",
+                    distance: "150 m",
                     time: "1"
                 },
 
@@ -210,8 +210,8 @@
                 },
                 info: {
                     name: "Upcoming Commercial",
-                    distance: "200 m",
-                    time: "1"
+                    distance: "400 m",
+                    time: "2"
                 },
 
                 // Optional. Remove or leave empty if this dot should not navigate.
