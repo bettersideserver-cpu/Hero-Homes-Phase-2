@@ -210,7 +210,7 @@
                 },
                 info: {
                     name: "Upcoming Commercial",
-                    distance: "500 m",
+                    distance: "200 m",
                     time: "1"
                 },
 

@@ -138,8 +138,8 @@
                 },
                 info: {
                     name: "Elgin Cafe",
-                    distance: "500 m",
-                    time: "1"
+                    distance: "2.8 km",
+                    time: "5"
                 },
 
                 // Optional. Remove or leave empty if this dot should not navigate.
@@ -194,8 +194,8 @@
                 },
                 info: {
                     name: "Sunview Enclave",
-                    distance: "500 m",
-                    time: "1"
+                    distance: "5.6 km",
+                    time: "12"
                 },
 
                 // Optional. Remove or leave empty if this dot should not navigate.
@@ -249,8 +249,8 @@
                 },
                 info: {
                     name: "DPS School",
-                    distance: "500 m",
-                    time: "1"
+                    distance: "3.5 km",
+                    time: "7"
                 },
 
                 // Optional. Remove or leave empty if this dot should not navigate.
@@ -304,8 +304,8 @@
                 },
                 info: {
                     name: "Sri Ram Public School",
-                    distance: "500 m",
-                    time: "1"
+                    distance: "4 km",
+                    time: "8"
                 },
 
                 // Optional. Remove or leave empty if this dot should not navigate.
@@ -359,8 +359,8 @@
                 },
                 info: {
                     name: "Ananta Enclave",
-                    distance: "500 m",
-                    time: "1"
+                    distance: "1.5 km",
+                    time: "4"
                 },
 
                 // Optional. Remove or leave empty if this dot should not navigate.
