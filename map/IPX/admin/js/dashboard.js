@@ -1,4 +1,5 @@
 import { supabase } from './supabase.js';
+import { initVisitorDetails, loadVisitorDetails } from './visitor-details.js';
 const $=id=>document.getElementById(id);let units=[],apartmentFloors=[],statuses=[];const unitDrafts=new Map();
 function toast(t){const e=$('toast');e.textContent=t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2200)}
 async function guard(){const {data:{session}}=await supabase.auth.getSession();if(!session){location.href='login.html';return false}return true}
@@ -186,7 +187,7 @@ window.addEventListener('beforeunload',e=>{
   if(unitDrafts.size>0){e.preventDefault();e.returnValue='You have unsaved apartment changes.';}
 });
 
-startVisitorLiveRefresh();
+initVisitorDetails();
 document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{
   document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));
   b.classList.add('active');
@@ -194,6 +195,7 @@ document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{
   $(b.dataset.page).classList.add('active');
   if(b.dataset.page==='visitors')loadVisitors();
   if(b.dataset.page==='holdRequests')loadHoldRequests();
+  if(b.dataset.page==='visitorDetails')loadVisitorDetails();
 });
 $('logout').onclick=async()=>{await supabase.auth.signOut();location.href='login.html'};
-(async()=>{if(await guard())await load()})();
+(async()=>{if(await guard()){startVisitorLiveRefresh();await load();}})();

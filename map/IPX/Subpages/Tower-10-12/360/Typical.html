@@ -2226,6 +2226,7 @@ const rooms = {
         }
 
         function updateBalconyControls(roomName) {
+            window.HeroHomesAnalytics?.trackRoom(roomName, { balconyType, balconyFloor: currentBalconyFloor });
             updateActiveRoomPill(roomName);
             const controls = document.getElementById("balconyControls");
             if (!controls) return;
@@ -2637,6 +2638,7 @@ document.getElementById("backBtn").addEventListener("click", function (e) {
         });
     })();
 </script>
+<script type="module" src="../../../JS/HeroHomesAnalytics.js"></script>
 </body>
 
 </html>

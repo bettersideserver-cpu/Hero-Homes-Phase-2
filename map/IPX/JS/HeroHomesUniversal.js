@@ -9,7 +9,7 @@
 
   const esc=s=>String(s??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));
   const saved=()=>{try{return JSON.parse(sessionStorage.getItem(VISITOR_KEY)||'null')}catch(_){return null}};
-  const save=v=>{sessionStorage.setItem(VISITOR_KEY,JSON.stringify(v));window.HeroHomesVisitor=v};
+  const save=v=>{sessionStorage.setItem(VISITOR_KEY,JSON.stringify(v));window.HeroHomesVisitor=v;window.dispatchEvent(new Event('hero-homes:visitor-ready'))};
   const context=()=>{
     const p=new URLSearchParams(location.search);
     const tower=p.get('tower')||sessionStorage.getItem('selectedTower')||sessionStorage.getItem('heroHomesTower')||'';

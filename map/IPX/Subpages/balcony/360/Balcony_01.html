@@ -693,6 +693,7 @@
         items.forEach(c=>{c.addEventListener('click',e=>{c.classList.add('is-bouncing');c.addEventListener('animationend',()=>c.classList.remove('is-bouncing'),{once:true});const r=document.createElement('span');r.className='dock-ripple';const icon=c.querySelector('.dock-icon'),b=icon.getBoundingClientRect(),s=Math.max(b.width,b.height);r.style.width=r.style.height=s+'px';r.style.left=(e.clientX-b.left-s/2)+'px';r.style.top=(e.clientY-b.top-s/2)+'px';icon.appendChild(r);r.addEventListener('animationend',()=>r.remove());});});
     })();
     </script>
+<script type="module" src="../../../JS/HeroHomesAnalytics.js"></script>
 </body>
 
 </html>

@@ -39,6 +39,32 @@
 @media(max-width:700px){.tower-tabs{grid-template-columns:repeat(2,minmax(0,1fr));}.tower-tab:last-child{grid-column:span 2;}}
 
 /* Unsaved apartment state */
+.main{min-width:0}
+.analytics-cards{grid-template-columns:repeat(5,minmax(0,1fr));margin-bottom:24px}
+.analytics-cards .metric{font-size:28px}
+.analytics-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.analytics-toolbar input{max-width:440px;margin:0}
+.analytics-toolbar button{flex-shrink:0}
+.analytics-message{min-height:20px;font-size:13px;margin:12px 0 18px}
+.analytics-section{margin-top:30px}
+.analytics-section h2{font-size:19px;margin:0 0 8px}
+.analytics-table{min-width:940px;font-size:13px}
+.analytics-table th{font-size:11px;color:#aeb9c7;text-transform:uppercase;letter-spacing:.04em}
+.analytics-table td{vertical-align:top;line-height:1.5}
+.analytics-table .small-btn{white-space:nowrap;padding:8px 11px;font-size:12px}
+.analytics-table tr.analytics-selected{background:#f0b90b0d}
+.analytics-table button[aria-pressed=true]{background:#f0b90b;color:#17120a}
+.analytics-empty{text-align:center!important;padding:32px!important;color:#aeb9c7}
+.analytics-url{font-size:11px;color:#8996a7;max-width:300px;overflow-wrap:anywhere;margin-top:5px}
+.analytics-pagination{display:flex;justify-content:flex-end;align-items:center;gap:12px;margin:12px 0;color:#8996a7;font-size:13px}
+.analytics-pagination button{padding:8px 12px}
+.analytics-pagination button:disabled,.analytics-toolbar button:disabled{opacity:.4;cursor:not-allowed}
+#visitorDetailsSetup{color:#f0b90b;display:inline-block;margin:0 0 16px}
+#visitorDetailsSetup[hidden]{display:none}
+#analyticsSelectedSession{overflow-wrap:anywhere}
+@media(max-width:1200px){.analytics-cards{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:700px){.analytics-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.analytics-toolbar{align-items:stretch;flex-direction:column}.analytics-toolbar input{max-width:none}.analytics-pagination{gap:8px;justify-content:space-between}}
+@media(max-width:540px){.dash{display:block}.side{position:relative;width:100%;inset:auto;padding:16px}.side h2{margin:0 0 12px}.nav{grid-template-columns:repeat(2,minmax(0,1fr))}.logout{position:static;margin-top:12px}.main{margin-left:0;padding:18px 12px}.analytics-cards{gap:8px}.analytics-cards .card{padding:14px}.analytics-cards .metric{font-size:24px}}
 .unit-table tr.has-unsaved td { background: rgba(255,176,0,.06); }
 .unit-table tr.has-unsaved td:first-child { box-shadow: inset 3px 0 0 #ffb000; }
 .unit-table td:last-child { overflow: visible; }

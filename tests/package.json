@@ -1,0 +1,12 @@
+{
+  "name": "hero-homes-analytics-tests",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test visitor-analytics.test.mjs"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
+    "jsdom": "^29.1.1"
+  }
+}

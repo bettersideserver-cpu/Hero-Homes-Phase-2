@@ -6,7 +6,7 @@
   const VISITOR_KEY='heroHomesVisitor';
 
   const saved=()=>{try{return JSON.parse(sessionStorage.getItem(VISITOR_KEY)||'null')}catch(e){return null}};
-  const save=v=>{sessionStorage.setItem(VISITOR_KEY,JSON.stringify(v));window.HeroHomesVisitor=v};
+  const save=v=>{sessionStorage.setItem(VISITOR_KEY,JSON.stringify(v));window.HeroHomesVisitor=v;window.dispatchEvent(new Event('hero-homes:visitor-ready'))};
   const params=new URLSearchParams(location.search);
   const context=()=>({
     tower:params.get('tower')||sessionStorage.getItem('heroHomesTower')||sessionStorage.getItem('selectedTower')||'',
