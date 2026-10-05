@@ -14,19 +14,19 @@
         <div id="loginView">
             <h1>Admin Login</h1>
             <p class="muted">Sign in to manage units, statuses and visitors.</p>
-            <form id="loginForm"><input id="email" type="email" placeholder="Email" required><input id="password"
-                    type="password" placeholder="Password" required><button>Login</button></form><button class="link"
+            <form id="loginForm"><input id="email" type="email" placeholder="Email" autocomplete="username" required><input id="password"
+                    type="password" placeholder="Password" autocomplete="current-password" required><button type="submit">Login</button></form><button type="button" class="link"
                 id="showRegister">Register a user</button>
         </div>
         <div id="registerView" hidden>
             <h1>Register User</h1>
             <p class="muted">Every registered user is an admin.</p>
-            <form id="registerForm"><input id="name" placeholder="Name" required><input id="regEmail" type="email"
-                    placeholder="Email" required><input id="regPassword" type="password" placeholder="Password"
-                    minlength="6" required><button>Register</button></form><button class="link" id="showLogin">Back to
+            <form id="registerForm"><input id="name" placeholder="Name" autocomplete="name" required><input id="regEmail" type="email"
+                    placeholder="Email" autocomplete="email" required><input id="regPassword" type="password" placeholder="Password"
+                    autocomplete="new-password" minlength="6" required><button type="submit">Register</button></form><button type="button" class="link" id="showLogin">Back to
                 login</button>
         </div>
-        <div id="msg" class="msg"></div>
+        <div id="msg" class="msg" role="status" aria-live="polite" aria-atomic="true"></div>
     </div>
     <script type="module" src="js/auth.js"></script>
 </body>
