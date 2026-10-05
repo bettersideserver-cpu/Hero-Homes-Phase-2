@@ -10,7 +10,8 @@ const duration = value => {
   return hours ? `${hours}h ${minutes}m ${seconds % 60}s` : minutes ? `${minutes}m ${seconds % 60}s` : `${seconds}s`;
 };
 const count = value => Number(value || 0).toLocaleString();
-const state = { page: 0, sessionPage: 0, journeyPage: 0, search: '', visitors: [], sessions: [],
+const visitorName = visitor => visitor.is_registered ? visitor.name : visitor.id;
+const state = { page: 0, sessionPage: 0, journeyPage: 0, search: '', registration: 'all', visitors: [], sessions: [],
   visitor: null, session: null, listRequest: 0, sessionRequest: 0, journeyRequest: 0, busy: false };
 const empty = (id, columns, message) => { $(id).innerHTML = `<tr><td colspan="${columns}" class="analytics-empty">${esc(message)}</td></tr>`; };
 
@@ -21,7 +22,7 @@ function pagination(prefix, page, total) {
 }
 
 function showError(error) {
-  const missing = ['PGRST202', 'PGRST205', '42P01', '42883'].includes(error?.code);
+  const missing = ['PGRST202', 'PGRST204', 'PGRST205', '42P01', '42703', '42883'].includes(error?.code);
   $('visitorDetailsMessage').textContent = missing
     ? 'Visitor analytics needs its Supabase setup. Run the supplied setup SQL, then refresh.'
     : `Could not load visitor details. ${error?.message || 'Please try again.'}`;
@@ -81,7 +82,7 @@ async function loadSessions(visitor, preserve = false) {
   const request = ++state.sessionRequest;
   const selectedSessionId = preserve ? state.session?.id : null;
   state.visitor = visitor;
-  $('analyticsSelectedVisitor').textContent = `${visitor.name} · ${visitor.phone}`;
+  $('analyticsSelectedVisitor').textContent = `${visitorName(visitor)} · ${visitor.is_registered ? 'Registered' : 'Non-registered'}${visitor.phone ? ` · ${visitor.phone}` : ''}`;
   document.querySelectorAll('[data-analytics-visitor]').forEach(button => {
     const active = button.dataset.analyticsVisitor === visitor.id;
     button.setAttribute('aria-pressed', String(active));
@@ -126,10 +127,15 @@ export async function loadVisitorDetails() {
   $('visitorDetailsMessage').textContent = 'Loading visitor details…';
   $('visitorDetailsSetup').hidden = true;
   try {
-    let query = supabase.from('visitor_profiles').select('*', { count: 'exact' })
+    let query = supabase.from('visitor_profiles').select('id,name,phone,email,city,is_registered,first_seen,last_seen,total_sessions,total_page_views', { count: 'exact' })
       .order('last_seen', { ascending: false }).order('id');
+    if (state.registration !== 'all') query = query.eq('is_registered', state.registration === 'registered');
     const search = state.search.replace(/[,()%"\\]/g, '').trim();
-    if (search) query = query.or(['name', 'phone', 'email', 'city'].map(column => `${column}.ilike.%${search}%`).join(','));
+    if (search) {
+      const filters = ['name', 'phone', 'email', 'city'].map(column => `${column}.ilike.%${search}%`);
+      if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(search)) filters.push(`id.eq.${search}`);
+      query = query.or(filters.join(','));
+    }
     const [profiles, summary] = await Promise.all([
       query.range(state.page * PAGE_SIZE, (state.page + 1) * PAGE_SIZE - 1),
       supabase.rpc('visitor_analytics_summary')
@@ -145,11 +151,12 @@ export async function loadVisitorDetails() {
     $('analyticsAverage').textContent = duration(metrics.average_session_seconds);
     state.visitors = profiles.data || [];
     $('analyticsVisitorRows').innerHTML = state.visitors.map(visitor => `<tr>
-      <td><strong>${esc(visitor.name)}</strong></td><td>${esc(visitor.phone)}</td><td>${esc(visitor.email || '—')}</td>
+      <td><strong>${esc(visitorName(visitor))}</strong>${visitor.is_registered ? `<div class="analytics-url">${esc(visitor.id)}</div>` : ''}</td>
+      <td>${visitor.is_registered ? 'Registered' : 'Non-registered'}</td><td>${esc(visitor.phone || '—')}</td><td>${esc(visitor.email || '—')}</td>
       <td>${esc(visitor.city || '—')}</td><td>${date(visitor.first_seen)}</td><td>${date(visitor.last_seen)}</td>
       <td>${count(visitor.total_sessions)}</td><td>${count(visitor.total_page_views)}</td>
       <td><button type="button" class="small-btn" data-analytics-visitor="${esc(visitor.id)}" aria-pressed="false">View sessions</button></td></tr>`).join('');
-    if (!state.visitors.length) empty('analyticsVisitorRows', 9, state.search ? 'No visitors match your search.' : 'No visitors yet. Registered visitors will appear here as they browse.');
+    if (!state.visitors.length) empty('analyticsVisitorRows', 10, state.search || state.registration !== 'all' ? 'No visitors match your filters.' : 'No visitors yet. Visitors appear here when they explore the map.');
     pagination('analyticsVisitors', state.page, profiles.count || 0);
     $('visitorDetailsMessage').textContent = `Updated ${new Date().toLocaleTimeString()} · Refreshes every 30 seconds while this section is open.`;
     const selected = state.visitors.find(visitor => visitor.id === state.visitor?.id) || state.visitors[0];
@@ -162,7 +169,7 @@ export async function loadVisitorDetails() {
     if (request !== state.listRequest) return;
     showError(error);
     if (!state.visitors.length) {
-      empty('analyticsVisitorRows', 9, 'Visitor details are unavailable. See the message above.');
+      empty('analyticsVisitorRows', 10, 'Visitor details are unavailable. See the message above.');
       clearSessions();
     }
   } finally {
@@ -175,6 +182,13 @@ export async function loadVisitorDetails() {
 
 export function initVisitorDetails() {
   $('refreshVisitorDetails').addEventListener('click', loadVisitorDetails);
+  $('visitorDetailsRegistration').addEventListener('change', event => {
+    state.registration = event.target.value;
+    state.page = 0;
+    state.visitors = [];
+    clearSessions();
+    void loadVisitorDetails();
+  });
   let searchTimer;
   $('visitorDetailsSearch').addEventListener('input', event => {
     state.search = event.target.value;

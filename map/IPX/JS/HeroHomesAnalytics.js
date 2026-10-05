@@ -1,11 +1,15 @@
 import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from '../admin/js/config.js';
 
-// Shared visitor tracking. The existing registration form supplies the identity.
+// A per-tab visitor ID follows the journey before and after registration.
 const PROFILE_KEY = 'heroHomesVisitor';
+const VISITOR_ID_KEY = 'heroHomesAnalyticsVisitorId';
 const SESSION_KEY = 'heroHomesAnalyticsSession';
 const QUEUE_KEY = 'heroHomesAnalyticsQueue';
 const TIMEOUT = 30 * 60 * 1000;
 const rootPath = decodeURIComponent(new URL('../../../', import.meta.url).pathname);
+const route = decodeURIComponent(location.pathname).slice(rootPath.length);
+// Never record the public home page or admin, even if a cached page loads this script.
+const trackable = /^map\//i.test(route) && !/^map\/IPX\/admin(?:\/|$)/i.test(route);
 const read = (key, fallback = null) => {
   try { return JSON.parse(sessionStorage.getItem(key)) ?? fallback; } catch { return fallback; }
 };
@@ -25,6 +29,8 @@ const cleanUrl = value => {
 let queue = read(QUEUE_KEY, []);
 if (!Array.isArray(queue)) queue = [];
 let session = read(SESSION_KEY);
+let visitorId = stored(VISITOR_ID_KEY);
+if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(visitorId)) visitorId = '';
 let page = null;
 let activeSince = null;
 let activeMilliseconds = 0;
@@ -96,7 +102,7 @@ async function send(event, keepalive = false) {
 }
 
 async function flush() {
-  if (sending || !navigator.onLine || !queue.length) return;
+  if (!trackable || sending || !navigator.onLine || !queue.length) return;
   sending = true;
   try {
     while (queue.length) await send(queue[0]);
@@ -123,24 +129,37 @@ function snapshot(left = false) {
 }
 
 function track() {
+  if (!trackable) return;
   const profile = read(PROFILE_KEY);
-  const phone = phoneOf(profile);
-  if (!/^\d{10}$/.test(phone) || !String(profile?.fullName || profile?.name || '').trim()) {
-    if (page) snapshot(true);
-    page = null;
-    activeSince = null;
-    void flush();
-    return;
+  const name = String(profile?.fullName || profile?.name || '').trim().slice(0, 160);
+  const registered = /^\d{10}$/.test(phoneOf(profile)) && !!name;
+  const phone = registered ? phoneOf(profile) : '';
+  // A different registered person (or an explicit reset) gets a new identity.
+  const changedVisitor = !!session?.phone && session.phone !== phone;
+  if (!visitorId || changedVisitor) {
+    visitorId = uuid();
+    try { sessionStorage.setItem(VISITOR_ID_KEY, visitorId); } catch { /* Keep the in-memory ID. */ }
   }
   const now = Date.now();
   const description = describePage();
-  const expired = !session || session.phone !== phone || now - session.lastActivity > TIMEOUT;
-  if (!expired && page?.page_key === description.page_key && page.phone === phone) return;
+  const identity = { visitor_id: visitorId, phone, name: registered ? name : visitorId,
+    email: registered ? String(profile.email || '').slice(0, 254) : '',
+    city: registered ? String(profile.city || '').slice(0, 160) : '' };
+  const expired = !session || session.visitorId !== visitorId || now - session.lastActivity > TIMEOUT;
+  if (!expired && page?.page_key === description.page_key) {
+    if (page.phone !== phone || page.name !== identity.name || page.email !== identity.email || page.city !== identity.city) {
+      // Enrich the current page/session in place so registration preserves the journey.
+      Object.assign(page, identity);
+      session.phone = phone;
+      snapshot();
+      void flush();
+    }
+    return;
+  }
   if (page) snapshot(true);
-  if (expired) session = { id: uuid(), phone, lastActivity: now, previousPage: '' };
-  page = { ...description, id: uuid(), session_id: session.id, phone,
-    name: String(profile.fullName || profile.name).trim().slice(0, 160),
-    email: String(profile.email || '').slice(0, 254), city: String(profile.city || '').slice(0, 160),
+  if (expired) session = { id: uuid(), visitorId, phone, lastActivity: now, previousPage: '' };
+  session.phone = phone;
+  page = { ...description, ...identity, id: uuid(), session_id: session.id,
     previous_page: session.previousPage || '', referrer: cleanUrl(document.referrer), entered_at: iso(now) };
   session.previousPage = description.page_name;
   session.lastActivity = now;

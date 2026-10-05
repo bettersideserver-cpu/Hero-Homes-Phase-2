@@ -40,7 +40,8 @@
         .bg {
             position: absolute;
             inset: 0;
-            background: url("assets/hero-render.jpg") center/cover no-repeat;
+            /* Change this WebP path to your custom placeholder image. */
+            background: url("map/IPX/images/Thumbnail/Home.webp") center/cover no-repeat;
             transform: scale(1.04);
             animation: zoom 16s ease-out
         }
@@ -456,7 +457,27 @@
             <div class="play">▶</div><span>Watch<br>the vision</span>
         </div> -->
     </div>
-<script type="module" src="map/IPX/JS/HeroHomesAnalytics.js"></script>
+    <script>
+        (() => {
+            const background = document.querySelector('.bg');
+            const fullImage = new Image();
+            fullImage.decoding = 'async';
+            fullImage.onload = async () => {
+                // Keep the WebP visible until the JPG is ready to paint.
+                if (typeof fullImage.decode === 'function') {
+                    try {
+                        await fullImage.decode();
+                    } catch {
+                        return;
+                    }
+                }
+                background.style.backgroundImage = `url("${fullImage.src}")`;
+            };
+            // A failed JPG load leaves the WebP background in place.
+            fullImage.src = 'map/IPX/images/Home.jpg';
+        })();
+    </script>
+
 </body>
 
 </html>

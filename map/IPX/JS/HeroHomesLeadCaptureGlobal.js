@@ -124,7 +124,7 @@
   function init(){
     window.HeroHomesVisitor=saved();window.HeroHomesContext=context;window.HeroHomesGetSavedLead=saved;window.HeroHomesResetVisitor=()=>{sessionStorage.removeItem(VISITOR_KEY);location.reload()};
     // Only pages that opt in should show the visitor form on arrival.
-    // The map landing pages opt in with data-hero-homes-visitor-gate="true".
+    // The three Typical tour pages opt in with data-hero-homes-visitor-gate="true".
     const shouldShowInitialGate=document.documentElement.dataset.heroHomesVisitorGate==='true';
     if(shouldShowInitialGate && !saved())showGate();
     wireTowerFloorLinks();wireHold();

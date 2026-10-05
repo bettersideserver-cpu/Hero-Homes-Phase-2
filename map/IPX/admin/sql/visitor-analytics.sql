@@ -4,8 +4,9 @@ begin;
 
 create table if not exists public.visitor_profiles (
   id uuid primary key default gen_random_uuid(),
-  phone text not null unique check (phone ~ '^[0-9]{10}$'),
+  phone text check (phone ~ '^[0-9]{10}$'),
   name text not null,
+  is_registered boolean not null default false,
   email text not null default '',
   city text not null default '',
   first_seen timestamptz not null default now(),
@@ -13,6 +14,14 @@ create table if not exists public.visitor_profiles (
   total_sessions bigint not null default 0,
   total_page_views bigint not null default 0
 );
+
+-- Upgrade existing installations without changing profile IDs or losing journeys.
+alter table public.visitor_profiles alter column phone drop not null;
+alter table public.visitor_profiles drop constraint if exists visitor_profiles_phone_key;
+alter table public.visitor_profiles add column if not exists is_registered boolean not null default false;
+update public.visitor_profiles set is_registered = true where phone is not null and not is_registered;
+create index if not exists visitor_profiles_phone_idx on public.visitor_profiles(phone);
+create index if not exists visitor_profiles_registration_idx on public.visitor_profiles(is_registered, last_seen desc, id);
 
 create table if not exists public.visitor_sessions (
   id uuid primary key,
@@ -76,7 +85,8 @@ declare
   v_key text := left(coalesce(p_event->>'page_key', ''), 1000);
   v_page_name text := left(coalesce(p_event->>'page_name', ''), 240);
   v_seconds integer;
-  v_visitor uuid;
+  v_visitor uuid := nullif(p_event->>'visitor_id', '')::uuid;
+  v_registered boolean;
   v_session_row public.visitor_sessions%rowtype;
   v_page_row public.visitor_page_views%rowtype;
   v_new_session integer;
@@ -84,7 +94,9 @@ declare
   v_previous_seconds integer := 0;
 begin
   if length(v_phone) = 12 and left(v_phone, 2) = '91' then v_phone := substr(v_phone, 3); end if;
-  if v_phone !~ '^[0-9]{10}$' or v_name = '' or v_session is null or v_page is null
+  v_registered := v_phone ~ '^[0-9]{10}$' and v_name <> '';
+  if (v_phone <> '' and not v_registered) or (v_visitor is null and not v_registered)
+     or v_session is null or v_page is null
      or v_key = '' or v_page_name = '' or v_entered is null or v_seen is null
      or v_entered > now() + interval '5 minutes' or v_entered < now() - interval '30 days'
      or v_seen < v_entered or v_seen > now() + interval '5 minutes' then
@@ -94,14 +106,25 @@ begin
     ceil(extract(epoch from (v_seen - v_entered)))::integer));
   if v_left is not null then v_left := v_seen; end if;
 
-  -- This upsert locks the profile, serializing concurrent counts for the same phone.
-  insert into public.visitor_profiles as profile (phone, name, email, city, first_seen, last_seen)
-  values (v_phone, v_name, left(coalesce(p_event->>'email', ''), 254),
-    left(coalesce(p_event->>'city', ''), 160), v_entered, v_seen)
-  on conflict (phone) do update set
-    name = case when excluded.last_seen >= profile.last_seen then excluded.name else profile.name end,
-    email = case when excluded.last_seen >= profile.last_seen and excluded.email <> '' then excluded.email else profile.email end,
-    city = case when excluded.last_seen >= profile.last_seen and excluded.city <> '' then excluded.city else profile.city end,
+  -- Keep older deployed clients working while the new website is rolled out.
+  if v_visitor is null then
+    perform pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtext(v_phone)::bigint);
+    select id into v_visitor from public.visitor_profiles where phone = v_phone order by first_seen, id limit 1;
+    v_visitor := coalesce(v_visitor, gen_random_uuid());
+  end if;
+
+  -- Lock by the visitor ID. Registration enriches this same profile; delayed
+  -- anonymous snapshots must never erase a registered person's details.
+  insert into public.visitor_profiles as profile (id, phone, name, is_registered, email, city, first_seen, last_seen)
+  values (v_visitor, nullif(v_phone, ''), case when v_registered then v_name else v_visitor::text end,
+    v_registered, case when v_registered then left(coalesce(p_event->>'email', ''), 254) else '' end,
+    case when v_registered then left(coalesce(p_event->>'city', ''), 160) else '' end, v_entered, v_seen)
+  on conflict (id) do update set
+    phone = case when excluded.is_registered and (not profile.is_registered or excluded.last_seen >= profile.last_seen) then excluded.phone else profile.phone end,
+    name = case when excluded.is_registered and (not profile.is_registered or excluded.last_seen >= profile.last_seen) then excluded.name else profile.name end,
+    is_registered = profile.is_registered or excluded.is_registered,
+    email = case when excluded.is_registered and (not profile.is_registered or excluded.last_seen >= profile.last_seen) and excluded.email <> '' then excluded.email else profile.email end,
+    city = case when excluded.is_registered and (not profile.is_registered or excluded.last_seen >= profile.last_seen) and excluded.city <> '' then excluded.city else profile.city end,
     first_seen = least(profile.first_seen, excluded.first_seen),
     last_seen = greatest(profile.last_seen, excluded.last_seen)
   returning id into v_visitor;
@@ -168,11 +191,11 @@ grant execute on function public.visitor_analytics_summary() to authenticated;
 do $$
 begin
   if to_regclass('public.visitors') is not null then
-    insert into public.visitor_profiles (phone, name, email, city, first_seen, last_seen)
+    insert into public.visitor_profiles (phone, name, email, city, first_seen, last_seen, is_registered)
     select distinct on (phone) phone,
       left(coalesce(nullif(row->>'name', ''), nullif(trim(concat_ws(' ', row->>'first_name', row->>'last_name')), ''), 'Visitor'), 160),
       left(coalesce(row->>'email', ''), 254), left(coalesce(row->>'city', ''), 160),
-      min(seen) over (partition by phone), max(seen) over (partition by phone)
+      min(seen) over (partition by phone), max(seen) over (partition by phone), true
     from (
       select row, case when length(digits) = 12 and left(digits, 2) = '91' then substr(digits, 3) else digits end as phone,
         coalesce(nullif(row->>'created_at', '')::timestamptz, now()) as seen
@@ -180,8 +203,8 @@ begin
         from public.visitors v) raw
     ) normalized
     where phone ~ '^[0-9]{10}$'
-    order by phone, seen desc
-    on conflict (phone) do nothing;
+      and not exists (select 1 from public.visitor_profiles existing where existing.phone = normalized.phone)
+    order by phone, seen desc;
   end if;
 end $$;
 
