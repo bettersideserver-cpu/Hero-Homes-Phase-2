@@ -8,13 +8,13 @@
 
   const DETAILS = {
     'Tower_A.html':      { name: 'Towers 9 & 10',  apartment: '3 & 4 BHK', carpetArea: '1,412 \u2013 2,131' },
-    'Tower_B.html':      { name: 'Tower 11',       apartment: '3 BHK',     carpetArea: '2,595' },
+    'Tower_B.html':      { name: 'Tower 11',       apartment: '3 BHK',     carpetArea: '1,412 \u2013 2,131' },
     'Tower_C.html':      { name: 'Towers 12 & 12A', apartment: '3 & 4 BHK', carpetArea: '1,412 \u2013 2,131' },
-    'Tower-9.html':      { name: 'Tower 9',        apartment: '4 BHK',     carpetArea: '1,412' },
-    'Tower-10.html':     { name: 'Tower 10',       apartment: '3 BHK',     carpetArea: '2,131' },
+    'Tower-9.html':      { name: 'Tower 9',        apartment: '4 BHK',     carpetArea: '1,412 \u2013 2,131' },
+    'Tower-10.html':     { name: 'Tower 10',       apartment: '3 BHK',     carpetArea: '1,412 \u2013 2,131' },
     'Tower-11.html':     { name: 'Tower 11',       apartment: '4 BHK',     carpetArea: '2,595' },
-    'Tower-12.html':     { name: 'Tower 12',       apartment: '3 BHK',     carpetArea: '1,412' },
-    'Tower-C-12-A.html': { name: 'Tower 12A',      apartment: '4 BHK',     carpetArea: '2,131' }
+    'Tower-12.html':     { name: 'Tower 12',       apartment: '3 BHK',     carpetArea: '1,412 \u2013 2,131' },
+    'Tower-C-12-A.html': { name: 'Tower 12A',      apartment: '4 BHK',     carpetArea: '1,412 \u2013 2,131' }
   };
 
   function init() {
