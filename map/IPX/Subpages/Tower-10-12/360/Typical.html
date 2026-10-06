@@ -1635,7 +1635,7 @@ background: rgba(18,35,30,.94);
 }
 </style>
 
-      <script src="../../../JS/HeroHomesLeadCaptureGlobal.js?v=20261005-navigation-2"></script>
+      <script src="../../../JS/HeroHomesLeadCaptureGlobal.js?v=20261006-dismiss-lobby"></script>
 </head>
 
 <body>
@@ -2544,6 +2544,18 @@ let roomHistory = [{
     balconyType: startRoom === "balcony" ? balconyType : null
 }];
 let isGoingBack = false;
+
+// Dismissing registration cancels the requested room and restores the free lobby.
+window.addEventListener('hero-homes:visitor-dismissed', () => {
+    roomHistory = [{ roomName: 'lobby', balconyType: null }];
+    isGoingBack = false;
+    viewer.setPanorama(rooms.lobby);
+    applyCameraAngle('lobby');
+    document.getElementById('fadeOverlay').style.opacity = 0;
+    showInfoCard('lobby');
+    updateBalconyControls('lobby');
+    document.querySelector('.tour-pill.active')?.focus();
+});
 
 document.getElementById("backBtn").addEventListener("click", function (e) {
 

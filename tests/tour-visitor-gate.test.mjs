@@ -58,6 +58,70 @@ async function tour(t, route, { query = '', registered = false, optIn = true } =
 }
 
 for (const route of tours) {
+  test(`${route}: closing cancels navigation and submission resumes only the new selection`, async t => {
+    const { window, viewer, flush, gateOpen } = await tour(t, route);
+    const lobby = viewer.panorama;
+    window.goToRoom('kitchen');
+    window.document.getElementById('hhReqClose').click(); flush();
+    assert.equal(gateOpen(), false);
+    assert.equal(viewer.panorama, lobby);
+    assert.equal(window.sessionStorage.getItem('heroHomesVisitor'), null);
+    assert.equal(window.document.body.style.overflow, '');
+    window.goToRoom('lobby'); flush();
+    assert.equal(gateOpen(), false);
+    window.goToRoom('dinning'); flush();
+    assert.equal(gateOpen(), true);
+    assert.equal(viewer.panorama, lobby);
+    const form = window.document.getElementById('hhRequiredVisitorForm');
+    form.dispatchEvent(new window.Event('submit', { cancelable: true }));
+    assert.equal(gateOpen(), true, 'Empty details cannot unlock navigation');
+    for (const [id, value] of Object.entries({ hhReqName: 'Test Visitor', hhReqPhone: '9000000001', hhReqCity: 'Test City' })) {
+      window.document.getElementById(id).value = value;
+    }
+    form.dispatchEvent(new window.Event('submit', { cancelable: true }));
+    assert.equal(window.document.getElementById('hhReqClose').disabled, true);
+    await new Promise(resolve => setImmediate(resolve)); flush();
+    assert.equal(gateOpen(), false);
+    assert.equal(window.document.getElementById('cardName').textContent, 'Dining Room');
+    window.goToRoom('kitchen'); flush();
+    assert.equal(gateOpen(), false);
+    assert.equal(window.document.getElementById('cardName').textContent, 'Kitchen');
+  });
+
+  test(`${route}: closing from a direct balcony returns to lobby and preserves page Back`, async t => {
+    const { window, viewer, flush, gateOpen } = await tour(t, route, { query: '?room=balcony&balconyFloor=5' });
+    const balcony = viewer.panorama;
+    window.goToRoom('kitchen');
+    window.document.getElementById('hhReqClose').click(); flush();
+    assert.equal(gateOpen(), false);
+    assert.notEqual(viewer.panorama, balcony);
+    assert.equal(window.document.getElementById('cardName').textContent, 'Lobby');
+    assert.equal(window.document.getElementById('balconyControls').style.display, 'none');
+    assert.equal(window.document.querySelector('.tour-pill.active').textContent.trim(), 'Lobby');
+    let backCalls = 0;
+    window.history.back = () => backCalls++;
+    window.document.getElementById('backBtn').click(); flush();
+    assert.equal(backCalls, 1, 'Back leaves the tour instead of returning to the old balcony');
+    assert.equal(gateOpen(), false);
+    window.goToRoom('balcony'); flush();
+    assert.equal(gateOpen(), true, 'The former entry view is now gated too');
+    window.document.getElementById('hhReqClose').click(); flush();
+    viewer.panorama.children[0].dispatchEvent(new window.Event('click')); flush();
+    assert.equal(gateOpen(), true, 'Lobby hotspots remain gated after closing');
+  });
+
+  test(`${route}: Escape closes a hold-request form without unlocking the tour`, async t => {
+    const { window, flush, gateOpen } = await tour(t, route, { query: '?room=balcony' });
+    window.document.getElementById('holdRequestBtn').click();
+    assert.equal(gateOpen(), true);
+    window.document.getElementById('hhReqClose').dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    flush();
+    assert.equal(gateOpen(), false);
+    assert.equal(window.document.getElementById('cardName').textContent, 'Lobby');
+    window.goToRoom('kitchen'); flush();
+    assert.equal(gateOpen(), true);
+  });
+
   test(`${route}: first view stays open until a different room is selected`, async t => {
     const { window, viewer, flush, gateOpen } = await tour(t, route);
     const initial = viewer.panorama;
