@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-hero-homes-visitor-gate="on-navigation">
+<html data-hero-homes-visitor-gate="true">
 
 <head>
     <meta charset="utf-8">
@@ -103,8 +103,10 @@ body {
 /* =========================================
    BOTTOM ROOM NAVIGATION
 ========================================= */
+
 .tour-nav-wrap {
     position: fixed;
+
     left: 50%;
     bottom: 22px;
 
@@ -117,9 +119,8 @@ body {
 
     width: auto;
     max-width: calc(100vw - 40px);
-
-    padding-right: 45px;
 }
+
 .tour-nav {
     display: flex;
     align-items: center;
@@ -244,7 +245,7 @@ body {
     min-width: 185px !important;
     max-width: 185px !important;
 
-      padding: 12px 16px !important;
+    padding: 12px 16px !important;
 
     background: #1E302B !important;
 
@@ -376,8 +377,7 @@ body {
 
     #roomInfoCard .hud-dims {
         font-size: 11px !important;
-        gap: 4px !important;
-        margin: 0 !important;
+        margin-bottom: 5px !important;
     }
 
     #roomInfoCard .hud-sqft {
@@ -388,76 +388,43 @@ body {
 /* =========================================
    SCROLL ARROW
 ========================================= */
-.scroll-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
 
-    display: flex;
+.scroll-arrow {
+    display: none;
+
     align-items: center;
     justify-content: center;
 
-    width: 38px;
+    width: 36px;
     height: 40px;
 
-    border: 1px solid #c62828;
-    border-radius: 10px;
+    margin-left: 5px;
 
-    background: rgba(255,255,255,0.96);
-    color: #c62828;
+    flex-shrink: 0;
 
-    box-shadow:
-        0 3px 12px rgba(0,0,0,.18);
+    border: 1px solid rgba(255,255,255,.16);
+    border-radius: 12px;
 
-    z-index: 5;
+    background: rgba(12,12,12,.55);
+    color: #fff;
 
-    cursor: pointer;
-    pointer-events: auto;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
 
-    transition:
-        opacity .25s ease,
-        transform .25s ease,
-        background .2s ease,
-        box-shadow .2s ease;
-}
+    pointer-events: none;
 
-.scroll-arrow-right {
-    right: 7px;
-}
-
-.scroll-arrow-left {
-    left: 7px;
-}
-
-.scroll-arrow:hover {
-    background: #c62828;
-    color: #ffffff;
-    box-shadow:
-        0 5px 16px rgba(198,40,40,.28);
-}
-
-.scroll-arrow:not(.hidden) {
-    animation: scrollArrowHint 1.8s ease-in-out infinite;
-}
-
-@keyframes scrollArrowHint {
-    0%, 100% {
-        transform: translateY(-50%) translateX(0);
-    }
-    50% {
-        transform: translateY(-50%) translateX(3px);
-    }
+    transition: opacity .3s ease;
 }
 
 .scroll-arrow svg {
-    width: 17px;
-    height: 17px;
+    width: 15px;
+    height: 15px;
 }
 
 .scroll-arrow.hidden {
     opacity: 0;
-    pointer-events: none;
 }
+
 
 /* =========================================
    BALCONY / FLOOR CONTROL
@@ -581,7 +548,7 @@ background: rgba(18,35,30,.94);
     }
 
     .scroll-arrow {
-        display: flex !important;
+        display: none !important;
     }
 }
 
@@ -1071,9 +1038,7 @@ background: rgba(18,35,30,.94);
         font-size: 21px;
     }
 }
-
 </style>
-
 <style>
 /* Hero Homes — Red & White theme */
 /* ===== Red & White Tour Theme ===== */
@@ -1294,32 +1259,104 @@ background: rgba(18,35,30,.94);
         font-size: 12px;
     }
 }
-/* Information UI only: numbers without units; total area hidden */
-#roomInfoCard .hud-dims {
-    display: block !important;
+
+/* =========================================================
+   ADDED DESKTOP NAVIGATION + 2K / QHD UI SCALING
+   Added from the reference tour UI.
+   Existing room/content information is unchanged.
+   ========================================================= */
+
+@media (min-width: 769px) {
+
+    /* Desktop bottom navigation */
+    .tour-nav-wrap {
+        left: 50% !important;
+        right: auto !important;
+        bottom: 22px !important;
+        width: auto !important;
+        transform: translateX(-50%) !important;
+    }
+
+    .tour-nav-wrap .tour-nav {
+        position: static !important;
+        transform: none !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+    }
+
+    /* Desktop arrows */
+    .scroll-arrow {
+        position: absolute !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        width: 38px !important;
+        height: 40px !important;
+
+        margin-left: 0 !important;
+
+        border: 1px solid #c62828 !important;
+        border-radius: 10px !important;
+
+        background: rgba(255,255,255,0.96) !important;
+        color: #c62828 !important;
+
+        box-shadow: 0 3px 12px rgba(0,0,0,.18) !important;
+
+        z-index: 5 !important;
+        cursor: pointer !important;
+        pointer-events: auto !important;
+
+        transition:
+            opacity .25s ease,
+            transform .25s ease,
+            background .2s ease,
+            box-shadow .2s ease !important;
+    }
+
+    .scroll-arrow-left {
+        left: 7px !important;
+    }
+
+    .scroll-arrow-right {
+        right: 7px !important;
+    }
+
+    .scroll-arrow:hover {
+        background: #c62828 !important;
+        color: #ffffff !important;
+        box-shadow: 0 5px 16px rgba(198,40,40,.28) !important;
+    }
+
+    .scroll-arrow svg {
+        width: 17px !important;
+        height: 17px !important;
+    }
+
+    .scroll-arrow.hidden {
+        opacity: 0 !important;
+        pointer-events: none !important;
+    }
 }
-#roomInfoCard .hud-sqft {
-    display: none !important;
-}
+
 
 /* =========================================================
    2K / QHD — 2560 × 1440
-   Full UI scaling
    ========================================================= */
 
 @media (min-width: 2560px) and (max-width: 3839px) {
 
-    /* =========================================
-       BACK BUTTON
-       ========================================= */
-
+    /* Back button */
     #backBtn {
         top: 30px !important;
         left: 30px !important;
-
         width: 56px !important;
         height: 56px !important;
-
         border-radius: 50% !important;
     }
 
@@ -1328,11 +1365,7 @@ background: rgba(18,35,30,.94);
         height: 22px !important;
     }
 
-
-    /* =========================================
-       ROOM INFORMATION CARD
-       ========================================= */
-
+    /* Information card */
     #roomInfoCard {
         top: 30px !important;
         right: 30px !important;
@@ -1343,258 +1376,170 @@ background: rgba(18,35,30,.94);
         max-width: 250px !important;
 
         padding: 18px 20px !important;
-
         box-sizing: border-box !important;
-
         border-radius: 10px !important;
     }
 
-
     #roomInfoCard .hud-name {
         margin: 0 0 7px !important;
-
         font-size: 29px !important;
         line-height: 1.1 !important;
     }
 
-
     #roomInfoCard .hud-dims {
         gap: 6px !important;
-
         font-size: 17px !important;
         line-height: 1.2 !important;
     }
-
 
     #roomInfoCard .hud-dims > span {
         margin: 0 !important;
         padding: 0 !important;
     }
 
-
-    /* =========================================
-       BOTTOM NAVIGATION
-       ========================================= */
-
+    /* Bottom navigation */
     .tour-nav-wrap {
         bottom: 28px !important;
-
         max-width: calc(100vw - 60px) !important;
-
         padding-right: 55px !important;
     }
 
-
     .tour-nav {
         gap: 5px !important;
-
         padding: 9px !important;
-
         border-radius: 20px !important;
     }
 
-
-    /* =========================================
-       ROOM BUTTONS
-       ========================================= */
-
     .tour-pill {
         height: 48px !important;
-
         padding: 0 18px !important;
-
         gap: 9px !important;
-
         border-radius: 13px !important;
-
         font-size: 15px !important;
     }
-
 
     .tour-pill svg {
         width: 18px !important;
         height: 18px !important;
     }
 
-
-    /* =========================================
-       LEFT / RIGHT NAVIGATION ARROWS
-       ========================================= */
-
+    /* 2K forward/back arrows */
     .scroll-arrow {
         width: 46px !important;
         height: 46px !important;
-
         border-radius: 11px !important;
     }
-
 
     .scroll-arrow-left {
         left: 7px !important;
     }
 
-
     .scroll-arrow-right {
         right: 7px !important;
     }
-
 
     .scroll-arrow svg {
         width: 20px !important;
         height: 20px !important;
     }
 
-
-    /* =========================================
-       REQUEST TO HOLD
-       ========================================= */
-
+    /* Request to Hold */
     #holdRequestBtn {
         right: 30px !important;
         bottom: 116px !important;
-
         height: 56px !important;
-
         padding: 0 26px !important;
-
         border-radius: 14px !important;
-
         font-size: 15px !important;
-
         gap: 10px !important;
     }
-
 
     #holdRequestBtn svg {
         width: 20px !important;
         height: 20px !important;
     }
 
-
-    /* =========================================
-       BALCONY / FLOOR CONTROL
-       ========================================= */
-
+    /* Balcony / floor control */
     #balconyControls {
         right: 30px !important;
-
         padding: 10px 13px 10px 16px !important;
-
         gap: 12px !important;
-
         border-radius: 14px !important;
     }
 
-
     #balconyControls label {
         font-size: 12px !important;
-
         letter-spacing: 1px !important;
     }
 
-
     #balconyFloorSelect {
         min-width: 125px !important;
-
         padding: 10px 30px 10px 12px !important;
-
         border-radius: 9px !important;
-
         font-size: 14px !important;
     }
 
-
-    /* =========================================
-       HOLD FORM
-       ========================================= */
-
+    /* Hold form */
     #holdCard {
         width: 520px !important;
-
         padding: 36px !important;
-
         border-radius: 16px !important;
     }
 
-
     #holdCard h2 {
         font-size: 28px !important;
-
         margin: 0 50px 9px 0 !important;
     }
 
-
     #holdCard .hold-subtitle {
         margin-bottom: 28px !important;
-
         font-size: 14px !important;
-
         line-height: 1.6 !important;
     }
-
 
     .hold-field {
         margin-bottom: 19px !important;
     }
 
-
     .hold-field label {
         margin-bottom: 8px !important;
-
         font-size: 12px !important;
     }
-
 
     .hold-field input,
     .hold-field select,
     .hold-field textarea {
         height: 50px !important;
-
         padding: 0 15px !important;
-
         border-radius: 10px !important;
-
         font-size: 14px !important;
     }
-
 
     .hold-field textarea {
         height: 90px !important;
-
         padding: 13px 15px !important;
     }
 
-
     #selectedRoom {
         padding: 14px 16px !important;
-
         margin-bottom: 20px !important;
-
         border-radius: 10px !important;
-
         font-size: 13px !important;
     }
 
-
     #submitHoldBtn {
         height: 54px !important;
-
         border-radius: 11px !important;
-
         font-size: 14px !important;
     }
-
 
     #holdClose {
         top: 16px !important;
         right: 16px !important;
-
         width: 38px !important;
         height: 38px !important;
-
         border-radius: 10px !important;
     }
-
 
     #holdClose svg {
         width: 18px !important;
@@ -1690,8 +1635,7 @@ background: rgba(18,35,30,.94);
 }
 </style>
 
-</head>
-    <script src="../../JS/HeroHomesLeadCaptureGlobal.js?v=20261005-navigation-2"></script>
+      <script src="../../../JS/HeroHomesLeadCaptureGlobal.js"></script>
 </head>
 
 <body>
@@ -1868,9 +1812,7 @@ background: rgba(18,35,30,.94);
     <div id="roomInfoCard">
         <div class="hud-name" id="cardName">Room</div>
         <div class="hud-dims">
-            <span id="cardLength">0</span>
-            <span class="hud-multiply">×</span>
-            <span id="cardWidth">0</span>
+            <span id="cardLength">0</span>&nbsp;×&nbsp;<span id="cardWidth">0</span>
         </div>
         <div class="hud-sqft" aria-hidden="true">
             <span id="cardSqft">0</span>
@@ -1883,7 +1825,7 @@ background: rgba(18,35,30,.94);
     <div class="tour-nav-wrap" id="tourNavWrap">
     <div class="tour-nav" id="tourNav">
 
-        <button class="tour-pill active" onclick="goToRoom('lobby', this)">
+       <button class="tour-pill active" onclick="goToRoom('lobby', this)">
             <svg viewBox="0 0 24 24" fill="none">
                 <path d="M4 10L12 4L20 10V20H4V10Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
             </svg>
@@ -1916,15 +1858,8 @@ background: rgba(18,35,30,.94);
             <span>Master Bedroom</span>
         </button>
 
-        <button class="tour-pill" onclick="goToRoom('room_2', this)">
-            <svg viewBox="0 0 24 24" fill="none">
-                <path d="M3 12V8H21V12" stroke="currentColor" stroke-width="1.8" />
-                <path d="M3 12H21V20H3V12Z" stroke="currentColor" stroke-width="1.8" />
-            </svg>
-            <span>Grandparent's Bedroom</span>
-        </button>
 
-        <button class="tour-pill" onclick="goToRoom('room_3', this)">
+       <button class="tour-pill" onclick="goToRoom('room_3', this)">
             <svg viewBox="0 0 24 24" fill="none">
                 <path d="M3 12V8H21V12" stroke="currentColor" stroke-width="1.8" />
                 <path d="M3 12H21V20H3V12Z" stroke="currentColor" stroke-width="1.8" />
@@ -1932,7 +1867,8 @@ background: rgba(18,35,30,.94);
             <span>Kids Room</span>
         </button>
 
-           <button class="tour-pill" onclick="goToRoom('room_4', this)">
+
+        <button class="tour-pill" onclick="goToRoom('room_2', this)">
             <svg viewBox="0 0 24 24" fill="none">
                 <path d="M3 12V8H21V12" stroke="currentColor" stroke-width="1.8" />
                 <path d="M3 12H21V20H3V12Z" stroke="currentColor" stroke-width="1.8" />
@@ -1941,7 +1877,15 @@ background: rgba(18,35,30,.94);
         </button>
 
 
-                   <button class="tour-pill" onclick="goToRoom('bathroom_1', this)">
+
+           <!-- <button class="tour-pill" onclick="goToRoom('room_4', this)">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M3 12V8H21V12" stroke="currentColor" stroke-width="1.8" />
+                <path d="M3 12H21V20H3V12Z" stroke="currentColor" stroke-width="1.8" />
+            </svg>
+            <span>Bedroom 4</span>
+        </button> -->
+           <button class="tour-pill" onclick="goToRoom('bathroom_1', this)">
             <svg viewBox="0 0 24 24" fill="none">
                 <path d="M3 12V8H21V12" stroke="currentColor" stroke-width="1.8" />
                 <path d="M3 12H21V20H3V12Z" stroke="currentColor" stroke-width="1.8" />
@@ -1957,31 +1901,18 @@ background: rgba(18,35,30,.94);
             </svg>
             <span>Bathroom 2</span>
         </button>
-        
-                   <button class="tour-pill" onclick="goToRoom('bathroom_3', this)">
+
+                           <button class="tour-pill" onclick="goToRoom('bathroom_3', this)">
             <svg viewBox="0 0 24 24" fill="none">
                 <path d="M3 12V8H21V12" stroke="currentColor" stroke-width="1.8" />
                 <path d="M3 12H21V20H3V12Z" stroke="currentColor" stroke-width="1.8" />
             </svg>
             <span>Bathroom 3</span>
         </button>
-        
-                   <button class="tour-pill" onclick="goToRoom('bathroom_4', this)">
-            <svg viewBox="0 0 24 24" fill="none">
-                <path d="M3 12V8H21V12" stroke="currentColor" stroke-width="1.8" />
-                <path d="M3 12H21V20H3V12Z" stroke="currentColor" stroke-width="1.8" />
-            </svg>
-            <span>Bathroom 4</span>
-        </button>
-        
-        
-                   <!-- <button class="tour-pill" onclick="goToRoom('pool', this)">
-            <svg viewBox="0 0 24 24" fill="none">
-                <path d="M3 12V8H21V12" stroke="currentColor" stroke-width="1.8" />
-                <path d="M3 12H21V20H3V12Z" stroke="currentColor" stroke-width="1.8" />
-            </svg>
-            <span>Pool</span>
-        </button> -->
+
+     
+
+
 
         <button class="tour-pill" data-balcony-type="F" onclick="goToRoom('balcony', this, 'F')">
             <svg viewBox="0 0 24 24" fill="none">
@@ -2028,7 +1959,7 @@ const selectedFloor = sessionStorage.getItem("selectedFloor") || "01";
         function createArrowSVG() {
             const svg = `
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
-<defs>
+ <defs>
   <radialGradient id="glassFill" cx="50%" cy="40%" r="60%">
     <stop offset="0%" stop-color="rgba(255,255,255,0.28)"/>
     <stop offset="55%" stop-color="rgba(255,255,255,0.10)"/>
@@ -2076,145 +2007,37 @@ const selectedFloor = sessionStorage.getItem("selectedFloor") || "01";
         }
 
         const ARROW_ICON = createArrowSVG();
-
-        // Read initial room from URL
-        const params = new URLSearchParams(window.location.search);
-        const initialRoom = params.get("room") || "lobby";
-        // Balcony type is supplied by the clicked OFF-state SVG: B or F.
-        let balconyType = (params.get("balconyType") || sessionStorage.getItem("balconyType") || "F").toUpperCase() === "B" ? "B" : "F";
-
-        // ── Viewer setup ──
-        const viewer = new PANOLENS.Viewer({
-            container: document.getElementById("viewer"),
-            controlBar: false
-        });
-        viewer.camera.fov = 100;
-        viewer.camera.updateProjectionMatrix();
-        // ============================================================
-// CAMERA ANGLES FOR EACH 360
-// ============================================================
-
-const CAMERA_ANGLES = {
-
-    lobby: {
-        yaw: 22,
-        pitch: 2
-    },
-
-    dinning: {
-        yaw:-10,
-        pitch: 2
-    },
-
-    kitchen: {
-        yaw: 0,
-        pitch: 0
-    },
-
-    room_1: {
-        yaw: 0,
-        pitch: 0
-    },
-
-    room_2: {
-        yaw: 0,
-        pitch: 0
-    },
-
-    room_3: {
-        yaw: 0,
-        pitch: 0
-    },
-
-    room_4: {
-        yaw: 0,
-        pitch: 0
-    },
-
-    bathroom_1: {
-        yaw: 0,
-        pitch: 0
-    },
-
-    bathroom_2: {
-        yaw: 0,
-        pitch: 0
-    },
-
-    bathroom_3: {
-        yaw: 0,
-        pitch: 0
-    },
-
-    bathroom_4: {
-        yaw: 0,
-        pitch: 0
-    },
-
-    balcony: {
-        yaw: 0,
-        pitch: 0
-    }
-};
-
-
-// ============================================================
-// APPLY CAMERA ANGLE
-// ============================================================
-
-// ============================================================
-// APPLY CAMERA ANGLE — PANOLENS VERSION
-// ============================================================
-
-function applyCameraAngle(roomName, delay = 0) {
-
-    const angle = CAMERA_ANGLES[roomName];
-
-    if (!angle) return;
-
-    const yaw = THREE.MathUtils.degToRad(angle.yaw);
-    const pitch = THREE.MathUtils.degToRad(angle.pitch);
-
-    const radius = 5000;
-
-    const cosPitch = Math.cos(pitch);
-
-    const target = new THREE.Vector3(
-        radius * cosPitch * Math.cos(yaw),
-        radius * Math.sin(pitch),
-        radius * cosPitch * Math.sin(yaw)
-    );
-
-    setTimeout(() => {
-
-        viewer.tweenControlCenter(
-            target,
-            0
-        );
-
-        viewer.camera.fov = 100;
-        viewer.camera.updateProjectionMatrix();
-
-    }, delay);
-}
-
-        // =========================================
-// CAMERA ANGLE CONTROL
+// =========================================
+// URL / BALCONY PARAMETERS
 // =========================================
 
+const params = new URLSearchParams(window.location.search);
+
+const initialRoom = params.get("room") || "lobby";
+
+let balconyType =
+    (
+        params.get("balconyType") ||
+        sessionStorage.getItem("balconyType") ||
+        "F"
+    ).toUpperCase() === "B"
+        ? "B"
+        : "F";
 
 
-        // ── Rooms ──
- // ── Progressive room panorama: webp shown first, jpg swapped in silently ──
-// ── Progressive panorama loader ──
-// WebP appears immediately.
-// JPG loads in the background and replaces WebP when ready.
+// =========================================
+// PANOLENS VIEWER
+// =========================================
 
-// ── Progressive panorama loader ──
-// WebP loads first.
-// JPG loads in the background and replaces WebP.
-// WebP color/brightness settings are preserved.
+const viewer = new PANOLENS.Viewer({
+    container: document.getElementById("viewer"),
+    controlBar: false
+});
 
+viewer.camera.fov = 100;
+viewer.camera.updateProjectionMatrix();
+        // Read initial room from URL
+   
 function createRoomPanorama(webpFile, jpgFile) {
 
     const webpPath = `images/${webpFile}`;
@@ -2306,20 +2129,18 @@ function createRoomPanorama(webpFile, jpgFile) {
 
     return panorama;
 }
-
+        // ── Rooms ──
 const rooms = {
-    bathroom_3: createRoomPanorama("Bathroom_1.webp", "Bathroom_1.jpg"),
-    bathroom_4: createRoomPanorama("Bathroom_2.webp", "Bathroom_2.jpg"),
-    bathroom_1: createRoomPanorama("Bathroom_1.webp", "Bathroom_1.jpg"),
-    bathroom_2: createRoomPanorama("Bathroom_2.webp", "Bathroom_2.jpg"),
-    lobby:      createRoomPanorama("Lobby.webp", "Lobby.jpg"),
-    dinning:    createRoomPanorama("Bar.webp", "Bar.jpg"),
-    room_1:     createRoomPanorama("Room_1.webp", "Room_1.jpg"),
-    room_2:     createRoomPanorama("Room_2.webp", "Room_2.jpg"),
-    room_3:     createRoomPanorama("Room_3.webp", "Room_3.jpg"),
-    room_4:     createRoomPanorama("Room_4.webp", "Room_4.jpg"),
-    kitchen:    createRoomPanorama("Kitchen.webp", "Kitchen.jpg"),
-    pool:       new PANOLENS.ImagePanorama("images/pool.jpg"), // no webp for this one yet
+    bathroom_1: createRoomPanorama("Bathroom-1.webp", "Bathroom-1.jpg"),
+    bathroom_2: createRoomPanorama("Bathroom-2.webp", "Bathroom-2.jpg"),
+    bathroom_3: createRoomPanorama("Bathroom-2.webp", "Bathroom-2.jpg"),
+    lobby: createRoomPanorama("Lobby.webp", "Lobby.jpg"),
+    dinning: createRoomPanorama("Dinning.webp", "Dinning.jpg"),
+    room_1: createRoomPanorama("room-1.webp", "room-1.jpg"),
+    room_3: createRoomPanorama("Kids_Room.webp", "Kids_Room.jpg"),
+    room_2: createRoomPanorama("room-2.webp", "room-2.jpg"),
+    pool: createRoomPanorama("pool.webp", "pool.jpg"),
+    kitchen: createRoomPanorama("kitchen.webp", "kitchen.jpg")
 };
         // ── Balcony floor system ──
         // The entry link sets the initial balcony; the navigation buttons can switch it.
@@ -2347,79 +2168,42 @@ const rooms = {
         }
 
         function createBalconyPanorama(floor) {
+            const towerFolder = getBalconyTowerFolder();
+            const baseName = `${balconyType} Floor ${floor}`;
+            const webpPath = `../../balcony/360/${towerFolder}/${baseName}.webp`;
+            const pngPath  = `../../balcony/360/${towerFolder}/${baseName}.png`;
 
-    const towerFolder = getBalconyTowerFolder();
-    const baseName = `${balconyType} Floor ${floor}`;
+            // WebP first; PNG replaces it in the background. No color/brightness changes.
+            const panorama = new PANOLENS.ImagePanorama(webpPath);
+            panorama.userData = { isBalconyPanorama: true, balconyFloor: floor, balconyType, webpPath, pngPath };
 
-    const webpPath = `../balcony/360/${towerFolder}/${baseName}.webp`;
-    const pngPath  = `../balcony/360/${towerFolder}/${baseName}.png`;
-
-    // Load WebP first for fast display
-    const panorama = new PANOLENS.ImagePanorama(webpPath);
-
-    panorama.userData = {
-        isBalconyPanorama: true,
-        balconyFloor: floor,
-        balconyType: balconyType,
-        webpPath: webpPath,
-        pngPath: pngPath
-    };
-
-    panorama.addEventListener("load", function () {
-
-        const loader = new THREE.TextureLoader();
-
-        loader.load(
-            pngPath,
-            function (pngTexture) {
-
-                if (!panorama.material) return;
-
-                const webpTexture = panorama.material.map;
-
-                // IMPORTANT:
-                // Three.js 0.124 uses `encoding` for color management.
-                // Force the replacement PNG to use the SAME color encoding
-                // as the WebP so the panorama does not become dark.
-                pngTexture.encoding = (
-                    webpTexture && webpTexture.encoding
-                ) ? webpTexture.encoding : THREE.sRGBEncoding;
-
-                // Preserve all texture settings used by the WebP.
-                if (webpTexture) {
-                    pngTexture.flipY = webpTexture.flipY;
-                    pngTexture.wrapS = webpTexture.wrapS;
-                    pngTexture.wrapT = webpTexture.wrapT;
-                    pngTexture.minFilter = webpTexture.minFilter;
-                    pngTexture.magFilter = webpTexture.magFilter;
-                    pngTexture.anisotropy = webpTexture.anisotropy;
-                    pngTexture.generateMipmaps = webpTexture.generateMipmaps;
-                    pngTexture.premultiplyAlpha = webpTexture.premultiplyAlpha;
-                }
-
-                pngTexture.needsUpdate = true;
-
-                // Replace WebP with PNG without changing the material.
-                panorama.material.map = pngTexture;
-                panorama.material.needsUpdate = true;
-
-                // Dispose old WebP texture after the swap.
-                if (webpTexture && webpTexture !== pngTexture) {
-                    webpTexture.dispose();
-                }
-
-                console.log("BALCONY WEBP → PNG SWAP COMPLETE:", pngPath);
-                console.log("BALCONY COLOR ENCODING:", pngTexture.encoding);
-            },
-            undefined,
-            function (error) {
-                console.error("BALCONY PNG FAILED TO LOAD:", pngPath, error);
-            }
-        );
-    });
-
-    return panorama;
-}
+            panorama.addEventListener("load", function () {
+                const loader = new THREE.TextureLoader();
+                loader.load(pngPath, function (pngTexture) {
+                    if (!panorama.material) { pngTexture.dispose(); return; }
+                    const webpTexture = panorama.material.map;
+                    if (webpTexture) {
+                        if ("encoding" in webpTexture && "encoding" in pngTexture) pngTexture.encoding = webpTexture.encoding;
+                        pngTexture.flipY = webpTexture.flipY;
+                        pngTexture.wrapS = webpTexture.wrapS;
+                        pngTexture.wrapT = webpTexture.wrapT;
+                        pngTexture.minFilter = webpTexture.minFilter;
+                        pngTexture.magFilter = webpTexture.magFilter;
+                        pngTexture.anisotropy = webpTexture.anisotropy;
+                        if ("premultiplyAlpha" in webpTexture) pngTexture.premultiplyAlpha = webpTexture.premultiplyAlpha;
+                        if ("unpackAlignment" in webpTexture) pngTexture.unpackAlignment = webpTexture.unpackAlignment;
+                    }
+                    pngTexture.needsUpdate = true;
+                    panorama.material.map = pngTexture;
+                    panorama.material.needsUpdate = true;
+                    if (webpTexture) webpTexture.dispose();
+                    console.log("BALCONY WEBP → PNG COMPLETE:", pngPath);
+                }, undefined, function (error) {
+                    console.error("BALCONY PNG FAILED TO LOAD:", pngPath, error);
+                });
+            });
+            return panorama;
+        }
 
         rooms.balcony = createBalconyPanorama(currentBalconyFloor);
 
@@ -2441,18 +2225,7 @@ const rooms = {
             });
         }
 
-        let currentTourView = '';
-        function tourViewKey(roomName, type, floor) {
-            return JSON.stringify(roomName === 'balcony' ? [roomName, type, floor] : [roomName]);
-        }
-
-        function allowTourNavigation(roomName, type, floor, resume) {
-            if (tourViewKey(roomName, type, floor) === currentTourView) return true;
-            return window.HeroHomesRequireVisitor?.(resume) ?? true;
-        }
-
         function updateBalconyControls(roomName) {
-            currentTourView = tourViewKey(roomName, balconyType, currentBalconyFloor);
             window.HeroHomesAnalytics?.trackRoom(roomName, { balconyType, balconyFloor: currentBalconyFloor });
             updateActiveRoomPill(roomName);
             const controls = document.getElementById("balconyControls");
@@ -2484,10 +2257,6 @@ const rooms = {
         function changeBalconyFloor(floor) {
             floor = parseInt(floor, 10);
             if (!BALCONY_FLOORS.includes(floor)) return;
-            if (!allowTourNavigation('balcony', balconyType, floor, () => changeBalconyFloor(floor))) {
-                updateFloorIndicator();
-                return;
-            }
             currentBalconyFloor = floor;
             sessionStorage.setItem("balconyType", balconyType);
             const oldBalcony = rooms.balcony;
@@ -2497,6 +2266,12 @@ const rooms = {
             viewer.add(panorama);
             rooms.balcony = panorama;
             viewer.setPanorama(panorama);
+
+            // Keep the balcony panorama at its configured starting angle.
+            setTimeout(() => {
+                applyCameraAngle("balcony");
+            }, 50);
+
             updateBalconyControls("balcony");
 
             // Remove the previous dynamically-created panorama when PANOLENS exposes remove().
@@ -2514,7 +2289,6 @@ const rooms = {
 
         // ── Helpers ──
         function addHotspot(from, to, yaw, pitch, text) {
-            
             const spot = new PANOLENS.Infospot(500, ARROW_ICON);
             const r = 5000;
             const phi = THREE.MathUtils.degToRad(90 - pitch);
@@ -2526,7 +2300,6 @@ const rooms = {
             );
             spot.addHoverText(text);
             spot.addEventListener("click", () => {
-                if (!allowTourNavigation(to, balconyType, currentBalconyFloor, () => goToRoom(to))) return;
                 const overlay = document.getElementById("fadeOverlay");
                 viewer.tweenControlCenter(spot.position);
                 setTimeout(() => {
@@ -2539,11 +2312,15 @@ const rooms = {
                             requestAnimationFrame(zoom);
                         } else {
                             overlay.style.opacity = 0.25;
-               viewer.setPanorama(rooms[to]);
+                            viewer.setPanorama(rooms[to]);
+                            viewer.camera.fov = 100;
+                            viewer.camera.updateProjectionMatrix();
 
-setTimeout(() => {
-    applyCameraAngle(to);
-}, 50);
+                            // Apply the saved starting camera angle for the destination room.
+                            setTimeout(() => {
+                                applyCameraAngle(to);
+                            }, 50);
+
                             setTimeout(() => { overlay.style.opacity = 0; }, 300);
                             showInfoCard(to);
                             updateBalconyControls(to);
@@ -2555,20 +2332,18 @@ setTimeout(() => {
             rooms[from].add(spot);
         }
 
-        // ── Room data ──
-        const roomData = {
-            lobby: { name: "Lobby", L: 14.8, W: 19 },
-            dinning: { name: "Dining Room", L: 9.8, W: 13.10 },
-            kitchen: { name: "Kitchen", L: 9, W: 13.6 },
-            room_1: { name: "Bedroom 1", L: 12, W: 15.2 },
-            room_2: { name: "Bedroom 2", L: 12, W: 13.6 },
-            room_3: { name: "Bedroom 3", L: 12, W: 1.2 },
-            room_4: { name: "Bedroom 4", L: 12.4, W: 15.10},
-            bathroom_1: { name: "Bathroom 1", L: 6.2, W: 9.2 },
-            bathroom_2: { name: "Bathroom 2", L: 6.2, W: 9.2 },
-            bathroom_3: { name: "Bathroom 3", L: 8.2, W: 6.2 },
-            bathroom_4: { name: "Bathroom 4", L: 11.2, W: 7.6 },
-              pool: { name: "Pool", L: 6, W: 8 },
+       const roomData = {
+            lobby: { name: "Lobby", L: 12.6, W: 18.1 },
+            dinning: { name: "Dining Room", L: 9.2, W: 12.4 },
+            kitchen: { name: "Kitchen", L: 8.2, W: 12 },
+            room_1: { name: "Bedroom 1", L: 11.8, W: 14.2 },
+            room_2: { name: "Bedroom 2", L: 12, W: 14.2},
+            room_3: { name: "Bedroom 3", L: 13, W: 14.2 },
+           
+            bathroom_1: { name: "Bathroom 1", L: 5.2, W: 8.10 },
+            bathroom_2: { name: "Bathroom 2", L: 8.2, W: 6.8 },
+            bathroom_3: { name: "Bathroom 2", L: 8.2, W: 6.8 },
+        pool: { name: "Pool", L: 6.10, W: 6 },
         };
         function showInfoCard(roomKey) {
             const data = roomData[roomKey];
@@ -2583,12 +2358,61 @@ setTimeout(() => {
             setTimeout(() => card.classList.add("visible"), 80);
         }
 
+// =========================================
+// 360° CAMERA STARTING ANGLES
+// =========================================
+//
+// yaw   = left / right rotation in degrees
+// pitch = up / down rotation in degrees
+// fov   = zoom level (smaller = more zoomed in)
+//
+// Change these values for each room to decide exactly
+// which direction the 360° panorama opens toward.
+// =========================================
+
+const CAMERA_ANGLES = {
+    lobby:       { yaw:   0, pitch:  0, fov: 100 },
+    dinning:     { yaw: 0, pitch:  0, fov: 100 },
+    kitchen:     { yaw:  0, pitch:  0, fov: 100 },
+    room_1:      { yaw:  0, pitch:  0, fov: 100 },
+    room_2:      { yaw: 0, pitch:  0, fov: 100 },
+    room_3:      { yaw:  0, pitch:  0, fov: 100 },
+    bathroom_1:  { yaw: 0, pitch:  0, fov: 100 },
+    bathroom_2:  { yaw:   0, pitch:  0, fov: 100 },
+    bathroom_3:  { yaw:  0, pitch:  0, fov: 100 },
+    balcony:     { yaw: 0, pitch: -5, fov: 100 },
+    pool:        { yaw:   0, pitch:  0, fov: 100 }
+};
+
+function applyCameraAngle(roomName) {
+    const angle = CAMERA_ANGLES[roomName];
+    if (!angle || !viewer || !viewer.camera) return;
+
+    const distance = 5000;
+
+    const phi = THREE.MathUtils.degToRad(90 - angle.pitch);
+    const theta = THREE.MathUtils.degToRad(angle.yaw);
+
+    const target = new THREE.Vector3(
+        distance * Math.sin(phi) * Math.cos(theta),
+        distance * Math.cos(phi),
+        distance * Math.sin(phi) * Math.sin(theta)
+    );
+
+    // Smoothly rotate the 360° view to the requested direction.
+    if (typeof viewer.tweenControlCenter === "function") {
+        viewer.tweenControlCenter(target, 700);
+    } else {
+        viewer.camera.lookAt(target);
+    }
+
+    viewer.camera.fov = angle.fov;
+    viewer.camera.updateProjectionMatrix();
+}
+
         // ── Nav pill navigation ──
 // ── Nav pill navigation ──
 function goToRoom(roomName, btn, requestedBalconyType = balconyType) {
-    if (!rooms[roomName]) return;
-    const nextType = requestedBalconyType === 'B' ? 'B' : 'F';
-    if (!allowTourNavigation(roomName, nextType, currentBalconyFloor, () => goToRoom(roomName, btn, nextType))) return;
     if (roomName === "balcony") {
         balconyType = requestedBalconyType === "B" ? "B" : "F";
         sessionStorage.setItem("balconyType", balconyType);
@@ -2635,75 +2459,63 @@ function goToRoom(roomName, btn, requestedBalconyType = balconyType) {
 
     }, 300);
 }
+
         // ── Hotspots ──
-        // ── Hotspots ──
-        addHotspot("lobby", "dinning", -300, -6, "Dinning & Bar");
-        addHotspot("lobby", "balcony", -27, 2, "Balcony");
-        addHotspot("lobby", "room_1", 56, -6, "Master Bedroom");
-         addHotspot("lobby", "room_2", 55, 2, "Grandparent's Room");
-         addHotspot("lobby", "room_3", 46, -6, "Kids Room");
-         addHotspot("lobby", "room_3", 47, 2, "Guest Room");
+    addHotspot("lobby", "dinning", -300, -7, "Dinning & Bar");
+         addHotspot("lobby", "balcony", -25, -7, "Balcony");
+        
+         addHotspot("lobby", "room_1", -303, -3, "Master Bedroom");
+          addHotspot("lobby", "room_2", -316, -9, "Kids Room");
+           addHotspot("lobby", "room_3", -314, -3, "Guest Room");
+     
+      addHotspot("room_2", "bathroom_3", 64, -3, "Bathroom");
+      addHotspot("bathroom_3", "room_2", 89, -3, "Guest Room");
 
-
-
-
-
-
-
-           addHotspot("dinning", "room_4", -94, 3, "Room 4");
+        addHotspot("dinning", "bathroom_1", -42, -5, "Bathroom ");
+        addHotspot("dinning", "kitchen", 8, -5, "Kitchen");
+     addHotspot("dinning", "room_3", -26, -5, "Kids Room");  
 
 
 
        
- addHotspot("kitchen", "dinning", -50, -10, "Dinning");
-
-
-
-addHotspot("room_4", "balcony", 80, -6, "balcony ");
-addHotspot("room_3", "balcony", -75, -6, "balcony ");
-addHotspot("room_2", "balcony", -75, -6, "balcony ");
-addHotspot("room_1", "balcony", -75, -6, "balcony ");
-
-addHotspot("bathroom_2", "room_1", -150, -6, "Master Bedroom ");
+        addHotspot("kitchen", "dinning", -170, -10, "Dinning");
+        addHotspot("kitchen", "lobby", -137, -5, "Lobby");
        
-addHotspot("room_1", "bathroom_2", -121, -6, "Bathroom ");
-        addHotspot("room_1", "lobby", 100, -6, "Lobby");
 
-addHotspot("room_3", "bathroom_3", -219, -6, "Bathroom ");
-        addHotspot("room_3", "lobby", 105, -10, "Lobby");
-         addHotspot("room_4", "lobby", -135, -10, "Lobby");
-         addHotspot("room_4", "bathroom_4", -79, -6, "Bathroom ");
-          addHotspot("bathroom_4", "room_4", -145, -6, "Guest Room");
+        addHotspot("room_1", "lobby", -89, -6, "Lobby");
+        addHotspot("room_1", "lobby", 73, -6, "Balcony");
 
-addHotspot("bathroom_3", "room_3", -70, -6, "Kids Room ");
-
-
-
-
-   addHotspot("bathroom_1", "room_2", -70, -6, "Grandparent's Room ");
+        addHotspot("room_3", "bathroom_1", -46, -5, "Bathroom");
+        addHotspot("bathroom_1", "room_3", 105, -5, "Kids Room");
+        
+      
    
-   addHotspot("room_2", "bathroom_1", -209, -6, "Bathroom ");
-        addHotspot("room_2", "lobby", 100, -6, "Lobby");
+        addHotspot("room_2", "lobby", 120, -6, "Lobby");
+        addHotspot("room_2", "balcony", -90, -6, "Balcony");
     
 
         addHotspot("balcony", "room_1", -130, -6, "Master Bedroom");
 
+
+
+
+        addHotspot("bathroom_1", "lobby", -46, -5, "Lobby");
+        addHotspot("bathroom_1", "room_3", -110, -5, "Kids Room");
+
         // ── Init ──
-const startRoom =
-    rooms[initialRoom] ? initialRoom : "lobby";
+        const startRoom = rooms[initialRoom] ? initialRoom : "lobby";
+        viewer.setPanorama(rooms[startRoom]);
 
-viewer.setPanorama(rooms[startRoom]);
+        // Apply the starting camera angle on first load.
+        setTimeout(() => {
+            applyCameraAngle(startRoom);
+        }, 150);
 
-setTimeout(() => {
-    applyCameraAngle(startRoom);
-}, 100);
-
-showInfoCard(startRoom);
-updateBalconyControls(startRoom);
+        showInfoCard(startRoom);
         updateBalconyControls(startRoom);
 
 
-    // ── Room navigation history ──
+ // ── Room navigation history ──
 // =========================================
 // ROOM HISTORY + PAGE HISTORY
 // =========================================
@@ -2803,25 +2615,41 @@ document.getElementById("backBtn").addEventListener("click", function (e) {
             tourNav.addEventListener('scroll', updateScrollArrows, { passive: true });
             window.addEventListener('resize', updateScrollArrows);
 
-            // Wait until layout is complete so scrollWidth/clientWidth are correct.
             requestAnimationFrame(updateScrollArrows);
             window.addEventListener('load', updateScrollArrows);
         }
-        document.getElementById("floorMapBtn").addEventListener("click", () => {
+</script>
+
+<script>
+    (function () {
+        const floorMapBtn = document.getElementById("floorMapBtn");
+        if (!floorMapBtn) return;
+        floorMapBtn.addEventListener("click", () => {
             const pageParams = new URLSearchParams(window.location.search);
-            const tower = pageParams.get("tower") || sessionStorage.getItem("selectedTower") || "9";
+            const tower = pageParams.get("tower") || sessionStorage.getItem("selectedTower") || "10";
             const floor = pageParams.get("floor") || sessionStorage.getItem("selectedFloor") || "1";
             const unit = pageParams.get("unit") || sessionStorage.getItem("selectedUnit");
-            const floorMaps = { "9": "../Floor/Tower-9.html", "12A": "../Floor/Tower-C-12-A.html" };
-            const destination = new URL(floorMaps[tower] || floorMaps["9"], window.location.href);
+            const floorMaps = { "10": "../../Floor/Tower-10.html", "12": "../../Floor/Tower-12.html" };
+            const destination = new URL(floorMaps[tower] || floorMaps["10"], window.location.href);
             destination.searchParams.set("tower", tower);
             destination.searchParams.set("floor", floor);
             if (unit) destination.searchParams.set("unit", unit);
             window.location.href = destination.href;
         });
+    })();
 </script>
-
-<script type="module" src="../../JS/HeroHomesAnalytics.js"></script>
+<script type="module" src="../../../JS/HeroHomesAnalytics.js"></script>
 </body>
 
 </html>
+<style>
+/* Room info: show dimensions as numbers only */
+#roomInfoCard .hud-dims {
+    display: block !important;
+}
+
+/* Keep cardSqft in the DOM for existing JS, but never display total area */
+#roomInfoCard .hud-sqft {
+    display: none !important;
+}
+</style>

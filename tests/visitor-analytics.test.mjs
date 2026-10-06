@@ -231,7 +231,7 @@ test('Home and admin never create an identity or flush stored analytics', async 
 
 test('Typical form failure retains anonymous identity; success enriches it and avoids repeat prompts', async t => {
   const gateSource = readFileSync(path.join(root, 'map/IPX/JS/HeroHomesLeadCaptureGlobal.js'), 'utf8');
-  const html = '<html data-hero-homes-visitor-gate="true"><body></body></html>';
+  const html = '<html data-hero-homes-visitor-gate="on-navigation"><body></body></html>';
   const browser = tracker({}, { html }); t.after(() => browser.dom.window.close());
   await settle();
   const anonymous = browser.calls[0];
@@ -244,6 +244,9 @@ test('Typical form failure retains anonymous identity; success enriches it and a
   };
   browser.window.eval(gateSource); await settle();
   const document = browser.window.document;
+  assert.equal(document.getElementById('hhRequiredVisitorGate'), null);
+  let resumed = false;
+  assert.equal(browser.window.HeroHomesRequireVisitor(() => { resumed = true; }), false);
   assert.ok(document.getElementById('hhRequiredVisitorGate').classList.contains('open'));
   for (const [id, value] of Object.entries({ hhReqName: 'Test Visitor', hhReqPhone: '9000000001', hhReqEmail: 'test@example.com', hhReqCity: 'Test City' })) {
     document.getElementById(id).value = value;
@@ -254,6 +257,7 @@ test('Typical form failure retains anonymous identity; success enriches it and a
   assert.match(document.getElementById('hhReqError').textContent, /Could not submit/);
   assert.ok(document.getElementById('hhRequiredVisitorGate').classList.contains('open'));
   fail = false; submit(); await settle();
+  assert.equal(resumed, true);
   const registered = browser.calls.at(-1);
   assert.equal(registered.name, 'Test Visitor');
   assert.equal(registered.visitor_id, anonymous.visitor_id);
@@ -330,7 +334,7 @@ test('Map pages include a valid tracker; public home and admin do not track visi
     if (file.includes(`${path.sep}admin${path.sep}`) || file === path.join(root, 'index.html')) { assert.equal(scripts.length, 0); continue; }
     assert.equal(scripts.length, 1, file);
     assert.ok(existsSync(path.resolve(path.dirname(file), scripts[0][1])), file);
-    assert.equal(html.includes('data-hero-homes-visitor-gate="true"'), path.basename(file) === 'Typical.html', file);
+    assert.equal(html.includes('data-hero-homes-visitor-gate="on-navigation"'), path.basename(file) === 'Typical.html', file);
     tracked++;
   }
   assert.equal(tracked, 46);

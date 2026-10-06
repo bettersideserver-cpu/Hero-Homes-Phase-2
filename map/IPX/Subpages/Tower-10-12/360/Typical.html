@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-hero-homes-visitor-gate="true">
+<html data-hero-homes-visitor-gate="on-navigation">
 
 <head>
     <meta charset="utf-8">
@@ -1635,7 +1635,7 @@ background: rgba(18,35,30,.94);
 }
 </style>
 
-      <script src="../../../JS/HeroHomesLeadCaptureGlobal.js"></script>
+      <script src="../../../JS/HeroHomesLeadCaptureGlobal.js?v=20261005-navigation-2"></script>
 </head>
 
 <body>
@@ -2225,7 +2225,18 @@ const rooms = {
             });
         }
 
+        let currentTourView = '';
+        function tourViewKey(roomName, type, floor) {
+            return JSON.stringify(roomName === 'balcony' ? [roomName, type, floor] : [roomName]);
+        }
+
+        function allowTourNavigation(roomName, type, floor, resume) {
+            if (tourViewKey(roomName, type, floor) === currentTourView) return true;
+            return window.HeroHomesRequireVisitor?.(resume) ?? true;
+        }
+
         function updateBalconyControls(roomName) {
+            currentTourView = tourViewKey(roomName, balconyType, currentBalconyFloor);
             window.HeroHomesAnalytics?.trackRoom(roomName, { balconyType, balconyFloor: currentBalconyFloor });
             updateActiveRoomPill(roomName);
             const controls = document.getElementById("balconyControls");
@@ -2257,6 +2268,10 @@ const rooms = {
         function changeBalconyFloor(floor) {
             floor = parseInt(floor, 10);
             if (!BALCONY_FLOORS.includes(floor)) return;
+            if (!allowTourNavigation('balcony', balconyType, floor, () => changeBalconyFloor(floor))) {
+                updateFloorIndicator();
+                return;
+            }
             currentBalconyFloor = floor;
             sessionStorage.setItem("balconyType", balconyType);
             const oldBalcony = rooms.balcony;
@@ -2300,6 +2315,7 @@ const rooms = {
             );
             spot.addHoverText(text);
             spot.addEventListener("click", () => {
+                if (!allowTourNavigation(to, balconyType, currentBalconyFloor, () => goToRoom(to))) return;
                 const overlay = document.getElementById("fadeOverlay");
                 viewer.tweenControlCenter(spot.position);
                 setTimeout(() => {
@@ -2413,6 +2429,9 @@ function applyCameraAngle(roomName) {
         // ── Nav pill navigation ──
 // ── Nav pill navigation ──
 function goToRoom(roomName, btn, requestedBalconyType = balconyType) {
+    if (!rooms[roomName]) return;
+    const nextType = requestedBalconyType === 'B' ? 'B' : 'F';
+    if (!allowTourNavigation(roomName, nextType, currentBalconyFloor, () => goToRoom(roomName, btn, nextType))) return;
     if (roomName === "balcony") {
         balconyType = requestedBalconyType === "B" ? "B" : "F";
         sessionStorage.setItem("balconyType", balconyType);

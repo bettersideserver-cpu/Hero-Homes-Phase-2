@@ -1,20 +1,20 @@
 /* Hero Homes — shared tower information panel.
  * EDIT THE SAMPLE DETAILS BELOW. Values are placeholders, not verified areas.
- * Each key is the HTML filename. Keep superArea as text; "sq ft" is added by the panel.
+ * Each key is the HTML filename. Keep carpetArea as text; "sq ft" is added by the panel.
  * Tower_A shows towers 9/10; Tower_B shows 11; Tower_C shows 12/12A.
  */
 (() => {
   'use strict';
 
   const DETAILS = {
-    'Tower_A.html':      { name: 'Towers 9 & 10',  apartment: '3 & 4 BHK', superArea: '1,412 \u2013 2,131' },
-    'Tower_B.html':      { name: 'Tower 11',       apartment: '3 BHK',     superArea: '1,412 \u2013 2,131' },
-    'Tower_C.html':      { name: 'Towers 12 & 12A', apartment: '3 & 4 BHK', superArea: '1,412 \u2013 2,131' },
-    'Tower-9.html':      { name: 'Tower 9',        apartment: '4 BHK',     superArea: '1,412 \u2013 2,131' },
-    'Tower-10.html':     { name: 'Tower 10',       apartment: '3 BHK',     superArea: '1,412 \u2013 2,131' },
-    'Tower-11.html':     { name: 'Tower 11',       apartment: '4 BHK',     superArea: '2,595' },
-    'Tower-12.html':     { name: 'Tower 12',       apartment: '3 BHK',     superArea: '1,412 \u2013 2,131' },
-    'Tower-C-12-A.html': { name: 'Tower 12A',      apartment: '4 BHK',     superArea: '1,412 \u2013 2,131' }
+    'Tower_A.html':      { name: 'Towers 9 & 10',  apartment: '3 & 4 BHK', carpetArea: '1,412 \u2013 2,131' },
+    'Tower_B.html':      { name: 'Tower 11',       apartment: '3 BHK',     carpetArea: '1,412 \u2013 2,131' },
+    'Tower_C.html':      { name: 'Towers 12 & 12A', apartment: '3 & 4 BHK', carpetArea: '1,412 \u2013 2,131' },
+    'Tower-9.html':      { name: 'Tower 9',        apartment: '4 BHK',     carpetArea: '1,412 \u2013 2,131' },
+    'Tower-10.html':     { name: 'Tower 10',       apartment: '3 BHK',     carpetArea: '1,412 \u2013 2,131' },
+    'Tower-11.html':     { name: 'Tower 11',       apartment: '4 BHK',     carpetArea: '2,595' },
+    'Tower-12.html':     { name: 'Tower 12',       apartment: '3 BHK',     carpetArea: '1,412 \u2013 2,131' },
+    'Tower-C-12-A.html': { name: 'Tower 12A',      apartment: '4 BHK',     carpetArea: '1,412 \u2013 2,131' }
   };
 
   function init() {
@@ -39,13 +39,13 @@
         <h2 class="hh-details-name" id="hhTowerDetailsName"></h2>
         <dl class="hh-details-facts">
           <div class="hh-details-fact"><dt>Apartment</dt><dd class="hh-details-apartment"></dd></div>
-          <div class="hh-details-fact"><dt>Super Area</dt><dd><span class="hh-details-area"></span><span class="hh-details-unit">sq ft</span></dd></div>
+          <div class="hh-details-fact"><dt>Carpet area</dt><dd><span class="hh-details-area"></span><span class="hh-details-unit">sq ft</span></dd></div>
         </dl>
         <div class="hh-details-footer"><span>HERO HOMES</span><span>PHASE 2</span></div>
       </aside>`;
     widget.querySelector('.hh-details-name').textContent = details.name;
     widget.querySelector('.hh-details-apartment').textContent = details.apartment;
-    widget.querySelector('.hh-details-area').textContent = details.superArea;
+    widget.querySelector('.hh-details-area').textContent = details.carpetArea;
 
     document.body.classList.add('hh-has-tower-details');
     document.body.classList.toggle('hh-details-floor-page', isFloor);

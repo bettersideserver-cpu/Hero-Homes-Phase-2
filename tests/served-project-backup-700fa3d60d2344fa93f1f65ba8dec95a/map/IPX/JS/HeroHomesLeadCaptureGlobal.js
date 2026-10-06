@@ -4,7 +4,6 @@
   const SUPABASE_URL='https://lgsuzidpqnqgyqucrotx.supabase.co';
   const SUPABASE_KEY='sb_publishable_K587kfedNvRzY0t03KfAzQ_zVMjCcuS';
   const VISITOR_KEY='heroHomesVisitor';
-  let pendingNavigation=null;
 
   const saved=()=>{try{return JSON.parse(sessionStorage.getItem(VISITOR_KEY)||'null')}catch(e){return null}};
   const save=v=>{sessionStorage.setItem(VISITOR_KEY,JSON.stringify(v));window.HeroHomesVisitor=v;window.dispatchEvent(new Event('hero-homes:visitor-ready'))};
@@ -75,15 +74,12 @@
       if(!name||!city||!/^[0-9]{10}$/.test(phone)){err.textContent='Please enter your name, valid 10-digit phone number and city.';return}
       if(email && !/^\S+@\S+\.\S+$/.test(email)){err.textContent='Please enter a valid email address.';return}
       btn.disabled=true;btn.textContent='Submitting...';
-      let continueTour=null;
       try{
         await post('visitors',{name,first_name:name.split(/\s+/)[0]||name,last_name:name.split(/\s+/).slice(1).join(' '),mobile:phone,phone:phone,dial_code:'+91',email:email||'',city,source_page:location.href});
         save({fullName:name,mobile:phone,email,city,submittedAt:new Date().toISOString()});
         g.classList.remove('open');document.body.style.overflow='';
-        continueTour=pendingNavigation;pendingNavigation=null;
       }catch(ex){console.error('Hero Homes visitor submit:',ex);err.textContent='Could not submit: '+ex.message}
       finally{btn.disabled=false;btn.textContent='Continue'}
-      if(continueTour)continueTour();
     });
     return g;
   }
@@ -93,15 +89,6 @@
     if(saved())return;
     const g=ensureGate();g.classList.add('open');document.body.style.overflow='hidden';
   }
-
-  // Called only by an explicit navigation action, never by tour initialization,
-  // image loading or camera movement. Resume the requested view after submission.
-  window.HeroHomesRequireVisitor=function(continueTour){
-    if(document.documentElement.dataset.heroHomesVisitorGate!=='on-navigation'||saved())return true;
-    if(!pendingNavigation)pendingNavigation=continueTour;
-    showGate();
-    return false;
-  };
 
   function setContext(tower,floor,unit){
     if(tower){sessionStorage.setItem('heroHomesTower',String(tower));sessionStorage.setItem('selectedTower',String(tower))}
@@ -136,8 +123,10 @@
 
   function init(){
     window.HeroHomesVisitor=saved();window.HeroHomesContext=context;window.HeroHomesGetSavedLead=saved;window.HeroHomesResetVisitor=()=>{sessionStorage.removeItem(VISITOR_KEY);location.reload()};
-    // Arrival never opens a form. The tour's navigation actions request it.
-    hideOldForms();
+    // Only pages that opt in should show the visitor form on arrival.
+    // The three Typical tour pages opt in with data-hero-homes-visitor-gate="true".
+    const shouldShowInitialGate=document.documentElement.dataset.heroHomesVisitorGate==='true';
+    if(shouldShowInitialGate && !saved())showGate();
     wireTowerFloorLinks();wireHold();
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
