@@ -598,8 +598,8 @@
     <div class="lobby-top">
         <div class="content-wrapper" id="contentWrapper">
             <!-- <img src="./../../images/Apparments/1BHK/Lobby_Top.jpg" alt="Typical Lobby Image" /> -->
-            <img id="mainImage" src="images/Floor_11.jpg" data-full="images/Floor_11.jpg" alt="Home"
-                fetchpriority="high" decoding="async" width="4096" height="4096" class="blur-up" />
+            <img id="mainImage" src="images/Floor_11/Floor_1.webp" data-full="images/Floor_11/Floor_1.jpg" alt="Home"
+                fetchpriority="high" decoding="async" width="3840" height="5830" class="blur-up" />
             <div class="Cutout">
 
                 <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" viewBox="0 0 3840 5830">
@@ -804,6 +804,7 @@
     <script src="JS/bz021sxwxo.js"></script>
     <script src="JS/3qjueo9nsm.js"></script>
     <script src="JS/5guwuzaijb.js"></script>
+    <script src="JS/HeroHomesFloorImage.js"></script>
     <script src="JS/ky0nwmerow.js"></script>
     <script src="JS/s2dlrxbqxj.js"></script>
     <script src="JS/ekdxgbwr0o.js"></script>
@@ -1094,9 +1095,10 @@
     <script>
         /* BALCONY SVG -> BALCONY PANORAMA LINKING
          *
-         * Change the IDs in the B or F arrays below to control which OFF-state
-         * balcony SVG path opens the B Floor or F Floor panorama.
+         * Change the IDs in the arrays below to choose an OFF-state balcony panorama:
+         * B, F, C1 F, C1 B, C2 F, or C2 B.
          * IDs are the exact SVG path IDs from this file.
+         * Move each ID into its desired array; keep it in only one array.
          * Any balcony path not listed defaults to F.
          */
         (function () {
@@ -1105,16 +1107,32 @@
                     // PUT ANY BALCONY SVG IDs HERE to open B Floor.
                     // Example: "1 Balcony 1", "2 Balcony 3"
                     "1 Balcony 2",
-                    "1 Balcony 1",
+
                     "2 Balcony 2",
-                    "2 Balcony 1",
+
                 ],
                 F: [
-                    "1 Balcony 4",
+
                     "1 Balcony 3",
-                    "2 Balcony 4",
+
                     "2 Balcony 3",
 
+                ],
+                "C1 F": [
+                    // PUT BALCONY SVG IDs HERE to open C1 F Floor images.
+                    "1 Balcony 4",
+                ],
+                "C1 B": [
+                    // PUT BALCONY SVG IDs HERE to open C1 B Floor images.
+                    "1 Balcony 1",
+                ],
+                "C2 F": [
+                    // PUT BALCONY SVG IDs HERE to open C2 F Floor images.
+                    "2 Balcony 4",
+                ],
+                "C2 B": [
+                    // PUT BALCONY SVG IDs HERE to open C2 B Floor images.
+                    "2 Balcony 1",
                 ]
             };
 
@@ -1152,7 +1170,9 @@
 
             document.querySelectorAll('.Cutout path[id*="Balcony"], .Cutout path[id*="balcony"]').forEach(path => {
                 const key = normalize(path.id);
-                const type = String(path.dataset.balconyType || balconyTypeById[key] || BALCONY_DEFAULT_TYPE).toUpperCase() === 'B' ? 'B' : 'F';
+                const requestedType = normalize(path.dataset.balconyType || balconyTypeById[key] || BALCONY_DEFAULT_TYPE).toUpperCase();
+                const type = Object.prototype.hasOwnProperty.call(BALCONY_SVG_ASSIGNMENTS, requestedType)
+                    ? requestedType : BALCONY_DEFAULT_TYPE;
                 path.dataset.balconyType = type;
                 path.classList.add('balcony-svg-link');
 
@@ -1338,7 +1358,7 @@
         })();
     </script>
     <script src="hh-mobile-stage-fix.js"></script>
-<script type="module" src="../../JS/HeroHomesAnalytics.js"></script>
+    <script type="module" src="../../JS/HeroHomesAnalytics.js"></script>
 </body>
 
 </html>

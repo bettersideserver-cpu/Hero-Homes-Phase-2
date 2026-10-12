@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { JSDOM } from 'jsdom';
 
 const tours = ['9-12-Typical/Typical.html', 'Tower-10-12/360/Typical.html', 'Tower-B/360/Typical.html'];
@@ -209,4 +209,50 @@ test('Pages without a visitor-gate opt-in do not open a form during navigation',
   const { window, flush, gateOpen } = await tour(t, tours[0], { optIn: false });
   window.goToRoom('kitchen'); flush();
   assert.equal(gateOpen(), false);
+});
+
+for (const type of ['B', 'F', 'C1 F', 'C1 B', 'C2 F', 'C2 B']) {
+  test(`Tower 11: ${type} opens existing images at every selectable floor`, async t => {
+    const route = 'Tower-B/360/Typical.html';
+    const { window, viewer, flush } = await tour(t, route, {
+      query: `?tower=11&room=balcony&floor=32&balconyType=${encodeURIComponent(type)}`,
+      registered: true
+    });
+    const select = window.document.getElementById('balconyFloorSelect');
+    const topFloor = type.startsWith('C') ? 30 : 32;
+    const extension = type.startsWith('C') ? 'jpg' : 'webp';
+    assert.equal(viewer.panorama.userData.balconyType, type);
+    assert.equal(viewer.panorama.userData.balconyFloor, topFloor);
+    assert.equal(select.value, String(topFloor));
+    assert.deepEqual(Array.from(select.options, option => Number(option.value)), [1, 5, 10, 15, 20, 25, topFloor]);
+    for (const floor of [1, 5, 10, 15, 20, 25, topFloor]) {
+      select.value = String(floor);
+      select.dispatchEvent(new window.Event('change')); flush();
+      assert.equal(viewer.panorama.src, `../../balcony/360/Floor_11/${type} Floor ${floor}.${extension}`);
+      const image = new URL(viewer.panorama.src, new URL(`../map/IPX/Subpages/${route}`, import.meta.url));
+      assert.ok(existsSync(image), `Missing panorama: ${image.pathname}`);
+      if (extension === 'webp') {
+        assert.ok(existsSync(new URL(viewer.panorama.userData.pngPath, new URL(`../map/IPX/Subpages/${route}`, import.meta.url))));
+      }
+    }
+  });
+}
+
+test('Tower 11: switching balcony types and Back retain C1/C2 views and valid floors', async t => {
+  const { window, viewer, flush } = await tour(t, 'Tower-B/360/Typical.html', {
+    query: '?tower=11&room=balcony&balconyType=F&floor=32', registered: true
+  });
+  window.goToRoom('balcony', null, 'C2 B'); flush();
+  assert.equal(viewer.panorama.userData.balconyType, 'C2 B');
+  assert.equal(viewer.panorama.userData.balconyFloor, 30);
+  window.goToRoom('balcony', null, 'B'); flush();
+  assert.equal(viewer.panorama.userData.balconyType, 'B');
+  assert.equal(viewer.panorama.userData.balconyFloor, 32);
+  window.document.getElementById('backBtn').click(); flush();
+  assert.equal(viewer.panorama.userData.balconyType, 'C2 B');
+  assert.equal(viewer.panorama.userData.balconyFloor, 30);
+  window.goToRoom('kitchen'); flush();
+  window.goToRoom('balcony'); flush();
+  assert.equal(viewer.panorama.userData.balconyType, 'C2 B');
+  assert.equal(window.sessionStorage.getItem('balconyType'), 'C2 B');
 });

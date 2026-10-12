@@ -2167,8 +2167,13 @@ const selectedFloor = sessionStorage.getItem("selectedFloor") || "01";
         // Read initial room from URL
         const params = new URLSearchParams(window.location.search);
         const initialRoom = params.get("room") || "lobby";
-        // Balcony type is supplied by the clicked OFF-state SVG: B or F.
-        let balconyType = (params.get("balconyType") || sessionStorage.getItem("balconyType") || "F").toUpperCase() === "B" ? "B" : "F";
+        // Balcony type is supplied by the clicked OFF-state SVG.
+        const BALCONY_TYPES = ["B", "F", "C1 F", "C1 B", "C2 F", "C2 B"];
+        function normalizeBalconyType(value) {
+            const type = String(value || "").replace(/\s+/g, " ").trim().toUpperCase();
+            return BALCONY_TYPES.includes(type) ? type : "F";
+        }
+        let balconyType = normalizeBalconyType(params.get("balconyType") || sessionStorage.getItem("balconyType"));
 
         // ── Viewer setup ──
         const viewer = new PANOLENS.Viewer({
@@ -2303,31 +2308,45 @@ function createRoomPanorama(webpFile, jpgFile) {
         // ── Balcony floor system ──
         // The entry link sets the initial balcony; the navigation buttons can switch it.
         // F is Garden View Balcony and B is Back Balcony.
-        const BALCONY_FLOORS = [1, 5, 10, 15, 20, 25, 32];
+        function getBalconyFloors(type = balconyType) {
+            return type.startsWith("C") ? [1, 5, 10, 15, 20, 25, 30] : [1, 5, 10, 15, 20, 25, 32];
+        }
         const balconyFloorSelect = document.getElementById("balconyFloorSelect");
         let currentBalconyFloor = getInitialBalconyFloor();
 
         function getInitialBalconyFloor() {
-            const requested = parseInt(params.get("balconyFloor") || selectedFloor, 10);
+            return getClosestBalconyFloor(params.get("balconyFloor") || params.get("floor") || selectedFloor);
+        }
+
+        function getClosestBalconyFloor(value, type = balconyType) {
+            const requested = parseInt(value, 10);
             if (!Number.isFinite(requested)) return 1;
             // If the actual apartment floor is not one of the balcony renders,
             // start at the closest available balcony render.
-            return BALCONY_FLOORS.reduce((best, f) =>
-                Math.abs(f - requested) < Math.abs(best - requested) ? f : best, BALCONY_FLOORS[0]);
+            const floors = getBalconyFloors(type);
+            return floors.reduce((best, f) =>
+                Math.abs(f - requested) < Math.abs(best - requested) ? f : best, floors[0]);
         }
 
         function getBalconyTowerFolder() {
-            const tower = String(params.get("tower") || sessionStorage.getItem("selectedTower") || "9")
+            const tower = String(params.get("tower") || sessionStorage.getItem("selectedTower") || "11")
                 .toUpperCase().replace(/[-_ ]/g, "");
             if (tower === "12A" || tower === "C12A") return "Floor_12A";
             if (["9", "10", "11", "12"].includes(tower)) return `Floor_${tower}`;
-            // Keep Tower-B independent; its floor images can use the same floor set.
-            return "Floor_9";
+            return "Floor_11";
         }
 
         function createBalconyPanorama(floor) {
     const towerFolder = getBalconyTowerFolder();
     const baseName = `${balconyType} Floor ${floor}`;
+
+    // C1/C2 renders are supplied as JPGs, with no WebP/PNG versions.
+    if (balconyType.startsWith("C")) {
+        const jpgPath = `../../balcony/360/${towerFolder}/${baseName}.jpg`;
+        const panorama = new PANOLENS.ImagePanorama(jpgPath);
+        panorama.userData = { isBalconyPanorama: true, balconyFloor: floor, balconyType, jpgPath };
+        return panorama;
+    }
 
     const webpPath = `../../balcony/360/${towerFolder}/${baseName}.webp`;
     const pngPath  = `../../balcony/360/${towerFolder}/${baseName}.png`;
@@ -2418,7 +2437,10 @@ function createRoomPanorama(webpFile, jpgFile) {
         Object.values(rooms).forEach(r => { r.fadeDuration = 1200; });
 
         function updateFloorIndicator() {
-            if (balconyFloorSelect) balconyFloorSelect.value = String(currentBalconyFloor);
+            if (!balconyFloorSelect) return;
+            balconyFloorSelect.replaceChildren(...getBalconyFloors().map(floor =>
+                new Option(`Floor ${floor}`, String(floor))));
+            balconyFloorSelect.value = String(currentBalconyFloor);
         }
 
         function updateActiveRoomPill(roomName) {
@@ -2473,7 +2495,7 @@ function createRoomPanorama(webpFile, jpgFile) {
 
         function changeBalconyFloor(floor) {
             floor = parseInt(floor, 10);
-            if (!BALCONY_FLOORS.includes(floor)) return;
+            if (!getBalconyFloors().includes(floor)) return;
             if (!allowTourNavigation('balcony', balconyType, floor, () => changeBalconyFloor(floor))) {
                 updateFloorIndicator();
                 return;
@@ -2639,10 +2661,12 @@ function createRoomPanorama(webpFile, jpgFile) {
  // ── Nav pill navigation ──
 function goToRoom(roomName, btn, requestedBalconyType = balconyType) {
     if (!rooms[roomName]) return;
-    const nextType = requestedBalconyType === 'B' ? 'B' : 'F';
-    if (!allowTourNavigation(roomName, nextType, currentBalconyFloor, () => goToRoom(roomName, btn, nextType))) return;
+    const nextType = normalizeBalconyType(requestedBalconyType);
+    const nextFloor = getClosestBalconyFloor(currentBalconyFloor, nextType);
+    if (!allowTourNavigation(roomName, nextType, nextFloor, () => goToRoom(roomName, btn, nextType))) return;
     if (roomName === "balcony") {
-        balconyType = requestedBalconyType === "B" ? "B" : "F";
+        balconyType = nextType;
+        currentBalconyFloor = nextFloor;
         sessionStorage.setItem("balconyType", balconyType);
     }
 
