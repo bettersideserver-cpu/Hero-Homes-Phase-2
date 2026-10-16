@@ -57,6 +57,8 @@ test('Supabase migration: profiles, idempotent timing, journeys and access contr
   await assert.rejects(db.query('select * from visitor_sessions'), /permission denied/);
   await assert.rejects(db.query('select * from visitor_page_views'), /permission denied/);
   await assert.rejects(db.query('select visitor_analytics_summary()'), /permission denied/);
+  await assert.rejects(db.query('delete from visitor_profiles'), /permission denied/);
+  await assert.rejects(db.query('select delete_all_visitor_details()'), /permission denied/);
   await send(event);
   await db.exec('set role authenticated');
   const summary = (await db.query('select visitor_analytics_summary() as metrics')).rows[0].metrics;
@@ -65,7 +67,10 @@ test('Supabase migration: profiles, idempotent timing, journeys and access contr
   assert.equal(summary.sessions, 3);
   assert.equal(summary.page_views, 4);
   assert.equal(summary.average_session_seconds, 18);
-  await assert.rejects(db.query('delete from visitor_profiles'), /permission denied/);
+  assert.equal(Number((await db.query('select delete_all_visitor_details() as deleted')).rows[0].deleted), 2);
+  assert.equal((await db.query('select count(*)::int as n from visitor_profiles')).rows[0].n, 0);
+  assert.equal((await db.query('select count(*)::int as n from visitor_sessions')).rows[0].n, 0);
+  assert.equal((await db.query('select count(*)::int as n from visitor_page_views')).rows[0].n, 0);
 });
 
 function tracker(storage = {}, options = {}) {
@@ -285,11 +290,14 @@ test('Visitor Details: totals, profiles, session selection, escaping and empty j
   };
   window.supabase = {
     from(table) {
-      let rows = [...data[table]], start = 0, end = 24;
-      return { select() { return this; }, order() { return this; },
+      let rows = [...data[table]], start = 0, end = 24, removing = false;
+      return { select() { return this; }, order() { return this; }, delete() { removing = true; return this; },
         eq(column, value) { rows = rows.filter(row => row[column] === value); return this; },
         or() { return this; }, range(a, b) { start = a; end = b; return this; },
-        then(resolve) { return Promise.resolve({ data: rows.slice(start, end + 1), count: rows.length }).then(resolve); }
+        then(resolve) {
+          if (removing) data[table] = data[table].filter(row => !rows.includes(row));
+          return Promise.resolve({ data: rows.slice(start, end + 1), count: rows.length }).then(resolve);
+        }
       };
     },
     rpc: async () => ({ data: { visitors: 2, returning_visitors: 0, sessions: 1, page_views: 1, average_session_seconds: 80 } })
@@ -316,8 +324,38 @@ test('Visitor Details: totals, profiles, session selection, escaping and empty j
   assert.equal(window.document.getElementById('analyticsVisitors').textContent, '2');
   filter.value = 'all'; filter.dispatchEvent(new window.Event('change')); await settle();
   assert.equal(window.document.querySelectorAll('[data-analytics-visitor]').length, 2);
-  data.visitor_profiles = [];
-  await window.testAnalytics.loadVisitorDetails();
+  window.confirm = () => false;
+  window.document.querySelector('[data-delete-visitor="v1"]').click(); await settle();
+  assert.equal(data.visitor_profiles.length, 2);
+  window.confirm = () => true;
+  window.document.querySelector('[data-delete-visitor="v1"]').click(); await settle();
+  assert.deepEqual(data.visitor_profiles.map(row => row.id), ['v2']);
+  assert.equal(window.document.querySelector('[data-analytics-visitor="v1"]'), null);
+  const summaryRpc = window.supabase.rpc;
+  let resetCalls = 0, failReset = true;
+  window.supabase.rpc = async name => {
+    if (name !== 'delete_all_visitor_details') return summaryRpc(name);
+    resetCalls++;
+    if (failReset) return { error: { message: 'Permission denied' } };
+    const deleted = data.visitor_profiles.length;
+    data.visitor_profiles = [];
+    return { data: deleted };
+  };
+  window.confirm = () => false;
+  window.document.getElementById('deleteAllVisitorDetails').click(); await settle();
+  assert.equal(resetCalls, 0);
+  window.confirm = () => true;
+  window.document.getElementById('deleteAllVisitorDetails').click(); await settle();
+  assert.match(window.document.getElementById('visitorDetailsMessage').textContent, /Could not reset/);
+  assert.equal(data.visitor_profiles.length, 1);
+  assert.equal(window.document.getElementById('deleteAllVisitorDetails').disabled, false);
+  failReset = false;
+  filter.value = 'registered'; filter.dispatchEvent(new window.Event('change')); await settle();
+  assert.equal(window.document.querySelectorAll('[data-analytics-visitor]').length, 0);
+  window.document.getElementById('deleteAllVisitorDetails').click(); await settle();
+  assert.equal(data.visitor_profiles.length, 0);
+  assert.equal(filter.value, 'all');
+  assert.match(window.document.getElementById('visitorDetailsMessage').textContent, /Deleted 1 visitor/);
   assert.match(window.document.getElementById('analyticsSelectedVisitor').textContent, /Select a visitor/);
   window.supabase.rpc = async () => ({ error: { code: 'PGRST202' } });
   await window.testAnalytics.loadVisitorDetails();
@@ -331,7 +369,7 @@ test('Map pages include a valid tracker; public home and admin do not track visi
   for (const file of walk(root)) {
     const html = readFileSync(file, 'utf8');
     const scripts = [...html.matchAll(/<script type="module" src="([^"]*HeroHomesAnalytics\.js)"><\/script>/g)];
-    if (file.includes(`${path.sep}admin${path.sep}`) || file === path.join(root, 'index.html')) { assert.equal(scripts.length, 0); continue; }
+    if (file.includes(`${path.sep}admin${path.sep}`) || file === path.join(root, 'index.html') || file === path.join(root, 'admin.html')) { assert.equal(scripts.length, 0); continue; }
     assert.equal(scripts.length, 1, file);
     assert.ok(existsSync(path.resolve(path.dirname(file), scripts[0][1])), file);
     assert.equal(html.includes('data-hero-homes-visitor-gate="on-navigation"'), path.basename(file) === 'Typical.html', file);

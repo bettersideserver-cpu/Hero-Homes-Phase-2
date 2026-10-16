@@ -14,6 +14,63 @@ const visitorName = visitor => visitor.is_registered ? visitor.name : visitor.id
 const state = { page: 0, sessionPage: 0, journeyPage: 0, search: '', registration: 'all', visitors: [], sessions: [],
   visitor: null, session: null, listRequest: 0, sessionRequest: 0, journeyRequest: 0, busy: false };
 const empty = (id, columns, message) => { $(id).innerHTML = `<tr><td colspan="${columns}" class="analytics-empty">${esc(message)}</td></tr>`; };
+let deleting = false;
+
+async function deleteAllVisitors() {
+  if (deleting || !confirm('Delete ALL visitor details, sessions and page history across every page and filter? This cannot be undone. Registration records in Visitors are managed separately.')) return;
+  deleting = true;
+  const button = $('deleteAllVisitorDetails');
+  button.disabled = true;
+  button.textContent = 'Deleting…';
+  // Discard any reads that started before the reset.
+  state.listRequest++;
+  clearSessions();
+  try {
+    const { data, error } = await supabase.rpc('delete_all_visitor_details');
+    if (error) throw error;
+    state.page = state.sessionPage = state.journeyPage = 0;
+    state.search = '';
+    state.registration = 'all';
+    state.visitors = [];
+    $('visitorDetailsSearch').value = '';
+    $('visitorDetailsRegistration').value = 'all';
+    await loadVisitorDetails();
+    if (!$('visitorDetailsMessage').classList.contains('error')) {
+      $('visitorDetailsMessage').textContent = `Deleted ${count(data)} visitor profiles and their history. New browsing activity will appear here automatically.`;
+    }
+  } catch (error) {
+    $('visitorDetailsMessage').textContent = `Could not reset visitor details. ${error?.message || 'Please try again.'} Run the updated admin/sql/visitor-delete.sql in Supabase if this action is unavailable.`;
+    $('visitorDetailsMessage').classList.add('error');
+  } finally {
+    deleting = false;
+    state.busy = false;
+    $('refreshVisitorDetails').disabled = false;
+    button.disabled = false;
+    button.textContent = 'Delete All Visitor Details';
+  }
+}
+
+async function deleteVisitor(visitor, button) {
+  if (deleting || !confirm(`Delete visitor ${visitorName(visitor)} and all their sessions and page history? This cannot be undone. Registration records in Visitors are managed separately.`)) return;
+  deleting = true;
+  button.disabled = true;
+  button.textContent = 'Deleting…';
+  try {
+    const { data, error } = await supabase.from('visitor_profiles').delete().eq('id', visitor.id).select('id');
+    if (error) throw error;
+    if (!data?.some(row => row.id === visitor.id)) throw new Error('No visitor was deleted. Check your delete permission and refresh.');
+    if (state.visitor?.id === visitor.id) clearSessions();
+    state.page = 0;
+    await loadVisitorDetails();
+  } catch (error) {
+    $('visitorDetailsMessage').textContent = `Could not delete visitor. ${error?.message || 'Please try again.'} If permission is denied, run admin/sql/visitor-delete.sql in Supabase.`;
+    $('visitorDetailsMessage').classList.add('error');
+  } finally {
+    deleting = false;
+    button.disabled = false;
+    button.textContent = 'Delete';
+  }
+}
 
 function pagination(prefix, page, total) {
   $(`${prefix}Previous`).disabled = page === 0;
@@ -155,7 +212,7 @@ export async function loadVisitorDetails() {
       <td>${visitor.is_registered ? 'Registered' : 'Non-registered'}</td><td>${esc(visitor.phone || '—')}</td><td>${esc(visitor.email || '—')}</td>
       <td>${esc(visitor.city || '—')}</td><td>${date(visitor.first_seen)}</td><td>${date(visitor.last_seen)}</td>
       <td>${count(visitor.total_sessions)}</td><td>${count(visitor.total_page_views)}</td>
-      <td><button type="button" class="small-btn" data-analytics-visitor="${esc(visitor.id)}" aria-pressed="false">View sessions</button></td></tr>`).join('');
+      <td><button type="button" class="small-btn" data-analytics-visitor="${esc(visitor.id)}" aria-pressed="false">View sessions</button> <button type="button" class="small-btn danger" data-delete-visitor="${esc(visitor.id)}" aria-label="Delete visitor ${esc(visitorName(visitor))}">Delete</button></td></tr>`).join('');
     if (!state.visitors.length) empty('analyticsVisitorRows', 10, state.search || state.registration !== 'all' ? 'No visitors match your filters.' : 'No visitors yet. Visitors appear here when they explore the map.');
     pagination('analyticsVisitors', state.page, profiles.count || 0);
     $('visitorDetailsMessage').textContent = `Updated ${new Date().toLocaleTimeString()} · Refreshes every 30 seconds while this section is open.`;
@@ -181,6 +238,7 @@ export async function loadVisitorDetails() {
 }
 
 export function initVisitorDetails() {
+  $('deleteAllVisitorDetails').addEventListener('click', deleteAllVisitors);
   $('refreshVisitorDetails').addEventListener('click', loadVisitorDetails);
   $('visitorDetailsRegistration').addEventListener('change', event => {
     state.registration = event.target.value;
@@ -196,6 +254,12 @@ export function initVisitorDetails() {
     searchTimer = setTimeout(() => { state.page = 0; void loadVisitorDetails(); }, 250);
   });
   $('analyticsVisitorRows').addEventListener('click', event => {
+    const deleteButton = event.target.closest('[data-delete-visitor]');
+    if (deleteButton) {
+      const visitor = state.visitors.find(row => row.id === deleteButton.dataset.deleteVisitor);
+      if (visitor) void deleteVisitor(visitor, deleteButton);
+      return;
+    }
     const button = event.target.closest('[data-analytics-visitor]');
     const visitor = state.visitors.find(row => row.id === button?.dataset.analyticsVisitor);
     if (visitor) { state.sessionPage = 0; state.journeyPage = 0; void loadSessions(visitor); }
@@ -215,6 +279,6 @@ export function initVisitorDetails() {
     }
   }
   setInterval(() => {
-    if (!state.busy && document.visibilityState === 'visible' && $('visitorDetails').classList.contains('active')) void loadVisitorDetails();
+    if (!state.busy && !deleting && document.visibilityState === 'visible' && $('visitorDetails').classList.contains('active')) void loadVisitorDetails();
   }, 30000);
 }

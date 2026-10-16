@@ -64,6 +64,9 @@ alter table public.visitor_page_views enable row level security;
 -- Match the existing dashboard's Supabase Auth login. Public visitors cannot read leads.
 revoke all on public.visitor_profiles, public.visitor_sessions, public.visitor_page_views from anon, authenticated;
 grant select on public.visitor_profiles, public.visitor_sessions, public.visitor_page_views to authenticated;
+grant delete on public.visitor_profiles to authenticated;
+drop policy if exists visitor_profiles_admin_delete on public.visitor_profiles;
+create policy visitor_profiles_admin_delete on public.visitor_profiles for delete to authenticated using (true);
 drop policy if exists visitor_profiles_admin_read on public.visitor_profiles;
 create policy visitor_profiles_admin_read on public.visitor_profiles for select to authenticated using (true);
 drop policy if exists visitor_sessions_admin_read on public.visitor_sessions;
@@ -208,5 +211,17 @@ begin
   end if;
 end $$;
 
+-- One transaction resets all analytics, regardless of dashboard pagination.
+create or replace function public.delete_all_visitor_details()
+returns bigint language plpgsql security invoker set search_path = '' as $$
+declare deleted_count bigint;
+begin
+  delete from public.visitor_profiles;
+  get diagnostics deleted_count = row_count;
+  return deleted_count;
+end;
+$$;
+revoke all on function public.delete_all_visitor_details() from public, anon;
+grant execute on function public.delete_all_visitor_details() to authenticated;
 notify pgrst, 'reload schema';
 commit;
