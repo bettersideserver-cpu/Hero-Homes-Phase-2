@@ -87,6 +87,7 @@ function tracker(storage = {}, options = {}) {
   window.setInterval = callback => { intervals.push(callback); return intervals.length; };
   window.console.warn = () => {};
   window.fetch = async (_url, request) => {
+    assert.equal(_url, options.locationEnabled ? 'http://local-supabase/functions/v1/visitor-activity' : 'http://local-supabase/rest/v1/rpc/record_visitor_activity');
     if (options.fail?.()) throw new Error('offline');
     calls.push(JSON.parse(request.body).p_event);
     assert.equal(request.headers.apikey, 'test-publishable-key');
@@ -94,8 +95,8 @@ function tracker(storage = {}, options = {}) {
     return { ok: true };
   };
   for (const [key, value] of Object.entries(storage)) window.sessionStorage.setItem(key, value);
-  const source = trackerSource.replace(/^import .*;\r?\n/, "const SUPABASE_URL = 'http://local-supabase'; const SUPABASE_PUBLISHABLE_KEY = 'test-publishable-key';\n")
-    .replace('import.meta.url', "'http://localhost/Hero%20Homes/map/IPX/JS/HeroHomesAnalytics.js'");
+  const source = trackerSource.replace(/^import .*;\r?\n/, `const SUPABASE_URL = 'http://local-supabase'; const SUPABASE_PUBLISHABLE_KEY = 'test-publishable-key'; const VISITOR_LOCATION_ENABLED = ${!!options.locationEnabled};\n`)
+    .replaceAll('import.meta.url', "'http://localhost/Hero%20Homes/map/IPX/JS/HeroHomesAnalytics.js'");
   window.eval(source);
   return { dom, window, calls,
     advance(ms) { time += ms; },
@@ -108,6 +109,17 @@ function tracker(storage = {}, options = {}) {
     storage() { return Object.fromEntries(Object.keys(window.sessionStorage).map(key => [key, window.sessionStorage.getItem(key)])); }
   };
 }
+
+test('Enabled location tracking uses the edge endpoint and shows the privacy notice', async t => {
+  const browser = tracker({}, { locationEnabled: true }); t.after(() => browser.dom.window.close());
+  await settle();
+  assert.ok(browser.calls.length > 0);
+  const notice = browser.window.document.querySelector('[aria-label="Visitor analytics notice"]');
+  assert.match(notice.textContent, /IP address/);
+  assert.equal(notice.querySelector('a').href, 'http://localhost/Hero%20Homes/privacy.html');
+  notice.querySelector('button').click();
+  assert.equal(browser.window.document.querySelector('[aria-label="Visitor analytics notice"]'), null);
+});
 
 test('Tracker: identity, visible time, both balcony sides and session timeout', async t => {
   const browser = tracker(); t.after(() => browser.dom.window.close());
@@ -285,7 +297,7 @@ test('Visitor Details: totals, profiles, session selection, escaping and empty j
       { id: 'v1', name: '<img src=x onerror=alert(1)>', is_registered: true, phone: '9000000001', city: 'Test City', total_sessions: 1, total_page_views: 1 },
       { id: 'v2', name: 'v2', is_registered: false, phone: null, total_sessions: 0, total_page_views: 0 }
     ],
-    visitor_sessions: [{ id: 's1', visitor_id: 'v1', started_at: new Date().toISOString(), landing_page: 'Master Plan', exit_page: 'Garden View Balcony', duration_seconds: 80 }],
+    visitor_sessions: [{ id: 's1', visitor_id: 'v1', ip_address: '8.8.8.8', started_at: new Date().toISOString(), landing_page: 'Master Plan', exit_page: 'Garden View Balcony', duration_seconds: 80 }],
     visitor_page_views: [{ id: 'p1', session_id: 's1', page_name: 'Garden View Balcony', page_key: 'room=balcony&balconyType=F', duration_seconds: 80, visit_number: 1 }]
   };
   window.supabase = {
@@ -308,6 +320,10 @@ test('Visitor Details: totals, profiles, session selection, escaping and empty j
   await window.testAnalytics.loadVisitorDetails();
   assert.equal(window.document.getElementById('analyticsVisitors').textContent, '2');
   assert.equal(window.document.getElementById('analyticsAverage').textContent, '1m 20s');
+  assert.match(window.document.getElementById('analyticsSessionRows').textContent, /8\.8\.8\.8/);
+  const ipLink = window.document.querySelector('#analyticsSessionRows a');
+  assert.equal(ipLink.href, 'https://ipinfo.io/8.8.8.8');
+  assert.equal(ipLink.rel, 'noopener noreferrer');
   assert.equal(window.document.querySelectorAll('#analyticsVisitorRows img').length, 0);
   assert.match(window.document.getElementById('analyticsJourneyRows').textContent, /Garden View Balcony/);
   window.document.querySelector('[data-analytics-visitor="v2"]').click(); await settle();
@@ -369,7 +385,7 @@ test('Map pages include a valid tracker; public home and admin do not track visi
   for (const file of walk(root)) {
     const html = readFileSync(file, 'utf8');
     const scripts = [...html.matchAll(/<script type="module" src="([^"]*HeroHomesAnalytics\.js)"><\/script>/g)];
-    if (file.includes(`${path.sep}admin${path.sep}`) || file === path.join(root, 'index.html') || file === path.join(root, 'admin.html')) { assert.equal(scripts.length, 0); continue; }
+    if (file.includes(`${path.sep}admin${path.sep}`) || ['index.html', 'admin.html', 'privacy.html'].some(name => file === path.join(root, name))) { assert.equal(scripts.length, 0); continue; }
     assert.equal(scripts.length, 1, file);
     assert.ok(existsSync(path.resolve(path.dirname(file), scripts[0][1])), file);
     assert.equal(html.includes('data-hero-homes-visitor-gate="on-navigation"'), path.basename(file) === 'Typical.html', file);

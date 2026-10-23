@@ -100,7 +100,7 @@ function clearSessions() {
   state.sessions = [];
   state.sessionRequest++;
   $('analyticsSelectedVisitor').textContent = 'Select a visitor to see their sessions.';
-  empty('analyticsSessionRows', 7, 'No visitor selected.');
+  empty('analyticsSessionRows', 9, 'No visitor selected.');
   pagination('analyticsSessions', 0, 0);
   clearJourney();
 }
@@ -146,7 +146,7 @@ async function loadSessions(visitor, preserve = false) {
     button.closest('tr').classList.toggle('analytics-selected', active);
   });
   clearJourney('Loading sessions…');
-  empty('analyticsSessionRows', 7, 'Loading sessions…');
+  empty('analyticsSessionRows', 9, 'Loading sessions…');
   try {
     const { data, count: total, error } = await supabase.from('visitor_sessions').select('*', { count: 'exact' })
       .eq('visitor_id', visitor.id).order('started_at', { ascending: false }).order('id')
@@ -157,7 +157,7 @@ async function loadSessions(visitor, preserve = false) {
     $('analyticsSessionRows').innerHTML = state.sessions.map(session => `<tr>
       <td><code title="${esc(session.id)}">${esc(session.id.slice(0, 8))}</code></td>
       <td>${date(session.started_at)}</td><td>${date(session.last_activity)}</td>
-      <td>${esc(session.landing_page)}</td><td>${esc(session.exit_page)}</td><td>${duration(session.duration_seconds)}</td>
+      <td><code>${esc(session.ip_address || 'Unknown')}</code></td><td>${session.ip_address ? `<a href="https://ipinfo.io/${encodeURIComponent(session.ip_address)}" target="_blank" rel="noopener noreferrer">Check location</a>` : 'Unknown'}</td><td>${esc(session.landing_page)}</td><td>${esc(session.exit_page)}</td><td>${duration(session.duration_seconds)}</td>
       <td><button type="button" class="small-btn" data-analytics-session="${esc(session.id)}" aria-pressed="false">View journey</button></td></tr>`).join('');
     pagination('analyticsSessions', state.sessionPage, total || 0);
     const selected = state.sessions.find(session => session.id === selectedSessionId) || state.sessions[0];
@@ -165,12 +165,12 @@ async function loadSessions(visitor, preserve = false) {
       if (selected.id !== selectedSessionId) state.journeyPage = 0;
       await loadJourney(selected);
     } else {
-      empty('analyticsSessionRows', 7, 'No tracked sessions yet. Journeys appear after this visitor browses the updated website.');
+      empty('analyticsSessionRows', 9, 'No tracked sessions yet. Journeys appear after this visitor browses the updated website.');
       clearJourney('No tracked sessions for this visitor.');
     }
   } catch (error) {
     if (request !== state.sessionRequest) return;
-    empty('analyticsSessionRows', 7, 'Could not load sessions. Refresh to try again.');
+    empty('analyticsSessionRows', 9, 'Could not load sessions. Refresh to try again.');
     clearJourney();
     showError(error);
   }

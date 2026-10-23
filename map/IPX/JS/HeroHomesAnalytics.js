@@ -1,4 +1,4 @@
-import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from '../admin/js/config.js';
+import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, VISITOR_LOCATION_ENABLED } from '../admin/js/config.js';
 
 // A per-tab visitor ID follows the journey before and after registration.
 const PROFILE_KEY = 'heroHomesVisitor';
@@ -90,7 +90,8 @@ function enqueue(event) {
 }
 
 async function send(event, keepalive = false) {
-  const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/record_visitor_activity`, {
+  const endpoint = VISITOR_LOCATION_ENABLED ? '/functions/v1/visitor-activity' : '/rest/v1/rpc/record_visitor_activity';
+  const response = await fetch(`${SUPABASE_URL}${endpoint}`, {
     method: 'POST', keepalive,
     headers: { 'Content-Type': 'application/json', apikey: SUPABASE_PUBLISHABLE_KEY },
     body: JSON.stringify({ p_event: event })
@@ -203,5 +204,20 @@ setInterval(() => {
   snapshot();
   void flush();
 }, 15000);
+if (trackable && VISITOR_LOCATION_ENABLED && document.body) {
+  const notice = document.createElement('aside');
+  notice.setAttribute('aria-label', 'Visitor analytics notice');
+  notice.style.cssText = 'position:fixed;bottom:12px;left:12px;z-index:2147483647;max-width:min(380px,calc(100vw - 24px));padding:12px 16px;background:#fff;color:#222;border:1px solid #ccc;border-radius:8px;font:12px/1.5 sans-serif;box-shadow:0 2px 12px #0002';
+  const link = document.createElement('a');
+  link.href = new URL('../../../privacy.html', import.meta.url).href;
+  link.textContent = 'Privacy details';
+  notice.append('We record browsing activity and your IP address for visitor analytics. ', link);
+  const close = document.createElement('button');
+  close.type = 'button'; close.textContent = 'Dismiss';
+  close.style.cssText = 'margin-left:10px;cursor:pointer';
+  close.onclick = () => notice.remove();
+  notice.append(close);
+  document.body.append(notice);
+}
 track();
 void flush();
