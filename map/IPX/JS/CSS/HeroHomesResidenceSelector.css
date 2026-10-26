@@ -1,0 +1,52 @@
+#hhResidenceSelector {
+    position: fixed;
+    top: 72px;
+    left: 18px;
+    z-index: 10002;
+    width: 252px;
+    color: #29332e;
+    font: 13px/1.5 "Outfit", Arial, sans-serif;
+}
+#hhResidencePanel {
+    box-sizing: border-box;
+    padding: 12px;
+    background: #fffffff5;
+    border: 1px solid #e7e5df;
+    border-radius: 10px;
+    box-shadow: 0 12px 36px #14271c1f;
+    max-height: calc(100svh - 190px);
+    overflow-y: auto;
+}
+#hhResidencePanel[hidden] { display: none; }
+#hhResidenceSelector .hh-residence-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; color: #7b817a; font-size: 9px; letter-spacing: .16em; }
+#hhResidenceSelector .hh-residence-reset { padding: 7px 0 7px 8px; border: 0; background: transparent; color: #b5121b; font: 500 11px/1.5 "Outfit", Arial, sans-serif; cursor: pointer; }
+#hhResidenceSelector .hh-residence-options { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+#hhResidenceSelector .hh-residence-options button { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; min-height: 50px; padding: 8px; border: 1px solid #dedfd8; border-radius: 8px; background: #f8f8f5; color: #29332e; cursor: pointer; text-align: left; }
+#hhResidenceSelector .hh-residence-options strong { font: 600 16px/1.2 "Outfit", Arial, sans-serif; }
+#hhResidenceSelector .hh-residence-options span { font: 400 9px/1.5 "Outfit", Arial, sans-serif; white-space: nowrap; }
+#hhResidenceSelector .hh-residence-options button[aria-pressed="true"] { border-color: #b5121b; background: #b5121b; color: #fff; }
+#hhResidenceSelector .hh-residence-status { margin: 9px 0 0; font-size: 11px; color: #687169; }
+#hhResidenceSelector .hh-residence-towers { display: grid; gap: 4px; }
+#hhResidenceSelector .hh-residence-towers:not(:empty) { margin-top: 8px; }
+#hhResidenceSelector .hh-residence-towers a { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 7px; min-height: 32px; box-sizing: border-box; padding: 6px 8px; border: 1px solid #e5e5df; border-radius: 7px; background: #fff; color: #29332e; text-decoration: none; }
+#hhResidenceSelector .hh-residence-towers a:hover { border-color: #b5121b; background: #fff7f7; }
+#hhResidenceSelector .hh-residence-towers strong { grid-column: 1; font-size: 11px; font-weight: 500; }
+#hhResidenceSelector .hh-residence-towers span { grid-column: 2; font-size: 9px; text-align: right; color: #767e75; }
+#hhResidenceSelector .hh-residence-towers .hh-residence-arrow { grid-column: 3; color: #b5121b; font-size: 15px; }
+#hhResidenceSelector :focus-visible, #hhSelectedTower button:focus-visible { outline: 2px solid #b5121b; outline-offset: 3px; }
+#hhResidenceSelector .hh-residence-toggle { display: none; }
+body .Front .Cutout svg path.hh-residence-match,
+body .Cutout svg path.hh-residence-match { fill: #b5121b38 !important; stroke: #bd1823 !important; stroke-width: 2px !important; vector-effect: non-scaling-stroke; opacity: 1 !important; }
+body .Cutout svg path.hh-residence-match:hover,
+body .Cutout svg path.hh-residence-match:focus { fill: #b5121b66 !important; stroke: #fff !important; outline: none; }
+body .Front .Cutout svg path.hh-residence-muted,
+body .Cutout svg path.hh-residence-muted { fill: transparent !important; stroke: transparent !important; pointer-events: none !important; }
+#hhSelectedTower { position: fixed; left: 50%; top: 72px; transform: translateX(-50%); z-index: 10002; display: flex; align-items: center; gap: 16px; max-width: calc(100vw - 28px); padding: 10px 16px; border: 1px solid #e6e5df; border-radius: 10px; background: #fff; color: #29332e; box-shadow: 0 4px 16px #14271c1a; font: 500 12px/1.5 "Outfit", Arial, sans-serif; }
+#hhSelectedTower button { flex-shrink: 0; border: 0; background: transparent; color: #b5121b; padding: 6px; font: inherit; cursor: pointer; }
+@media (max-width: 768px) {
+    #hhResidenceSelector { top: 66px; left: 12px; width: min(252px, calc(100vw - 24px)); }
+    #hhResidenceSelector .hh-residence-toggle { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 44px; padding: 0 15px; border: 1px solid #e7e5df; border-radius: 9px; background: #fff; color: #29332e; font: 500 12px/1.4 "Outfit", Arial, sans-serif; cursor: pointer; box-shadow: 0 3px 14px #14271c1a; }
+    #hhResidencePanel { margin-top: 6px; max-height: calc(100svh - 225px); padding: 12px; }
+    #hhResidenceSelector .hh-residence-towers a { min-height: 44px; }
+    #hhSelectedTower { top: 70px; gap: 10px; font-size: 11px; width: max-content; }
+}
