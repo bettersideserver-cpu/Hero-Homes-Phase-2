@@ -1959,6 +1959,100 @@
   position: relative;
 }
     </style>
+
+    <style id="map-site-fills">
+        /* PREMIUM MAP OVERLAY — opacity preserves the aerial detail beneath. */
+        .Cutout .map-site-svg {
+            --map-plot-color: #d4b779;
+            --map-plot-border: #ecd8ab;
+            --map-hero-color: #aa233d;
+        }
+        .Cutout .map-site-svg .map-site-fill,
+        .Cutout .map-site-svg .map-hero-fill {
+            fill: var(--map-plot-color) !important;
+            fill-opacity: .24 !important;
+            stroke: var(--map-plot-border) !important;
+            stroke-opacity: .88 !important;
+            stroke-width: 1.2px !important;
+            vector-effect: non-scaling-stroke;
+            stroke-linejoin: round;
+            stroke-dasharray: none !important;
+            opacity: 1 !important;
+            animation: none !important;
+            filter: none !important;
+            pointer-events: none !important;
+        }
+        .Cutout .map-site-svg .map-road-fill {
+            fill: #f0e4c9 !important;
+            fill-opacity: .18 !important;
+            stroke: #eadcc0 !important;
+            stroke-opacity: .6 !important;
+            stroke-width: .65px !important;
+        }
+        .Cutout .map-site-svg .map-hero-fill {
+            fill: var(--map-hero-color) !important;
+            fill-opacity: .62 !important;
+            stroke: #f0abb5 !important;
+            stroke-opacity: 1 !important;
+            stroke-width: 1.8px !important;
+            pointer-events: auto !important;
+            cursor: pointer;
+            transition: fill-opacity .22s ease, stroke .22s ease;
+        }
+        .Cutout .map-site-svg .map-hero-fill:hover {
+            fill-opacity: .78 !important;
+            stroke: #ffe0e5 !important;
+        }
+        .Cutout .map-site-svg .map-road-labels {
+            pointer-events: none;
+        }
+        .Cutout .map-site-svg .map-road-labels rect {
+            fill: #202720;
+            fill-opacity: .94;
+            stroke: #c9b58b;
+            stroke-opacity: .75;
+            stroke-width: .7;
+        }
+        .Cutout .map-site-svg .map-road-labels text {
+            font-family: "Outfit", Arial, sans-serif;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 1.5px;
+            fill: #f4e7cc !important;
+            stroke: none !important;
+            text-anchor: middle;
+            dominant-baseline: central;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .Cutout .map-site-svg .map-hero-fill { transition: none; }
+        }
+    </style>
+    <style>
+    /* Clearly visible champagne-gold plots */
+    .Cutout .map-site-svg .map-site-fill {
+        fill-opacity: .65 !important;
+        stroke-opacity: 1 !important;
+        stroke-width: 2px !important;
+    }
+
+    /* Visible ivory roads */
+    .Cutout .map-site-svg .map-road-fill {
+        fill-opacity: .55 !important;
+        stroke-opacity: .95 !important;
+        stroke-width: 1.2px !important;
+    }
+
+    /* Strong ruby-red Hero Homes */
+    .Cutout .map-site-svg .map-hero-fill {
+        fill-opacity: .85 !important;
+        stroke-opacity: 1 !important;
+        stroke-width: 2.2px !important;
+    }
+
+    .Cutout .map-site-svg .map-hero-fill:hover {
+        fill-opacity: .95 !important;
+    }
+</style>
 </head>
 
 <body>
@@ -2669,12 +2763,32 @@
                 </div>
             </div>
             <div class="Cutout">
-               <svg
-    viewBox="0 0 8192 4175"
+               <svg class="map-site-svg"
+    viewBox="0 0 8192 4176"
     preserveAspectRatio="none"
     xmlns="http://www.w3.org/2000/svg">
-                    <path id="Hero Home - Phase 2" class="st0" data-link="index copy.html"
+                    <path id="Hero Home - Phase 2" class="st0 map-hero-fill" data-link="index copy.html"
                   d="m1060.36 1919.68-167.11 414.64s-2.3 17.23 17.62 13.66l37.28 13.4 285.91 81.7-48.26-491.74-125.45-31.66Z" />
+                    <path id="Ananta_Enclave" class="map-site-fill" d="m1876.79 1695.04 43.91-98.04-29.61-25.19 182.8-482.38 58.56 16.68L2175 985.6l499.49 54.55 242.81 367.66-97.28 290.3z" />
+                    <path id="Janpath" class="map-site-fill" d="m1578.66 1798.96-124.6 264.51 115.41 48-206.3 440.17L2034.15 2761l-87.32-424.34 347.74-72 113.37 26.04 231.32-491.74z" />
+                    <path id="Elgin" class="map-site-fill" d="m4293.21 1804.06-41.36 196.85 154.72 11.49 34.47-208.34z" />
+                    <path id="DPS_School" class="map-site-fill" d="m4601.89 1195.89-75.06 151.66 158.55 128.68 92.68-270.38z" />
+                    <path id="Sri_Public_Ram_School" class="map-site-fill" d="m4796.28 565.68-55.83 138.21 211.74 61.28-36.08-168.85z" />
+                    <path id="Sunview" class="map-site-fill" d="m5705.04 3297.94-31.4 376.08 271.15-36 189.19 62.81 89.62-209.11-216-93.44-15.32 35.23z" />
+                    <path id="Iskon_templ" class="map-site-fill" d="m1035.22 2392.15-78 142 170 55 93-44 12-90z" />
+                    <path id="Iskon_road" class="map-site-fill map-road-fill" d="m0 1717.15 1158.89 12 1223-11 985 5h1871s211 1 265 14 253 49 253 49l376.78 116.67 555 278 177 130 385.67 312 588 464 353.67 236v160l-193.67-148-275.56-225.78-187.11-152.89-484.56-387.22-336-270.67s-85.33-74.67-141.33-94.67l-194-108.33-215.67-99.67-382.17-114.28-194-42-308-35.25h-1974l-756-5.11H0v-81.81Z" />
+                    <path id="second_Road" class="map-site-fill map-road-fill" d="M5468.33 1731.98s-77.73-20.66-135.73-71.66l-44-31-30-41s-42-81-62-163-101-401-101-401l-176-708L4837.61 0h-49l40 166.32 35 137 76 303 111 436 83 321 4.19 23.47s3.92-17.08 11.67-17.17-.17 32.83-.17 32.83 19.72 86.58 26.83 108.81 24.89 85.33 43.56 114.67 52 81.78 52 81.78l6.22 9.44 3.1 6.5 4.9 8.33z" />
+                    <!-- Placeholder road names: replace these text values with the real names. -->
+                    <g class="map-road-labels" aria-label="Placeholder road names">
+                        <g data-map-road-label data-x="3300" data-y="1760" data-angle="0" transform="translate(3300 1760) scale(5.7)">
+                            <rect x="-47" y="-13" width="94" height="26" rx="13" />
+                            <text x="0" y="0">ROAD 01</text>
+                        </g>
+                        <g data-map-road-label data-x="5065" data-y="980" data-angle="76" transform="translate(5065 980) rotate(76) scale(5.7)">
+                            <rect x="-47" y="-13" width="94" height="26" rx="13" />
+                            <text x="0" y="0">ROAD 02</text>
+                        </g>
+                    </g>
                 </svg>
             </div>
         </div>
@@ -2682,6 +2796,40 @@
       </div>
     </div>
     <!-- ═══ /MOBILE VERTICAL MAP ═══ -->
+
+
+    <script>
+        // Keep road-name badges readable at every map size, including rotated mobile maps.
+        (function () {
+            const svg = document.querySelector('.Cutout .map-site-svg');
+            if (!svg) return;
+            const labels = svg.querySelectorAll('[data-map-road-label]');
+            let frame = 0;
+            function positionRoadLabels() {
+                frame = 0;
+                const matrix = svg.getScreenCTM();
+                if (!matrix) return;
+                labels.forEach(function (label) {
+                    const angle = Number(label.dataset.angle) || 0;
+                    const radians = angle * Math.PI / 180;
+                    const cos = Math.cos(radians), sin = Math.sin(radians);
+                    const sx = Math.hypot(matrix.a * cos + matrix.c * sin, matrix.b * cos + matrix.d * sin);
+                    const sy = Math.hypot(-matrix.a * sin + matrix.c * cos, -matrix.b * sin + matrix.d * cos);
+                    if (!sx || !sy) return;
+                    label.setAttribute('transform', 'translate(' + label.dataset.x + ' ' + label.dataset.y + ') rotate(' + angle + ') scale(' + (1 / sx) + ' ' + (1 / sy) + ')');
+                });
+            }
+            function schedule() {
+                if (!frame) frame = requestAnimationFrame(positionRoadLabels);
+            }
+            if (window.ResizeObserver) new ResizeObserver(schedule).observe(svg);
+            window.addEventListener('resize', schedule);
+            window.addEventListener('pageshow', schedule);
+            window.addEventListener('load', schedule, { once: true });
+            document.getElementById('mainImage')?.addEventListener('load', schedule);
+            schedule();
+        }());
+    </script>
 
     <script src="JS/MapRotate.js"></script>
     <script src="JS/DotPin copy.js"></script>

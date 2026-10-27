@@ -93,8 +93,8 @@
            
             {
                 id: "Elgin Cafe",
-                x: 56,
-                y: 44,
+                x: 53,
+                y: 48,
 
                 // SVG shown when this dot is clicked. Global SVG width/color are controlled above.
                 selectedSvg: {
@@ -146,11 +146,79 @@
                 link: ""
             },
   
+
+
+
+
+           
+           
+            {
+                id: "Janpath",
+                x: 23,
+                y: 62,
+
+                // SVG shown when this dot is clicked. Global SVG width/color are controlled above.
+                selectedSvg: {
+                    pathId: "Janpath",
+                    width: 100,
+                    offsetX: 0,
+                    offsetY: 0
+                },
+
+                logo: {
+                    src: "asset/companylogo/janpath.png",
+                    scale: 1.6,
+                    offsetX: 0,
+                    offsetY: 70
+                },
+
+                text: {
+
+                    content: "Janpath",
+
+                    fontSize: 14,
+
+                    fontWeight: "600",
+
+                    color: "#ffffff",
+
+                    offsetX: 0,
+
+                    offsetY: -30,
+
+                    gap: 6
+
+                },
+
+                dot: {
+                    size: 15,
+                    color: "#ff6a00",
+                    borderColor: "rgba(255,255,255,.95)",
+                    borderWidth: 2,
+                    pulse: true
+                },
+                info: {
+                    name: "Janpath",
+                    distance: "2.8 km",
+                    time: "5"
+                },
+
+                // Optional. Remove or leave empty if this dot should not navigate.
+                link: ""
+            },
+
+
+
+
+
+
+
+
              
             {
                 id: "Sunview Enclave",
-                x: 70,
-                y: 88,
+                x: 73,
+                y: 80,
 
                 // SVG shown when this dot is clicked. Global SVG width/color are controlled above.
                 selectedSvg: {
@@ -555,6 +623,14 @@
 
     function showSelectedPath(pathId, settings) {
         window.__dotPinPendingPathId = pathId;
+
+        // This map now renders the supplied filled shapes permanently in HTML.
+        // Keep pin selection/info cards, but do not paint obsolete route lines
+        // over the new geometry. Other pages retain their existing overlays.
+        if (document.querySelector(".Cutout .map-site-svg")) {
+            if (selectedOverlay) selectedOverlay.style.display = "none";
+            return;
+        }
 
         const holder = ensureSelectedOverlay();
         if (!holder) return;

@@ -27,7 +27,7 @@
     // path bbox, as a percentage of the map. That bbox is x 8.11-18.46%,
     // y 53.22-67.41%; the x is nudged just outside the right edge so the
     // connector starts clear of the glowing outline instead of on top of it.
-    var DEFAULT_ANCHOR = { x: 15.9, y: 50.32 };
+    var DEFAULT_ANCHOR = { x:10.9, y: 50.32 };
 
     /* The one media condition that means "mobile portrait". Declared once and
        reused by readAnchor() and declaredSide(), and kept byte-identical to

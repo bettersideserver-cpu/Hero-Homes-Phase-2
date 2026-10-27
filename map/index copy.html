@@ -1942,6 +1942,99 @@
             }
         }
     </style>
+<style id="map-site-fills">
+        /* PREMIUM MAP OVERLAY — opacity preserves the aerial detail beneath. */
+        .Cutout .map-site-svg {
+            --map-plot-color: #d4b779;
+            --map-plot-border: #ecd8ab;
+            --map-hero-color: #aa233d;
+        }
+        .Cutout .map-site-svg .map-site-fill,
+        .Cutout .map-site-svg .map-hero-fill {
+            fill: var(--map-plot-color) !important;
+            fill-opacity: .24 !important;
+            stroke: var(--map-plot-border) !important;
+            stroke-opacity: .88 !important;
+            stroke-width: 1.2px !important;
+            vector-effect: non-scaling-stroke;
+            stroke-linejoin: round;
+            stroke-dasharray: none !important;
+            opacity: 1 !important;
+            animation: none !important;
+            filter: none !important;
+            pointer-events: none !important;
+        }
+        .Cutout .map-site-svg .map-road-fill {
+            fill: #f0e4c9 !important;
+            fill-opacity: .18 !important;
+            stroke: #eadcc0 !important;
+            stroke-opacity: .6 !important;
+            stroke-width: .65px !important;
+        }
+        .Cutout .map-site-svg .map-hero-fill {
+            fill: var(--map-hero-color) !important;
+            fill-opacity: .62 !important;
+            stroke: #f0abb5 !important;
+            stroke-opacity: 1 !important;
+            stroke-width: 1.8px !important;
+            pointer-events: auto !important;
+            cursor: pointer;
+            transition: fill-opacity .22s ease, stroke .22s ease;
+        }
+        .Cutout .map-site-svg .map-hero-fill:hover {
+            fill-opacity: .78 !important;
+            stroke: #ffe0e5 !important;
+        }
+        .Cutout .map-site-svg .map-road-labels {
+            pointer-events: none;
+        }
+        .Cutout .map-site-svg .map-road-labels rect {
+            fill: #202720;
+            fill-opacity: .94;
+            stroke: #c9b58b;
+            stroke-opacity: .75;
+            stroke-width: .7;
+        }
+        .Cutout .map-site-svg .map-road-labels text {
+            font-family: "Outfit", Arial, sans-serif;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 1.5px;
+            fill: #f4e7cc !important;
+            stroke: none !important;
+            text-anchor: middle;
+            dominant-baseline: central;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .Cutout .map-site-svg .map-hero-fill { transition: none; }
+        }
+    </style>
+    <style>
+    /* Clearly visible champagne-gold plots */
+    .Cutout .map-site-svg .map-site-fill {
+        fill-opacity: .65 !important;
+        stroke-opacity: 1 !important;
+        stroke-width: 2px !important;
+    }
+
+    /* Visible ivory roads */
+    .Cutout .map-site-svg .map-road-fill {
+        fill-opacity: .55 !important;
+        stroke-opacity: .95 !important;
+        stroke-width: 1.2px !important;
+    }
+
+    /* Strong ruby-red Hero Homes */
+    .Cutout .map-site-svg .map-hero-fill {
+        fill-opacity: .85 !important;
+        stroke-opacity: 1 !important;
+        stroke-width: 2.2px !important;
+    }
+
+    .Cutout .map-site-svg .map-hero-fill:hover {
+        fill-opacity: .95 !important;
+    }
+</style>
 </head>
 
 <body>
@@ -2993,12 +3086,14 @@
                         </div>
                     </div>
                     <div class="Cutout">
-                <svg
+                <svg class="map-site-svg"
     viewBox="0 0 8192 4175"
     preserveAspectRatio="none"
     xmlns="http://www.w3.org/2000/svg">
-                            <path id="Hero Home - Phase 2" class="st0" data-link="IPX/index.html"
+                            <path id="Hero Home - Phase 2" class="st0 map-hero-fill" data-link="IPX/index.html"
                                 d="m4949.4 1519.17-65.87 102.64-18.38-10.72-15.23 23.83-5.96-3.06-19.79 29.4-28.6 44.94-29.57 48.94s-17.23 31.66-23.49 60-12 127.4-12 127.4l-11.23 135.15-8.51 108.94-4.51 59.4-167.49-7.15v-10.55h-11.23l-10.13 178.04 13.79 26.04-13.79 65.87v70.47l926.81 58.21 14.81-4.6 42.38-104.17 89.62-139.4 97.28-132.51 34.47-37.53 37.53-70.47 40.6-50.78 7.66-14.44 19.15-26.7-847.91-543.06-6.89-6.89-23.49 22.77Z" />
+                            <path id="iskon" class="map-site-fill" d="m2992.42 1310.75-346.67 532 9.33 394.67 258.67 166.67s13.33 13.33 78.67-14.67 556-805.33 556-805.33l-518.67-326.67z" />
+                            <path id="upcoming_commercial" class="map-site-fill" d="m4530.08 2643.42-24 80s-10.28 16 6.36 23 1455.97 1003 1455.97 1003l272-958z"/>
                         </svg>
                     </div>
                 </div>
