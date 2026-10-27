@@ -2391,8 +2391,8 @@ const CAMERA_ANGLES = {
     lobby:       { yaw:   0, pitch:  0, fov: 100 },
     dinning:     { yaw: 0, pitch:  0, fov: 100 },
     kitchen:     { yaw:  0, pitch:  0, fov: 100 },
-    room_1:      { yaw:  0, pitch:  0, fov: 100 },
-    room_2:      { yaw: 0, pitch:  0, fov: 100 },
+    room_1:      { yaw:  160, pitch:  0, fov: 100 },
+    room_2:      { yaw: 160, pitch:  0, fov: 100 },
     room_3:      { yaw:  0, pitch:  0, fov: 100 },
     bathroom_1:  { yaw: 0, pitch:  0, fov: 100 },
     bathroom_2:  { yaw:   0, pitch:  0, fov: 100 },
@@ -2488,7 +2488,7 @@ function goToRoom(roomName, btn, requestedBalconyType = balconyType) {
           addHotspot("lobby", "room_2", -316, -9, "Kids Room");
            addHotspot("lobby", "room_3", -314, -3, "Guest Room");
      
-      addHotspot("room_2", "bathroom_3", 64, -3, "Bathroom");
+      addHotspot("room_2", "bathroom_3", -128, -3, "Bathroom");
       addHotspot("bathroom_3", "room_2", 89, -3, "Guest Room");
 
         addHotspot("dinning", "bathroom_1", -42, -5, "Bathroom ");
@@ -2502,16 +2502,20 @@ function goToRoom(roomName, btn, requestedBalconyType = balconyType) {
         addHotspot("kitchen", "lobby", -137, -5, "Lobby");
        
 
-        addHotspot("room_1", "lobby", -89, -6, "Lobby");
-        addHotspot("room_1", "lobby", 73, -6, "Balcony");
+        addHotspot("room_1", "balcony", -159, -6, "Balcony");
+        addHotspot("room_1", "lobby", 73, -6, "Lobby");
+         addHotspot("room_1", "bathroom_2", -212, -6, "Bathroom");
 
+
+          addHotspot("room_3", "lobby", 86, -5, "Lobby");
+        addHotspot("room_3", "balcony", -26, -5, "Balcony");
         addHotspot("room_3", "bathroom_1", -46, -5, "Bathroom");
         addHotspot("bathroom_1", "room_3", 105, -5, "Kids Room");
         
       
    
-        addHotspot("room_2", "lobby", 120, -6, "Lobby");
-        addHotspot("room_2", "balcony", -90, -6, "Balcony");
+        addHotspot("room_2", "balcony", 140, -6, "Balcony");
+        addHotspot("room_2", "lobby", -90, -6, "Lobby");
     
 
         addHotspot("balcony", "room_1", -130, -6, "Master Bedroom");

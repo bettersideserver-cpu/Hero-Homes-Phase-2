@@ -1,0 +1,211 @@
+0 verbose cli C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js
+1 info using npm@11.13.0
+2 info using node@v24.17.0
+3 silly config load:file:C:\Program Files\nodejs\node_modules\npm\npmrc
+4 silly config load:file:C:\Users\ADMIN\Downloads\Hero Homes Phase 2\tests\.npmrc
+5 silly config load:file:C:\Users\ADMIN\.npmrc
+6 silly config load:file:C:\Users\ADMIN\AppData\Roaming\npm\etc\npmrc
+7 verbose title npm ci
+8 verbose argv "ci" "--ignore-scripts" "--cache" ".npm-cache"
+9 verbose logfile logs-max:10 dir:C:\Users\ADMIN\Downloads\Hero Homes Phase 2\tests\.npm-cache\_logs\2026-10-27T07_48_01_781Z-
+10 verbose logfile C:\Users\ADMIN\Downloads\Hero Homes Phase 2\tests\.npm-cache\_logs\2026-10-27T07_48_01_781Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:4496293888 maxSize:1124073472 maxEntrySize:562036736
+13 http fetch GET https://registry.npmjs.org/npm attempt 1 failed with ENOTFOUND
+14 silly packumentCache heap:4496293888 maxSize:1124073472 maxEntrySize:562036736
+15 silly idealTree buildDeps
+16 silly reify moves {}
+17 silly audit bulk request {
+17 silly audit   '@asamuzakjp/css-color': [ '5.1.11' ],
+17 silly audit   '@asamuzakjp/dom-selector': [ '7.1.1' ],
+17 silly audit   '@asamuzakjp/generational-cache': [ '1.0.1' ],
+17 silly audit   '@asamuzakjp/nwsapi': [ '2.3.9' ],
+17 silly audit   '@bramus/specificity': [ '2.4.2' ],
+17 silly audit   '@csstools/color-helpers': [ '6.1.2' ],
+17 silly audit   '@csstools/css-calc': [ '3.4.1' ],
+17 silly audit   '@csstools/css-color-parser': [ '4.2.4' ],
+17 silly audit   '@csstools/css-parser-algorithms': [ '4.0.1' ],
+17 silly audit   '@csstools/css-syntax-patches-for-csstree': [ '1.1.14' ],
+17 silly audit   '@csstools/css-tokenizer': [ '4.0.2' ],
+17 silly audit   '@electric-sql/pglite': [ '0.5.8' ],
+17 silly audit   '@exodus/bytes': [ '1.16.0' ],
+17 silly audit   'bidi-js': [ '1.1.0' ],
+17 silly audit   'css-tree': [ '3.2.1' ],
+17 silly audit   'data-urls': [ '7.0.0' ],
+17 silly audit   'decimal.js': [ '10.6.0' ],
+17 silly audit   entities: [ '8.1.0' ],
+17 silly audit   'html-encoding-sniffer': [ '6.0.0' ],
+17 silly audit   'is-potential-custom-element-name': [ '1.0.1' ],
+17 silly audit   jsdom: [ '29.1.1' ],
+17 silly audit   'lru-cache': [ '11.5.3' ],
+17 silly audit   'mdn-data': [ '2.27.1' ],
+17 silly audit   parse5: [ '8.0.1' ],
+17 silly audit   punycode: [ '2.3.1' ],
+17 silly audit   'require-from-string': [ '2.0.2' ],
+17 silly audit   saxes: [ '6.0.0' ],
+17 silly audit   'source-map-js': [ '1.2.1' ],
+17 silly audit   'symbol-tree': [ '3.2.4' ],
+17 silly audit   tldts: [ '7.4.16' ],
+17 silly audit   'tldts-core': [ '7.4.16' ],
+17 silly audit   'tough-cookie': [ '6.0.2' ],
+17 silly audit   tr46: [ '6.0.0' ],
+17 silly audit   undici: [ '7.30.0' ],
+17 silly audit   'w3c-xmlserializer': [ '5.0.0' ],
+17 silly audit   'webidl-conversions': [ '8.0.1' ],
+17 silly audit   'whatwg-mimetype': [ '5.0.0' ],
+17 silly audit   'whatwg-url': [ '16.0.1' ],
+17 silly audit   'xml-name-validator': [ '5.0.0' ],
+17 silly audit   xmlchars: [ '2.2.0' ]
+17 silly audit }
+18 verbose audit error FetchError: request to https://registry.npmjs.org/-/npm/v1/security/advisories/bulk failed, reason: getaddrinfo ENOTFOUND registry.npmjs.org
+18 verbose audit error     at ClientRequest.<anonymous> (C:\Program Files\nodejs\node_modules\npm\node_modules\minipass-fetch\lib\index.js:130:14)
+18 verbose audit error     at ClientRequest.emit (node:events:509:28)
+18 verbose audit error     at emitErrorEvent (node:_http_client:109:11)
+18 verbose audit error     at _destroy (node:_http_client:993:9)
+18 verbose audit error     at onSocketNT (node:_http_client:1014:5)
+18 verbose audit error     at process.processTicksAndRejections (node:internal/process/task_queues:91:21) {
+18 verbose audit error   code: 'ENOTFOUND',
+18 verbose audit error   errno: 'ENOTFOUND',
+18 verbose audit error   syscall: 'getaddrinfo',
+18 verbose audit error   hostname: 'registry.npmjs.org',
+18 verbose audit error   type: 'system'
+18 verbose audit error }
+19 silly audit error undefined
+20 silly audit report null
+21 http cache xmlchars@https://registry.npmjs.org/xmlchars/-/xmlchars-2.2.0.tgz 0ms (cache hit)
+22 http cache whatwg-url@https://registry.npmjs.org/whatwg-url/-/whatwg-url-16.0.1.tgz 0ms (cache hit)
+23 http cache xml-name-validator@https://registry.npmjs.org/xml-name-validator/-/xml-name-validator-5.0.0.tgz 0ms (cache hit)
+24 http cache webidl-conversions@https://registry.npmjs.org/webidl-conversions/-/webidl-conversions-8.0.1.tgz 0ms (cache hit)
+25 http cache w3c-xmlserializer@https://registry.npmjs.org/w3c-xmlserializer/-/w3c-xmlserializer-5.0.0.tgz 0ms (cache hit)
+26 http cache tough-cookie@https://registry.npmjs.org/tough-cookie/-/tough-cookie-6.0.2.tgz 0ms (cache hit)
+27 http cache whatwg-mimetype@https://registry.npmjs.org/whatwg-mimetype/-/whatwg-mimetype-5.0.0.tgz 0ms (cache hit)
+28 http cache tr46@https://registry.npmjs.org/tr46/-/tr46-6.0.0.tgz 0ms (cache hit)
+29 http cache undici@https://registry.npmjs.org/undici/-/undici-7.30.0.tgz 0ms (cache hit)
+30 http cache tldts-core@https://registry.npmjs.org/tldts-core/-/tldts-core-7.4.16.tgz 0ms (cache hit)
+31 http cache source-map-js@https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.1.tgz 0ms (cache hit)
+32 http cache tldts@https://registry.npmjs.org/tldts/-/tldts-7.4.16.tgz 0ms (cache hit)
+33 http cache saxes@https://registry.npmjs.org/saxes/-/saxes-6.0.0.tgz 0ms (cache hit)
+34 http cache require-from-string@https://registry.npmjs.org/require-from-string/-/require-from-string-2.0.2.tgz 0ms (cache hit)
+35 http cache symbol-tree@https://registry.npmjs.org/symbol-tree/-/symbol-tree-3.2.4.tgz 0ms (cache hit)
+36 http cache punycode@https://registry.npmjs.org/punycode/-/punycode-2.3.1.tgz 0ms (cache hit)
+37 http cache parse5@https://registry.npmjs.org/parse5/-/parse5-8.0.1.tgz 0ms (cache hit)
+38 http cache mdn-data@https://registry.npmjs.org/mdn-data/-/mdn-data-2.27.1.tgz 0ms (cache hit)
+39 http cache lru-cache@https://registry.npmjs.org/lru-cache/-/lru-cache-11.5.3.tgz 0ms (cache hit)
+40 http cache jsdom@https://registry.npmjs.org/jsdom/-/jsdom-29.1.1.tgz 0ms (cache hit)
+41 http cache html-encoding-sniffer@https://registry.npmjs.org/html-encoding-sniffer/-/html-encoding-sniffer-6.0.0.tgz 0ms (cache hit)
+42 http cache is-potential-custom-element-name@https://registry.npmjs.org/is-potential-custom-element-name/-/is-potential-custom-element-name-1.0.1.tgz 0ms (cache hit)
+43 http cache @csstools/css-syntax-patches-for-csstree@https://registry.npmjs.org/@csstools/css-syntax-patches-for-csstree/-/css-syntax-patches-for-csstree-1.1.14.tgz 0ms (cache hit)
+44 http cache entities@https://registry.npmjs.org/entities/-/entities-8.1.0.tgz 0ms (cache hit)
+45 http cache decimal.js@https://registry.npmjs.org/decimal.js/-/decimal.js-10.6.0.tgz 0ms (cache hit)
+46 http cache data-urls@https://registry.npmjs.org/data-urls/-/data-urls-7.0.0.tgz 0ms (cache hit)
+47 http cache @electric-sql/pglite@https://registry.npmjs.org/@electric-sql/pglite/-/pglite-0.5.8.tgz 0ms (cache hit)
+48 http cache css-tree@https://registry.npmjs.org/css-tree/-/css-tree-3.2.1.tgz 0ms (cache hit)
+49 http cache @exodus/bytes@https://registry.npmjs.org/@exodus/bytes/-/bytes-1.16.0.tgz 0ms (cache hit)
+50 http cache bidi-js@https://registry.npmjs.org/bidi-js/-/bidi-js-1.1.0.tgz 0ms (cache hit)
+51 http cache @csstools/css-color-parser@https://registry.npmjs.org/@csstools/css-color-parser/-/css-color-parser-4.2.4.tgz 0ms (cache hit)
+52 http cache @bramus/specificity@https://registry.npmjs.org/@bramus/specificity/-/specificity-2.4.2.tgz 0ms (cache hit)
+53 http cache @csstools/css-tokenizer@https://registry.npmjs.org/@csstools/css-tokenizer/-/css-tokenizer-4.0.2.tgz 0ms (cache hit)
+54 http cache @csstools/css-parser-algorithms@https://registry.npmjs.org/@csstools/css-parser-algorithms/-/css-parser-algorithms-4.0.1.tgz 0ms (cache hit)
+55 http cache @csstools/color-helpers@https://registry.npmjs.org/@csstools/color-helpers/-/color-helpers-6.1.2.tgz 0ms (cache hit)
+56 http cache @asamuzakjp/generational-cache@https://registry.npmjs.org/@asamuzakjp/generational-cache/-/generational-cache-1.0.1.tgz 0ms (cache hit)
+57 http cache @asamuzakjp/nwsapi@https://registry.npmjs.org/@asamuzakjp/nwsapi/-/nwsapi-2.3.9.tgz 0ms (cache hit)
+58 silly tarball no local data for xmlchars@https://registry.npmjs.org/xmlchars/-/xmlchars-2.2.0.tgz. Extracting by manifest.
+59 http cache @csstools/css-calc@https://registry.npmjs.org/@csstools/css-calc/-/css-calc-3.4.1.tgz 0ms (cache hit)
+60 http cache @asamuzakjp/dom-selector@https://registry.npmjs.org/@asamuzakjp/dom-selector/-/dom-selector-7.1.1.tgz 0ms (cache hit)
+61 http cache @asamuzakjp/css-color@https://registry.npmjs.org/@asamuzakjp/css-color/-/css-color-5.1.11.tgz 0ms (cache hit)
+62 silly tarball no local data for whatwg-url@https://registry.npmjs.org/whatwg-url/-/whatwg-url-16.0.1.tgz. Extracting by manifest.
+63 silly tarball no local data for xml-name-validator@https://registry.npmjs.org/xml-name-validator/-/xml-name-validator-5.0.0.tgz. Extracting by manifest.
+64 silly tarball no local data for webidl-conversions@https://registry.npmjs.org/webidl-conversions/-/webidl-conversions-8.0.1.tgz. Extracting by manifest.
+65 silly tarball no local data for w3c-xmlserializer@https://registry.npmjs.org/w3c-xmlserializer/-/w3c-xmlserializer-5.0.0.tgz. Extracting by manifest.
+66 silly tarball no local data for tough-cookie@https://registry.npmjs.org/tough-cookie/-/tough-cookie-6.0.2.tgz. Extracting by manifest.
+67 silly tarball no local data for whatwg-mimetype@https://registry.npmjs.org/whatwg-mimetype/-/whatwg-mimetype-5.0.0.tgz. Extracting by manifest.
+68 silly tarball no local data for tr46@https://registry.npmjs.org/tr46/-/tr46-6.0.0.tgz. Extracting by manifest.
+69 silly tarball no local data for undici@https://registry.npmjs.org/undici/-/undici-7.30.0.tgz. Extracting by manifest.
+70 silly tarball no local data for tldts-core@https://registry.npmjs.org/tldts-core/-/tldts-core-7.4.16.tgz. Extracting by manifest.
+71 silly tarball no local data for source-map-js@https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.1.tgz. Extracting by manifest.
+72 silly tarball no local data for tldts@https://registry.npmjs.org/tldts/-/tldts-7.4.16.tgz. Extracting by manifest.
+73 silly tarball no local data for saxes@https://registry.npmjs.org/saxes/-/saxes-6.0.0.tgz. Extracting by manifest.
+74 silly tarball no local data for require-from-string@https://registry.npmjs.org/require-from-string/-/require-from-string-2.0.2.tgz. Extracting by manifest.
+75 silly tarball no local data for symbol-tree@https://registry.npmjs.org/symbol-tree/-/symbol-tree-3.2.4.tgz. Extracting by manifest.
+76 silly tarball no local data for punycode@https://registry.npmjs.org/punycode/-/punycode-2.3.1.tgz. Extracting by manifest.
+77 silly tarball no local data for parse5@https://registry.npmjs.org/parse5/-/parse5-8.0.1.tgz. Extracting by manifest.
+78 silly tarball no local data for mdn-data@https://registry.npmjs.org/mdn-data/-/mdn-data-2.27.1.tgz. Extracting by manifest.
+79 silly tarball no local data for lru-cache@https://registry.npmjs.org/lru-cache/-/lru-cache-11.5.3.tgz. Extracting by manifest.
+80 silly tarball no local data for jsdom@https://registry.npmjs.org/jsdom/-/jsdom-29.1.1.tgz. Extracting by manifest.
+81 silly tarball no local data for html-encoding-sniffer@https://registry.npmjs.org/html-encoding-sniffer/-/html-encoding-sniffer-6.0.0.tgz. Extracting by manifest.
+82 silly tarball no local data for is-potential-custom-element-name@https://registry.npmjs.org/is-potential-custom-element-name/-/is-potential-custom-element-name-1.0.1.tgz. Extracting by manifest.
+83 silly tarball no local data for @csstools/css-syntax-patches-for-csstree@https://registry.npmjs.org/@csstools/css-syntax-patches-for-csstree/-/css-syntax-patches-for-csstree-1.1.14.tgz. Extracting by manifest.
+84 silly tarball no local data for entities@https://registry.npmjs.org/entities/-/entities-8.1.0.tgz. Extracting by manifest.
+85 silly tarball no local data for decimal.js@https://registry.npmjs.org/decimal.js/-/decimal.js-10.6.0.tgz. Extracting by manifest.
+86 silly tarball no local data for data-urls@https://registry.npmjs.org/data-urls/-/data-urls-7.0.0.tgz. Extracting by manifest.
+87 silly tarball no local data for @electric-sql/pglite@https://registry.npmjs.org/@electric-sql/pglite/-/pglite-0.5.8.tgz. Extracting by manifest.
+88 silly tarball no local data for css-tree@https://registry.npmjs.org/css-tree/-/css-tree-3.2.1.tgz. Extracting by manifest.
+89 silly tarball no local data for @exodus/bytes@https://registry.npmjs.org/@exodus/bytes/-/bytes-1.16.0.tgz. Extracting by manifest.
+90 silly tarball no local data for bidi-js@https://registry.npmjs.org/bidi-js/-/bidi-js-1.1.0.tgz. Extracting by manifest.
+91 silly tarball no local data for @csstools/css-color-parser@https://registry.npmjs.org/@csstools/css-color-parser/-/css-color-parser-4.2.4.tgz. Extracting by manifest.
+92 silly tarball no local data for @bramus/specificity@https://registry.npmjs.org/@bramus/specificity/-/specificity-2.4.2.tgz. Extracting by manifest.
+93 silly tarball no local data for @csstools/css-tokenizer@https://registry.npmjs.org/@csstools/css-tokenizer/-/css-tokenizer-4.0.2.tgz. Extracting by manifest.
+94 silly tarball no local data for @csstools/css-parser-algorithms@https://registry.npmjs.org/@csstools/css-parser-algorithms/-/css-parser-algorithms-4.0.1.tgz. Extracting by manifest.
+95 silly tarball no local data for @csstools/color-helpers@https://registry.npmjs.org/@csstools/color-helpers/-/color-helpers-6.1.2.tgz. Extracting by manifest.
+96 silly tarball no local data for @asamuzakjp/generational-cache@https://registry.npmjs.org/@asamuzakjp/generational-cache/-/generational-cache-1.0.1.tgz. Extracting by manifest.
+97 silly tarball no local data for @asamuzakjp/nwsapi@https://registry.npmjs.org/@asamuzakjp/nwsapi/-/nwsapi-2.3.9.tgz. Extracting by manifest.
+98 silly tarball no local data for @csstools/css-calc@https://registry.npmjs.org/@csstools/css-calc/-/css-calc-3.4.1.tgz. Extracting by manifest.
+99 silly tarball no local data for @asamuzakjp/dom-selector@https://registry.npmjs.org/@asamuzakjp/dom-selector/-/dom-selector-7.1.1.tgz. Extracting by manifest.
+100 silly tarball no local data for @asamuzakjp/css-color@https://registry.npmjs.org/@asamuzakjp/css-color/-/css-color-5.1.11.tgz. Extracting by manifest.
+101 http fetch GET https://registry.npmjs.org/xmlchars/-/xmlchars-2.2.0.tgz attempt 1 failed with ENOTFOUND
+102 http fetch GET https://registry.npmjs.org/whatwg-url/-/whatwg-url-16.0.1.tgz attempt 1 failed with ENOTFOUND
+103 http fetch GET https://registry.npmjs.org/xml-name-validator/-/xml-name-validator-5.0.0.tgz attempt 1 failed with ENOTFOUND
+104 http fetch GET https://registry.npmjs.org/webidl-conversions/-/webidl-conversions-8.0.1.tgz attempt 1 failed with ENOTFOUND
+105 http fetch GET https://registry.npmjs.org/w3c-xmlserializer/-/w3c-xmlserializer-5.0.0.tgz attempt 1 failed with ENOTFOUND
+106 http fetch GET https://registry.npmjs.org/tough-cookie/-/tough-cookie-6.0.2.tgz attempt 1 failed with ENOTFOUND
+107 http fetch GET https://registry.npmjs.org/whatwg-mimetype/-/whatwg-mimetype-5.0.0.tgz attempt 1 failed with ENOTFOUND
+108 http fetch GET https://registry.npmjs.org/tr46/-/tr46-6.0.0.tgz attempt 1 failed with ENOTFOUND
+109 http fetch GET https://registry.npmjs.org/undici/-/undici-7.30.0.tgz attempt 1 failed with ENOTFOUND
+110 http fetch GET https://registry.npmjs.org/tldts-core/-/tldts-core-7.4.16.tgz attempt 1 failed with ENOTFOUND
+111 http fetch GET https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.1.tgz attempt 1 failed with ENOTFOUND
+112 http fetch GET https://registry.npmjs.org/tldts/-/tldts-7.4.16.tgz attempt 1 failed with ENOTFOUND
+113 http fetch GET https://registry.npmjs.org/saxes/-/saxes-6.0.0.tgz attempt 1 failed with ENOTFOUND
+114 http fetch GET https://registry.npmjs.org/require-from-string/-/require-from-string-2.0.2.tgz attempt 1 failed with ENOTFOUND
+115 http fetch GET https://registry.npmjs.org/symbol-tree/-/symbol-tree-3.2.4.tgz attempt 1 failed with ENOTFOUND
+116 http fetch GET https://registry.npmjs.org/npm attempt 2 failed with ENOTFOUND
+117 http fetch GET https://registry.npmjs.org/xmlchars/-/xmlchars-2.2.0.tgz attempt 2 failed with ENOTFOUND
+118 http fetch GET https://registry.npmjs.org/whatwg-url/-/whatwg-url-16.0.1.tgz attempt 2 failed with ENOTFOUND
+119 http fetch GET https://registry.npmjs.org/xml-name-validator/-/xml-name-validator-5.0.0.tgz attempt 2 failed with ENOTFOUND
+120 http fetch GET https://registry.npmjs.org/webidl-conversions/-/webidl-conversions-8.0.1.tgz attempt 2 failed with ENOTFOUND
+121 http fetch GET https://registry.npmjs.org/w3c-xmlserializer/-/w3c-xmlserializer-5.0.0.tgz attempt 2 failed with ENOTFOUND
+122 http fetch GET https://registry.npmjs.org/tough-cookie/-/tough-cookie-6.0.2.tgz attempt 2 failed with ENOTFOUND
+123 http fetch GET https://registry.npmjs.org/whatwg-mimetype/-/whatwg-mimetype-5.0.0.tgz attempt 2 failed with ENOTFOUND
+124 http fetch GET https://registry.npmjs.org/tr46/-/tr46-6.0.0.tgz attempt 2 failed with ENOTFOUND
+125 http fetch GET https://registry.npmjs.org/undici/-/undici-7.30.0.tgz attempt 2 failed with ENOTFOUND
+126 http fetch GET https://registry.npmjs.org/tldts-core/-/tldts-core-7.4.16.tgz attempt 2 failed with ENOTFOUND
+127 http fetch GET https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.1.tgz attempt 2 failed with ENOTFOUND
+128 http fetch GET https://registry.npmjs.org/tldts/-/tldts-7.4.16.tgz attempt 2 failed with ENOTFOUND
+129 http fetch GET https://registry.npmjs.org/saxes/-/saxes-6.0.0.tgz attempt 2 failed with ENOTFOUND
+130 http fetch GET https://registry.npmjs.org/require-from-string/-/require-from-string-2.0.2.tgz attempt 2 failed with ENOTFOUND
+131 http fetch GET https://registry.npmjs.org/symbol-tree/-/symbol-tree-3.2.4.tgz attempt 2 failed with ENOTFOUND
+132 http fetch GET https://registry.npmjs.org/npm attempt 3 failed with ENOTFOUND
+133 http fetch GET https://registry.npmjs.org/xmlchars/-/xmlchars-2.2.0.tgz attempt 3 failed with ENOTFOUND
+134 http fetch GET https://registry.npmjs.org/whatwg-url/-/whatwg-url-16.0.1.tgz attempt 3 failed with ENOTFOUND
+135 http fetch GET https://registry.npmjs.org/xml-name-validator/-/xml-name-validator-5.0.0.tgz attempt 3 failed with ENOTFOUND
+136 http fetch GET https://registry.npmjs.org/webidl-conversions/-/webidl-conversions-8.0.1.tgz attempt 3 failed with ENOTFOUND
+137 http fetch GET https://registry.npmjs.org/w3c-xmlserializer/-/w3c-xmlserializer-5.0.0.tgz attempt 3 failed with ENOTFOUND
+138 http fetch GET https://registry.npmjs.org/tough-cookie/-/tough-cookie-6.0.2.tgz attempt 3 failed with ENOTFOUND
+139 http fetch GET https://registry.npmjs.org/whatwg-mimetype/-/whatwg-mimetype-5.0.0.tgz attempt 3 failed with ENOTFOUND
+140 http fetch GET https://registry.npmjs.org/tr46/-/tr46-6.0.0.tgz attempt 3 failed with ENOTFOUND
+141 http fetch GET https://registry.npmjs.org/undici/-/undici-7.30.0.tgz attempt 3 failed with ENOTFOUND
+142 http fetch GET https://registry.npmjs.org/tldts-core/-/tldts-core-7.4.16.tgz attempt 3 failed with ENOTFOUND
+143 http fetch GET https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.1.tgz attempt 3 failed with ENOTFOUND
+144 http fetch GET https://registry.npmjs.org/tldts/-/tldts-7.4.16.tgz attempt 3 failed with ENOTFOUND
+145 http fetch GET https://registry.npmjs.org/saxes/-/saxes-6.0.0.tgz attempt 3 failed with ENOTFOUND
+146 http fetch GET https://registry.npmjs.org/require-from-string/-/require-from-string-2.0.2.tgz attempt 3 failed with ENOTFOUND
+147 http fetch GET https://registry.npmjs.org/symbol-tree/-/symbol-tree-3.2.4.tgz attempt 3 failed with ENOTFOUND
+148 verbose cwd C:\Users\ADMIN\Downloads\Hero Homes Phase 2\tests
+149 verbose os Windows_NT 10.0.26300
+150 verbose node v24.17.0
+151 verbose npm  v11.13.0
+152 error Exit handler never called!
+153 error This is an error with npm itself. Please report this error at:
+154 error   <https://github.com/npm/cli/issues>
+155 verbose exit 1
+156 verbose code 1
+157 error A complete log of this run can be found in: C:\Users\ADMIN\Downloads\Hero Homes Phase 2\tests\.npm-cache\_logs\2026-10-27T07_48_01_781Z-debug-0.log

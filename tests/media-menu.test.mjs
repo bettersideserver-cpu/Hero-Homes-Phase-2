@@ -1,0 +1,25 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync, existsSync, readdirSync} from 'node:fs';
+import path from 'node:path';
+import {JSDOM} from 'jsdom';
+const root=path.resolve('..'),source=readFileSync(path.join(root,'assets/contact-menu.js'),'utf8');
+const pages=readdirSync(path.join(root,'map/IPX'),{recursive:true}).filter(f=>f.endsWith('.html') && readFileSync(path.join(root,'map/IPX',f),'utf8').includes('data-contact-form'));
+for(const page of pages) test(page+': contact and media wiring',async t=>{
+ const file=path.join(root,'map/IPX',page),html=readFileSync(file,'utf8');
+ assert.ok(!html.includes('About the Project'));
+ const dom=new JSDOM(html,{url:'https://example.test/map/IPX/'+page.replaceAll('\\','/'),runScripts:'outside-only'});t.after(()=>dom.window.close());const w=dom.window;
+ for(const script of w.document.querySelectorAll('script:not([src])')) if(script.textContent.includes('// Gallery Lightbox')) w.eval(script.textContent);
+ Object.defineProperty(w.document,'currentScript',{value:w.document.querySelector('script[src$="/gallery.js"]')});
+ w.eval(readFileSync(path.join(root,'assets/gallery.js'),'utf8'));
+ w.eval(source);await new Promise(r=>setImmediate(r));
+ let clicked=0;w.document.querySelector('#enquiryBtn').addEventListener('click',()=>clicked++);
+ w.document.querySelector('[data-contact-form]').click();assert.equal(clicked,1);
+ w.document.querySelector('[data-open-gallery]').click();assert.ok(w.document.querySelector('#galleryOverlay').classList.contains('is-open'));
+ for(const img of w.document.querySelectorAll('#galleryImage, #galleryThumbs img')) assert.ok(existsSync(path.join(root,new URL(img.src).pathname)),img.getAttribute('src'));
+ assert.equal(w.document.querySelectorAll('#galleryThumbs button').length,6);
+ w.document.dispatchEvent(new w.KeyboardEvent('keydown',{key:'ArrowRight'}));assert.equal(w.document.querySelector('#galleryCurrent').textContent,'2');
+ w.document.dispatchEvent(new w.KeyboardEvent('keydown',{key:'Escape'}));assert.ok(!w.document.querySelector('#galleryOverlay').classList.contains('is-open'));assert.equal(w.document.body.style.overflow,'');
+ const video=w.document.querySelector('#walkthroughModalVideo source');assert.ok(video);
+ assert.ok(readFileSync(path.resolve(path.dirname(file),video.getAttribute('src'))).subarray(0,32).includes(Buffer.from('ftyp')));
+});

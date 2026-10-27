@@ -36,9 +36,9 @@
 #hhResidenceSelector :focus-visible, #hhSelectedTower button:focus-visible { outline: 2px solid #b5121b; outline-offset: 3px; }
 #hhResidenceSelector .hh-residence-toggle { display: none; }
 body .Front .Cutout svg path.hh-residence-match,
-body .Cutout svg path.hh-residence-match { fill: #b5121b38 !important; stroke: #bd1823 !important; stroke-width: 2px !important; vector-effect: non-scaling-stroke; opacity: 1 !important; }
+body .Cutout svg path.hh-residence-match { fill: rgba(46, 125, 80, 0.35) !important; stroke: #246b43 !important; stroke-width: 1px !important; vector-effect: non-scaling-stroke; opacity: 1 !important; }
 body .Cutout svg path.hh-residence-match:hover,
-body .Cutout svg path.hh-residence-match:focus { fill: #b5121b66 !important; stroke: #fff !important; outline: none; }
+body .Cutout svg path.hh-residence-match:focus { fill: rgba(46, 125, 80, 0.45) !important; stroke: #195232 !important; outline: none; }
 body .Front .Cutout svg path.hh-residence-muted,
 body .Cutout svg path.hh-residence-muted { fill: transparent !important; stroke: transparent !important; pointer-events: none !important; }
 #hhSelectedTower { position: fixed; left: 50%; top: 72px; transform: translateX(-50%); z-index: 10002; display: flex; align-items: center; gap: 16px; max-width: calc(100vw - 28px); padding: 10px 16px; border: 1px solid #e6e5df; border-radius: 10px; background: #fff; color: #29332e; box-shadow: 0 4px 16px #14271c1a; font: 500 12px/1.5 "Outfit", Arial, sans-serif; }

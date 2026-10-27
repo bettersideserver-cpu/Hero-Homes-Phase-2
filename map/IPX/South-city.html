@@ -4040,6 +4040,7 @@ body::after {
     }
 }
     </style>
+<link rel="stylesheet" href="../../assets/gallery.css">
 </head>
 
 <body>
@@ -4317,10 +4318,10 @@ body::after {
     <div class="dropdown-menu" id="dropdownMenu" role="menu" aria-hidden="true">
         <div class="dropdown-header">
             <div class="dropdown-header-label">Explore</div>
-            <div class="dropdown-header-title">The Lutyens</div>
+            <div class="dropdown-header-title">Hero Homes</div>
         </div>
 
-        <a class="dropdown-item" href="The Lutyens Gatefold Brochure.pdf" download role="menuitem">
+        <a class="dropdown-item" href="Hero Homes Gatefold Brochure.pdf" download role="menuitem">
             <div class="dropdown-item-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
@@ -4339,25 +4340,9 @@ body::after {
             </svg>
         </a>
 
-        <a class="dropdown-item" href="Subpages/About.html" role="menuitem">
-            <div class="dropdown-item-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10" />
-                    <path d="M12 16v-4" />
-                    <path d="M12 8h.01" />
-                </svg>
-            </div>
-            <div class="dropdown-item-text">
-                <span class="dropdown-item-title">About the Project</span>
-                <span class="dropdown-item-sub">Vision · Developer</span>
-            </div>
-            <svg class="dropdown-item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-        </a>
+        
 
-        <a class="dropdown-item" href="Subpages/Contact.html" role="menuitem">
+        <a class="dropdown-item" href="#enquiryOverlay" data-contact-form role="menuitem">
             <div class="dropdown-item-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <path
@@ -4759,7 +4744,7 @@ body::after {
         <div class="gallery-counter"><span id="galleryCurrent">1</span> / <span id="galleryTotal">6</span></div>
         <div class="gallery-main">
             <button class="gallery-nav gallery-prev" id="galleryPrev">&#8249;</button>
-            <img id="galleryImage" src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80"
+            <img id="galleryImage" src="../../assets/gallery/gallery-01.jpg"
                 alt="Gallery" />
             <button class="gallery-nav gallery-next" id="galleryNext">&#8250;</button>
         </div>
@@ -4770,68 +4755,15 @@ body::after {
     <div class="walkthrough-overlay" id="walkthroughOverlay">
         <button class="walkthrough-close" id="walkthroughClose">&#x2715;</button>
         <div class="walkthrough-video-wrap">
-            <video id="walkthroughModalVideo" controls preload="none"
-                poster="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=960&q=80">
-                <source src="Video/MDB_The_Lutyens_Walkthrough.mp4" type="video/mp4">
+            <video id="walkthroughModalVideo" controls playsinline preload="none"
+                poster="../../assets/gallery/gallery-01.jpg">
+                <source src="../../assets/video/walkthrough.mp4" type="video/mp4">
             </video>
         </div>
     </div>
 
     <!-- ═══ GALLERY + WALKTHROUGH SCRIPTS (ADDED) ═══ -->
-    <script>
-        // Gallery Lightbox
-        (function () {
-            const images = [
-                'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80',
-                'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80',
-                'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80',
-                'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200&q=80',
-                'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&q=80',
-                'https://images.unsplash.com/photo-1600566753376-12c8ab7a5a1e?w=1200&q=80'
-            ];
-            let idx = 0;
-            const overlay = document.getElementById('galleryOverlay');
-            const img = document.getElementById('galleryImage');
-            const counter = document.getElementById('galleryCurrent');
-            const total = document.getElementById('galleryTotal');
-            const thumbsWrap = document.getElementById('galleryThumbs');
-            if (!overlay || !img) return;
-            total.textContent = images.length;
-
-            // Build thumbs
-            images.forEach((src, i) => {
-                const t = document.createElement('div');
-                t.className = 'gallery-thumb' + (i === 0 ? ' is-active' : '');
-                t.innerHTML = '<img src="' + src.replace('w=1200', 'w=120') + '" alt="">';
-                t.addEventListener('click', () => goTo(i));
-                thumbsWrap.appendChild(t);
-            });
-
-            function goTo(i) {
-                idx = i; img.src = images[idx]; counter.textContent = idx + 1;
-                thumbsWrap.querySelectorAll('.gallery-thumb').forEach((t, j) => t.classList.toggle('is-active', j === idx));
-            }
-            function open() { overlay.classList.add('is-open'); goTo(idx); }
-            function close() { overlay.classList.remove('is-open'); }
-
-            document.getElementById('galleryPrev').addEventListener('click', () => goTo((idx - 1 + images.length) % images.length));
-            document.getElementById('galleryNext').addEventListener('click', () => goTo((idx + 1) % images.length));
-            document.getElementById('galleryClose').addEventListener('click', close);
-            overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
-
-            // Wire all gallery buttons
-            document.querySelectorAll('[data-open-gallery]').forEach(btn => {
-                btn.addEventListener('click', e => { e.preventDefault(); open(); });
-            });
-            // Keyboard
-            document.addEventListener('keydown', e => {
-                if (!overlay.classList.contains('is-open')) return;
-                if (e.key === 'Escape') close();
-                if (e.key === 'ArrowLeft') goTo((idx - 1 + images.length) % images.length);
-                if (e.key === 'ArrowRight') goTo((idx + 1) % images.length);
-            });
-        })();
-    </script>
+    <script src="../../assets/gallery.js" defer></script>
     <script>
         // Walkthrough Video Modal
         (function () {
@@ -4946,6 +4878,7 @@ body::after {
     </script>
 <script type="module" src="JS/HeroHomesAnalytics.js"></script>
     <script src="../../assets/site-actions.js" defer></script>
+<script src="../../assets/contact-menu.js" defer></script>
 </body>
 
 </html>

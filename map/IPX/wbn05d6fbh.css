@@ -432,7 +432,8 @@ body {
     pointer-events: auto;
     cursor: pointer;
     stroke: transparent;
-    stroke-width: 8px;
+    stroke-width: 1px;
+    vector-effect: non-scaling-stroke;
     stroke-linejoin: round;
     stroke-linecap: round;
     transition: stroke 0.3s ease, fill 0.3s ease;
@@ -443,9 +444,9 @@ body {
     /* stroke: rgb(156, 183, 165);
     fill: rgba(86, 139, 118, 0.2); */
     /* stroke: #164C39; */
-    stroke: #BA9753;
+    stroke: #246b43;
     /* fill: rgba(22, 76, 57, 0.4); */
-    fill: rgba(155, 183, 165, 0.4);
+    fill: rgba(46, 125, 80, 0.35);
 }
 
 
@@ -453,10 +454,10 @@ body {
     /* stroke: rgb(186, 150, 83); */
     /* stroke: rgb(201, 165, 97); */
     /* stroke: #215F48; */
-    stroke: #AB8949;
+    stroke: #195232;
     /* Orange */
     /* fill: rgba(22, 76, 57, 0.5); */
-    fill: rgba(119, 162, 144, 0.5);
+    fill: rgba(46, 125, 80, 0.45);
 }
 
 

@@ -1,4 +1,4 @@
-/* Shared public-page actions. Comments remain tab-local drafts until a destination is configured. */
+/* Shared public-page actions with private admin feedback. */
 (() => {
     'use strict';
     const script = document.currentScript;
@@ -11,13 +11,45 @@
         like: svg('<path d="M8 20H4V10h4m0 10h9a2 2 0 0 0 2-1.6l1.3-7A2 2 0 0 0 18.4 9H14l.7-4A2.5 2.5 0 0 0 12 2l-4 8v10Z"/>')
     };
 
-    function pageKey() {
-        const query = new URLSearchParams(location.search);
-        const context = new URLSearchParams();
-        for (const name of ['tower', 'floor', 'unit', 'room']) {
-            if (query.has(name)) context.set(name, query.get(name));
+    const configUrl = new URL('../map/IPX/admin/js/config.js', script.src).href;
+    const stored = key => { try { return sessionStorage.getItem(key) || ''; } catch { return ''; } };
+    function pageContext() {
+        if (window.HeroHomesAnalytics?.getPageContext) {
+            const context = window.HeroHomesAnalytics.getPageContext();
+            const url = new URL(context.page_url);
+            return {...context, page_key: url.pathname + url.search};
         }
-        return location.pathname + (context.size ? '?' + context.toString() : '');
+        const query = new URLSearchParams(location.search);
+        const route = location.pathname;
+        const tour = /Typical\.html$/i.test(route), floorPage = /Subpages\/Floor\//i.test(route);
+        const property = tour || floorPage || /Tower_[ABC]\.html$/i.test(route);
+        const tower = property ? query.get('tower') || route.match(/Tower-(9|10|11|12|C-12-A)\.html$/i)?.[1]?.replace('C-12-A', '12A') || stored('selectedTower') || stored('heroHomesTower') : '';
+        const floor = tour || floorPage ? Number(query.get('floor') || stored('selectedFloor') || stored('heroHomesFloor')) || null : null;
+        const unit = tour ? Number(query.get('unit') || stored('selectedUnit') || stored('heroHomesUnit')) || null : null;
+        const params = new URLSearchParams();
+        for (const [key, value] of Object.entries({tower, floor, unit, room: tour ? query.get('room') || 'lobby' : ''})) if (value) params.set(key, value);
+        const page_key = route + (params.size ? '?' + params : '');
+        return {page_key, page_url: location.origin + page_key, page_name: document.title || route, tower, floor, unit};
+    }
+    const pageKey = () => pageContext().page_key;
+    let clientId;
+    function identity() {
+        if (clientId) return clientId;
+        try { clientId = localStorage.getItem('heroHomesFeedbackClient'); } catch {}
+        if (!/^[0-9a-f-]{36}$/i.test(clientId || '')) clientId = crypto.randomUUID();
+        try { localStorage.setItem('heroHomesFeedbackClient', clientId); } catch {}
+        return clientId;
+    }
+    async function submitFeedback(kind, context, extra = {}) {
+        const {SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY} = await import(configUrl);
+        let visitor = {};
+        try { visitor = JSON.parse(stored('heroHomesVisitor') || '{}') || {}; } catch {}
+        const response = await fetch(SUPABASE_URL + '/rest/v1/rpc/submit_page_feedback', {
+            method: 'POST', headers: {'Content-Type': 'application/json', apikey: SUPABASE_PUBLISHABLE_KEY},
+            body: JSON.stringify({p_client: identity(), p_kind: kind, p_context: context,
+                p_name: visitor.fullName || visitor.name || '', ...extra})
+        });
+        if (!response.ok) throw new Error('Could not save. Please try again.');
     }
 
     function init() {
@@ -80,39 +112,47 @@
         for (const old of document.querySelectorAll('#waFab, #waLabel')) old.style.setProperty('display', 'none', 'important');
 
         let liked = false;
+        const likes = new Map();
         const readLike = () => {
-            try { liked = localStorage.getItem('heroHomesLike:' + pageKey()) === '1'; } catch (_) { /* In-memory fallback. */ }
+            liked = likes.get(pageKey()) || false;
+            try { liked = localStorage.getItem('heroHomesServerLike:' + pageKey()) === '1'; } catch (_) { /* In-memory fallback. */ }
             like.setAttribute('aria-pressed', String(liked));
             like.setAttribute('aria-label', liked ? 'Unlike this page' : 'Like this page');
             like.title = liked ? 'Liked · click to unlike' : 'Like this page';
         };
         readLike();
-        like.addEventListener('click', () => {
-            liked = !liked;
-            let persisted = true;
-            try { localStorage.setItem('heroHomesLike:' + pageKey(), liked ? '1' : '0'); } catch (_) { persisted = false; }
-            like.setAttribute('aria-pressed', String(liked));
-            like.setAttribute('aria-label', liked ? 'Unlike this page' : 'Like this page');
-            like.title = liked ? 'Liked · click to unlike' : 'Like this page';
-            status.textContent = liked ? (persisted ? 'Liked. Saved on this device.' : 'Liked for this visit.') : 'Like removed.';
+        like.addEventListener('click', async () => {
+            if (like.disabled) return;
+            const context = pageContext(), next = !liked;
+            like.disabled = true;
+            status.textContent = 'Saving…';
+            try {
+                await submitFeedback('like', context, {p_liked: next});
+                likes.set(context.page_key, next);
+                try { localStorage.setItem('heroHomesServerLike:' + context.page_key, next ? '1' : '0'); } catch {}
+                readLike();
+                status.textContent = next ? 'Thank you. Your like has been saved.' : 'Like removed.';
+            } catch (error) { status.textContent = error.message; }
+            finally { like.disabled = false; }
         });
         window.addEventListener('storage', readLike);
         window.addEventListener('popstate', readLike);
+        window.addEventListener('hero-homes:page-context', readLike);
 
         const dialog = document.createElement('dialog');
         dialog.id = 'hhCommentDialog';
         dialog.setAttribute('aria-labelledby', 'hhCommentTitle');
         dialog.setAttribute('aria-describedby', 'hhCommentHelp');
         dialog.innerHTML = `<div class="hh-comment-heading"><h2 id="hhCommentTitle">Leave a comment</h2><button type="button" class="hh-comment-close" aria-label="Close comment box">×</button></div>
-            <p id="hhCommentHelp">Write your thoughts about this page. Your comment stays a private draft in this tab and is not submitted.</p>
-            <form><label for="hhCommentText">Your comment</label><textarea id="hhCommentText" maxlength="2000" placeholder="What would you like to share?" aria-describedby="hhCommentCount"></textarea>
-            <span class="hh-comment-count" id="hhCommentCount">0 / 2000</span><button type="submit" class="hh-comment-keep">Keep draft</button></form>
+            <p id="hhCommentHelp">Share your thoughts with the Hero Homes team. Your comment and the current page or apartment details will be sent privately to the admin.</p>
+            <form><label for="hhCommentText">Your comment</label><textarea id="hhCommentText" required maxlength="2000" placeholder="What would you like to share?" aria-describedby="hhCommentCount"></textarea>
+            <span class="hh-comment-count" id="hhCommentCount">0 / 2000</span><button type="submit" class="hh-comment-keep">Submit comment</button></form>
             <p id="hhCommentStatus" role="status"></p>`;
         document.body.appendChild(dialog);
         const textarea = dialog.querySelector('textarea');
         const draftStatus = dialog.querySelector('#hhCommentStatus');
         const drafts = new Map();
-        let draftKey;
+        let draftKey, commentContext, requestId;
         function keepDraft() {
             drafts.set(draftKey, textarea.value);
             let stored = true;
@@ -121,7 +161,9 @@
             draftStatus.textContent = stored ? 'Draft kept in this tab. Not submitted.' : 'Draft kept while this page is open. Not submitted.';
         }
         comment.addEventListener('click', () => {
-            draftKey = 'heroHomesCommentDraft:' + pageKey();
+            commentContext = pageContext();
+            requestId = crypto.randomUUID();
+            draftKey = 'heroHomesCommentDraft:' + commentContext.page_key;
             let draft = drafts.get(draftKey) || '';
             try { draft = sessionStorage.getItem(draftKey) ?? draft; } catch (_) { /* In-memory fallback. */ }
             textarea.value = draft;
@@ -131,7 +173,25 @@
             textarea.focus();
         });
         textarea.addEventListener('input', keepDraft);
-        dialog.querySelector('form').addEventListener('submit', event => { event.preventDefault(); keepDraft(); });
+        dialog.querySelector('form').addEventListener('submit', async event => {
+            event.preventDefault();
+            const submit = dialog.querySelector('[type="submit"]');
+            if (submit.disabled) return;
+            const text = textarea.value.trim();
+            if (!text) { draftStatus.textContent = 'Please enter a comment.'; return; }
+            submit.disabled = true; textarea.disabled = true; comment.disabled = true;
+            draftStatus.textContent = 'Submitting…';
+            try {
+                await submitFeedback('comment', commentContext, {p_comment: text, p_request: requestId});
+                drafts.delete(draftKey);
+                try { sessionStorage.removeItem(draftKey); } catch {}
+                textarea.value = '';
+                dialog.querySelector('#hhCommentCount').textContent = '0 / 2000';
+                draftStatus.textContent = 'Thank you. Your comment has been sent to the admin.';
+                requestId = crypto.randomUUID();
+            } catch (error) { draftStatus.textContent = error.message + ' Your draft is still here.'; }
+            finally { submit.disabled = false; textarea.disabled = false; comment.disabled = false; }
+        });
         dialog.querySelector('.hh-comment-close').addEventListener('click', () => dialog.close());
         dialog.addEventListener('click', event => {
             const bounds = dialog.getBoundingClientRect();

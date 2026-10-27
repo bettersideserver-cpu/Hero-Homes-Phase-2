@@ -172,12 +172,15 @@ function track() {
 }
 
 window.HeroHomesAnalytics = {
+  getPageContext: describePage,
   trackRoom(room, details = {}) {
     roomOverride = { room, ...details };
+    window.dispatchEvent(new Event('hero-homes:page-context'));
     track();
   },
   identify: track
 };
+window.dispatchEvent(new Event('hero-homes:page-context'));
 window.addEventListener('hero-homes:visitor-ready', track);
 window.addEventListener('online', () => { track(); void flush(); });
 window.addEventListener('pageshow', () => {

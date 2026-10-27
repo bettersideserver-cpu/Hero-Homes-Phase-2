@@ -1963,8 +1963,8 @@
     <style id="map-site-fills">
         /* PREMIUM MAP OVERLAY — opacity preserves the aerial detail beneath. */
         .Cutout .map-site-svg {
-            --map-plot-color: #d4b779;
-            --map-plot-border: #ecd8ab;
+            --map-plot-color: #a83d78;
+            --map-plot-border: #d99cbe;
             --map-hero-color: #aa233d;
         }
         .Cutout .map-site-svg .map-site-fill,
@@ -2028,9 +2028,9 @@
         }
     </style>
     <style>
-    /* Clearly visible champagne-gold plots */
+    /* Light red-violet plot overlays preserve aerial detail. */
     .Cutout .map-site-svg .map-site-fill {
-        fill-opacity: .65 !important;
+        fill-opacity: .30 !important;
         stroke-opacity: 1 !important;
         stroke-width: 2px !important;
     }
@@ -2042,15 +2042,15 @@
         stroke-width: 1.2px !important;
     }
 
-    /* Strong ruby-red Hero Homes */
+    /* Transparent ruby-red Hero Homes overlay */
     .Cutout .map-site-svg .map-hero-fill {
-        fill-opacity: .85 !important;
+        fill-opacity: .40 !important;
         stroke-opacity: 1 !important;
         stroke-width: 2.2px !important;
     }
 
     .Cutout .map-site-svg .map-hero-fill:hover {
-        fill-opacity: .95 !important;
+        fill-opacity: .50 !important;
     }
 </style>
 </head>
@@ -2781,12 +2781,12 @@
                     <!-- Placeholder road names: replace these text values with the real names. -->
                     <g class="map-road-labels" aria-label="Placeholder road names">
                         <g data-map-road-label data-x="3300" data-y="1760" data-angle="0" transform="translate(3300 1760) scale(5.7)">
-                            <rect x="-47" y="-13" width="94" height="26" rx="13" />
-                            <text x="0" y="0">ROAD 01</text>
+                            <rect x="-47" y="-13" width="114" height="26" rx="13" />
+                            <text x="10" y="0">South-City Road</text>
                         </g>
                         <g data-map-road-label data-x="5065" data-y="980" data-angle="76" transform="translate(5065 980) rotate(76) scale(5.7)">
                             <rect x="-47" y="-13" width="94" height="26" rx="13" />
-                            <text x="0" y="0">ROAD 02</text>
+                            <text x="0" y="0">Canal Road</text>
                         </g>
                     </g>
                 </svg>

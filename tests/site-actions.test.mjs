@@ -6,14 +6,15 @@ import { fileURLToPath } from 'node:url';
 import { JSDOM } from 'jsdom';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const source = readFileSync(path.join(root, 'assets/site-actions.js'), 'utf8');
+const source = readFileSync(path.join(root, 'assets/site-actions.js'), 'utf8').replace('await import(configUrl)', "({SUPABASE_URL: 'https://db.test', SUPABASE_PUBLISHABLE_KEY: 'test'})");
+const settle = () => new Promise(resolve => setImmediate(resolve));
 
 async function setup(t, { url = 'https://example.test/map/IPX/index.html', html = '', blockedStorage = false, stored = {} } = {}) {
     const dom = new JSDOM(`<body>${html}<script src="https://example.test/assets/site-actions.js"></script></body>`, { url, runScripts: 'outside-only' });
     t.after(() => dom.window.close());
     const w = dom.window;
     let network = 0;
-    w.fetch = () => { network++; throw new Error('Actions must not submit data'); };
+    w.fetch = async (_url, options) => { network++; w.lastFeedback = JSON.parse(options.body); return {ok: true}; };
     w.open = () => { network++; throw new Error('No automatic outbound window'); };
     w.HTMLDialogElement.prototype.showModal = function () { this.setAttribute('open', ''); };
     w.HTMLDialogElement.prototype.close = function () { this.removeAttribute('open'); this.dispatchEvent(new w.Event('close')); };
@@ -72,7 +73,7 @@ test('outer pages group social controls with Enquiry and leave the header unchan
     assert.equal(header.className, 'tb-actions');
 });
 
-test('comment text stays a private draft, survives reopening, and is never submitted', async t => {
+test('comments preserve drafts until submitted and send safely to admin', async t => {
     const { w, network } = await setup(t);
     const comment = w.document.querySelector('[aria-label="Comment"]');
     comment.click();
@@ -82,7 +83,6 @@ test('comment text stays a private draft, survives reopening, and is never submi
     assert.equal(w.document.activeElement, textarea);
     textarea.value = '<img src=x onerror=alert(1)> I like the gardens';
     textarea.dispatchEvent(new w.Event('input'));
-    dialog.querySelector('form').dispatchEvent(new w.Event('submit', { bubbles: true, cancelable: true }));
     assert.equal(w.sessionStorage.getItem('heroHomesCommentDraft:/map/IPX/index.html'), textarea.value);
     dialog.querySelector('.hh-comment-close').click();
     assert.equal(w.document.activeElement, comment);
@@ -90,22 +90,29 @@ test('comment text stays a private draft, survives reopening, and is never submi
     assert.equal(textarea.value, '<img src=x onerror=alert(1)> I like the gardens');
     assert.equal(dialog.querySelectorAll('img').length, 0);
     assert.equal(network(), 0);
-    assert.ok(dialog.textContent.includes('not submitted'));
+    dialog.querySelector('form').dispatchEvent(new w.Event('submit', { bubbles: true, cancelable: true }));
+    await settle();
+    assert.equal(network(), 1);
+    assert.equal(w.lastFeedback.p_comment, '<img src=x onerror=alert(1)> I like the gardens');
+    assert.equal(textarea.value, '');
+    assert.equal(w.sessionStorage.getItem('heroHomesCommentDraft:/map/IPX/index.html'), null);
 });
 
 test('likes persist per page and unit and can be removed', async t => {
     const { w } = await setup(t, {
-        url: 'https://example.test/tour.html?unit=2&floor=9&token=ignored',
-        stored: { 'heroHomesLike:/tour.html?floor=9&unit=2': '1' }
+        url: 'https://example.test/map/IPX/Subpages/Tower-B/360/Typical.html?tower=11&unit=2&floor=9&token=ignored',
+        stored: { 'heroHomesServerLike:/map/IPX/Subpages/Tower-B/360/Typical.html?tower=11&floor=9&unit=2&room=lobby': '1' }
     });
     const like = w.document.querySelector('[aria-pressed]');
     assert.equal(like.getAttribute('aria-pressed'), 'true');
     like.click();
+    await settle();
     assert.equal(like.getAttribute('aria-pressed'), 'false');
-    assert.equal(w.localStorage.getItem('heroHomesLike:/tour.html?floor=9&unit=2'), '0');
+    assert.equal(w.localStorage.getItem('heroHomesServerLike:/map/IPX/Subpages/Tower-B/360/Typical.html?tower=11&floor=9&unit=2&room=lobby'), '0');
     like.click();
+    await settle();
     assert.equal(like.getAttribute('aria-pressed'), 'true');
-    w.history.pushState({}, '', '/tour.html?floor=9&unit=1');
+    w.history.pushState({}, '', '/map/IPX/Subpages/Tower-B/360/Typical.html?tower=11&floor=9&unit=1');
     w.dispatchEvent(new w.PopStateEvent('popstate'));
     assert.equal(like.getAttribute('aria-pressed'), 'false');
 });
@@ -114,6 +121,7 @@ test('blocked storage still allows liking and comment drafts for the open page',
     const { w } = await setup(t, { blockedStorage: true });
     const like = w.document.querySelector('[aria-pressed]');
     like.click();
+    await settle();
     assert.equal(like.getAttribute('aria-pressed'), 'true');
     const comment = w.document.querySelector('[aria-label="Comment"]');
     comment.click();
@@ -147,3 +155,27 @@ test('every public page loads the shared script once with a valid relative path'
         assert.ok(existsSync(path.resolve(root, path.dirname(page), matches[0][1])), page);
     }
 });
+
+ test('failed requests keep comment drafts and do not mark likes saved', async t => {
+    const {w} = await setup(t);
+    w.fetch = async () => ({ok: false});
+    const like = w.document.querySelector('[aria-pressed]');
+    like.click(); await settle();
+    assert.equal(like.getAttribute('aria-pressed'), 'false');
+    assert.equal(like.disabled, false);
+    w.document.querySelector('[aria-label="Comment"]').click();
+    const textarea = w.document.querySelector('#hhCommentText');
+    textarea.value = 'Please send details'; textarea.dispatchEvent(new w.Event('input'));
+    w.document.querySelector('#hhCommentDialog form').dispatchEvent(new w.Event('submit', {cancelable: true}));
+    await settle();
+    assert.equal(textarea.value, 'Please send details');
+    assert.match(w.document.querySelector('#hhCommentStatus').textContent, /try again/);
+ });
+ test('property context excludes stale apartment selections on project pages', async t => {
+    const {w} = await setup(t);
+    w.sessionStorage.setItem('selectedTower', '9'); w.sessionStorage.setItem('selectedFloor', '20'); w.sessionStorage.setItem('selectedUnit', '2');
+    w.document.querySelector('[aria-pressed]').click(); await settle();
+    assert.equal(w.lastFeedback.p_context.tower, '');
+    assert.equal(w.lastFeedback.p_context.floor, null);
+    assert.equal(w.lastFeedback.p_context.unit, null);
+ });

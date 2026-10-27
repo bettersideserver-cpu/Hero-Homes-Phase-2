@@ -1,3 +1,4 @@
+import { initFeedback, loadFeedback } from './feedback.js';
 import { supabase } from './supabase.js';
 import { initVisitorDetails, loadVisitorDetails } from './visitor-details.js';
 const $=id=>document.getElementById(id);let units=[],apartmentFloors=[],statuses=[];const unitDrafts=new Map();
@@ -188,6 +189,7 @@ window.addEventListener('beforeunload',e=>{
 });
 
 initVisitorDetails();
+initFeedback();
 document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{
   document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));
   b.classList.add('active');
@@ -195,6 +197,7 @@ document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{
   $(b.dataset.page).classList.add('active');
   if(b.dataset.page==='visitors')loadVisitors();
   if(b.dataset.page==='holdRequests')loadHoldRequests();
+  if(b.dataset.page==='likeComment')loadFeedback();
   if(b.dataset.page==='visitorDetails')loadVisitorDetails();
 });
 $('logout').onclick=async()=>{await supabase.auth.signOut();location.href='login.html'};
