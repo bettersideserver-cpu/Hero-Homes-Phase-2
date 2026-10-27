@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#f7f6f2">
+    <meta name="description" content="Discover Hero Homes Phase 2. Thoughtfully designed homes, surrounded by nature, connected to everything that matters.">
+    <title>Hero Homes — Phase 2</title>
+    <link rel="icon" type="image/svg+xml" href="assets/Hero%20Homes%20Logo-01.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            color-scheme: light;
+            --paper: #f7f6f2;
+            --ink: #262e29;
+            --muted: #62665f;
+            --red: #bd101a;
+            --line: #deded7;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--paper); color: var(--ink); font-family: "DM Sans", sans-serif; }
+        a:focus-visible { outline: 3px solid var(--ink); outline-offset: 5px; }
+
+        .header {
+            min-height: 95px;
+            padding: 20px 4.45vw;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            background: #fff;
+            border-bottom: 1px solid #ecece8;
+        }
+        .logo-box { display: block; flex-shrink: 0; width: 139px; }
+        .logo { display: block; width: 100%; height: auto; }
+        .header-details { display: flex; align-items: center; gap: 28px; font-size: 13px; }
+        .project-name { color: #505750; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+        .tag { padding-left: 28px; border-left: 1px solid var(--line); }
+
+        .hero { display: grid; grid-template-columns: 43% 57%; min-height: calc(100svh - 95px); }
+        .content { padding: 60px 4.45vw 32px; display: flex; flex-direction: column; justify-content: center; }
+        .welcome {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            margin-bottom: 30px;
+            color: #a41d25;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+        }
+        .welcome::before { content: ""; width: 29px; height: 2px; background: currentColor; flex-shrink: 0; }
+        h1 { font: 500 clamp(44px, 4.45vw, 82px)/1.1 "Playfair Display", Georgia, serif; letter-spacing: -.055em; }
+        h1 span { display: block; margin-top: 9px; color: #6b7569; font-size: .76em; letter-spacing: -.045em; }
+        .kicker { margin-top: 29px; font-size: clamp(19px, 1.67vw, 28px); font-weight: 500; line-height: 1.4; letter-spacing: -.035em; }
+        .desc { margin-top: 13px; max-width: 420px; color: var(--muted); font-size: 16px; line-height: 1.8; }
+        .explore {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            width: 390px;
+            max-width: 100%;
+            min-height: 64px;
+            margin-top: 31px;
+            padding: 18px 23px;
+            border-radius: 5px;
+            background: var(--red);
+            color: #fff;
+            box-shadow: 0 6px 18px #bd101a14;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 700;
+            transition: background .2s, transform .2s;
+        }
+        .explore:hover { background: #a20d16; transform: translateY(-2px); }
+        .arrow { width: 23px; height: 23px; flex-shrink: 0; transition: transform .2s; }
+        .explore:hover .arrow { transform: translateX(4px); }
+        .explore-note { margin-top: 11px; color: var(--muted); font-size: 13px; line-height: 1.5; }
+        .stats { display: grid; grid-template-columns: 1fr 1fr 1.45fr; margin-top: 39px; padding-top: 26px; border-top: 1px solid var(--line); }
+        .stat { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+        .stat + .stat { border-left: 1px solid var(--line); padding-left: 21px; }
+        .stat b { font-size: 31px; font-weight: 500; line-height: 1.2; }
+        .stat span { color: var(--muted); font-size: 13px; line-height: 1.6; }
+        .community b { font-size: 16px; line-height: 1.45; font-weight: 500; }
+        .rera { margin-top: 32px; color: var(--muted); font-size: 11px; line-height: 1.7; letter-spacing: .025em; }
+        .rera span { display: inline-block; margin-left: 6px; color: #8b4c38; }
+
+        .visual { position: relative; min-width: 0; min-height: 690px; overflow: hidden; background: #62715a; }
+        .bg { position: absolute; inset: 0; background: url("map/IPX/images/Thumbnail/Home.webp") center center/cover no-repeat; }
+        .visual::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, #17271d00 55%, #10251fd4 100%); pointer-events: none; }
+        .image-badge { position: absolute; z-index: 1; top: 29px; left: 29px; display: flex; align-items: center; gap: 9px; padding: 12px 15px; border-radius: 4px; background: #fafaf4f2; font-size: 12px; font-weight: 500; letter-spacing: .025em; }
+        .image-badge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #75816c; }
+        .image-caption { position: absolute; z-index: 1; inset: auto 36px 36px; display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; color: #fff; }
+        .image-caption p { font: 500 clamp(26px, 2.15vw, 40px)/1.25 "Playfair Display", Georgia, serif; letter-spacing: -.035em; }
+        .image-caption span { flex-shrink: 0; padding-bottom: 3px; text-align: right; text-transform: uppercase; font-size: 11px; line-height: 1.8; letter-spacing: .025em; }
+
+        @media (min-width: 1700px) {
+            .content { padding-left: 5vw; padding-right: 5vw; }
+            .desc { max-width: 460px; font-size: 18px; }
+            .explore { width: 440px; }
+        }
+        @media (min-width: 901px) and (max-height: 800px) {
+            .content { padding-top: 36px; padding-bottom: 24px; }
+            .welcome { margin-bottom: 22px; }
+            .kicker { margin-top: 23px; }
+            .stats { margin-top: 28px; padding-top: 22px; }
+            .rera { margin-top: 24px; }
+            .visual { min-height: 640px; }
+        }
+        @media (max-width: 1100px) and (min-width: 761px) {
+            .hero { grid-template-columns: 48% 52%; }
+            .content { padding-left: 32px; padding-right: 32px; }
+            .stat + .stat { padding-left: 15px; }
+            .image-caption { left: 26px; right: 26px; }
+            .image-caption span { font-size: 10px; }
+        }
+        @media (max-width: 760px) {
+            .header { min-height: 80px; padding: 17px 24px; }
+            .logo-box { width: 120px; }
+            .header-details { font-size: 11px; }
+            .project-name { display: none; }
+            .tag { padding-left: 16px; }
+            .hero { grid-template-columns: 1fr; min-height: auto; }
+            .content { padding: 48px 24px 30px; }
+            .welcome { font-size: 10px; margin-bottom: 25px; }
+            h1 { font-size: clamp(46px, 9vw, 66px); }
+            .kicker { margin-top: 25px; font-size: 21px; }
+            .desc { font-size: 15px; }
+            .explore { width: 100%; margin-top: 26px; }
+            .stats { margin-top: 30px; padding-top: 24px; }
+            .stat + .stat { padding-left: 16px; }
+            .stat b { font-size: 28px; }
+            .community b { font-size: 14px; }
+            .stat span { font-size: 12px; }
+            .rera { margin-top: 25px; }
+            .visual { min-height: 520px; height: 70svh; max-height: 760px; }
+            .image-badge { top: 22px; left: 24px; }
+            .image-caption { inset: auto 24px 28px; gap: 16px; }
+            .image-caption p { font-size: 28px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .explore, .arrow { transition: none; }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <a class="logo-box" href="index.html" aria-label="Hero Homes home"><img class="logo" src="assets/hero-homes-logo.png" alt="Hero Homes"></a>
+        <div class="header-details">
+            <span class="project-name">Hero Homes · Phase 2</span>
+            <span class="tag">A better tomorrow.</span>
+        </div>
+    </header>
+    <main class="hero">
+        <section class="content" aria-labelledby="project-title">
+            <p class="welcome">Welcome to Hero Homes</p>
+            <h1 id="project-title">Hero Homes<span>Phase 2</span></h1>
+            <p class="kicker">Spaces for a brighter tomorrow.</p>
+            <p class="desc">Thoughtfully designed homes, surrounded by nature, connected to everything that matters.</p>
+            <a class="explore" href="map/index.html">
+                <span>Explore the Project</span>
+                <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 12h15M12 5l7 7-7 7" /></svg>
+            </a>
+            <p class="explore-note">Discover the towers, homes and spaces.</p>
+            <div class="stats" aria-label="Project highlights">
+                <div class="stat"><b>5</b><span>Towers</span></div>
+                <div class="stat"><b>32</b><span>Floors</span></div>
+                <div class="stat community"><b>A brighter<br>community</b><span>A new chapter</span></div>
+            </div>
+            <!-- Replace this dummy RERA number and remove the placeholder label before publishing. -->
+            <p class="rera">RERA No. PBRERA-LDH00-PR0000 <span>(Placeholder)</span></p>
+        </section>
+        <section class="visual" aria-label="Hero Homes Phase 2 project view">
+            <div class="bg" role="img" aria-label="Aerial rendering of Hero Homes towers, landscaped gardens and surrounding greenery"></div>
+            <div class="image-badge">Hero Homes · Phase 2</div>
+            <div class="image-caption">
+                <p>Modern living.<br>Green tomorrow.</p>
+                <span>The project<br>Phase 2</span>
+            </div>
+        </section>
+    </main>
+    <script>
+        (() => {
+            const background = document.querySelector('.bg');
+            const fullImage = new Image();
+            fullImage.decoding = 'async';
+            fullImage.onload = async () => {
+                // Keep the WebP visible until the JPG is ready to paint.
+                if (typeof fullImage.decode === 'function') {
+                    try {
+                        await fullImage.decode();
+                    } catch {
+                        return;
+                    }
+                }
+                background.style.backgroundImage = `url("${fullImage.src}")`;
+            };
+            // A failed JPG load leaves the WebP background in place.
+            fullImage.src = 'map/IPX/images/Home.jpg';
+        })();
+    </script>
+    <script src="assets/site-actions.js" defer></script>
+</body>
+
+</html>
