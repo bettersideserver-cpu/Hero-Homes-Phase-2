@@ -923,13 +923,13 @@
                 });
             }
 
-            const closeCard = document.getElementById("closeCard");
-            if (closeCard) {
-                closeCard.addEventListener("click", () => {
-                    window.history.back();
-                });
-            }
+      const closeCard = document.getElementById("closeCard");
 
+if (closeCard) {
+    closeCard.addEventListener("click", () => {
+        window.location.href = "../Tower_A.html";
+    });
+}
             ['mousedown', 'mouseup', 'click', 'pointerdown', 'pointerup', 'touchstart', 'touchend'].forEach(evt => {
                 if (widget) widget.addEventListener(evt, e => e.stopPropagation());
             });

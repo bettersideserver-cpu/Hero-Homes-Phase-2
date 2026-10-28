@@ -765,14 +765,13 @@
                 });
             }
 
-            const closeCard = document.getElementById("closeCard");
-            if (closeCard) {
-                closeCard.addEventListener("click", () => {
-                    document.getElementById("closeCard").addEventListener("click", () => {
-                        window.history.back();
-                    });
-                });
-            }
+const closeCard = document.getElementById("closeCard");
+
+if (closeCard) {
+    closeCard.addEventListener("click", () => {
+        window.location.href = "../Tower_C.html";
+    });
+}
 
             // Block pointer events from reaching Panolens canvas
             ['mousedown', 'mouseup', 'click', 'pointerdown', 'pointerup', 'touchstart', 'touchend'].forEach(evt => {
