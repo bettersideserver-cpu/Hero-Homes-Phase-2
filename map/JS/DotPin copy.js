@@ -89,6 +89,16 @@
         // EDIT YOUR DOTS HERE
         // ============================================================
         pins: [
+            {
+                id: "Janpath Farm",
+                x: 36.7,
+                y: 73,
+                selectedSvg: { pathId: "Janpath_farm" },
+                logo: { src: "asset/companylogo/janpath-farms-only.png", scale: 1.6, offsetX: 0, offsetY: 70 },
+                text: { content: "Janpath Farm", offsetY: -30 },
+                info: { name: "Janpath Farm", distance: "1.7 km", time: "5 min" },
+                link: ""
+            },
            
            
             {
@@ -153,13 +163,13 @@
            
            
             {
-                id: "Janpath",
+                id: "Atam Vallabh",
                 x: 23,
                 y: 62,
 
                 // SVG shown when this dot is clicked. Global SVG width/color are controlled above.
                 selectedSvg: {
-                    pathId: "Janpath",
+                    pathId: "Atam Vallabh",
                     width: 100,
                     offsetX: 0,
                     offsetY: 0
@@ -174,7 +184,7 @@
 
                 text: {
 
-                    content: "Janpath",
+                    content: "Atam Vallabh",
 
                     fontSize: 14,
 
@@ -198,7 +208,7 @@
                     pulse: true
                 },
                 info: {
-                    name: "Janpath",
+                    name: "Atam Vallabh",
                     distance: "2.8 km",
                     time: "5"
                 },
@@ -598,6 +608,15 @@
         const sourceDoc = new DOMParser().parseFromString(sourceText, "image/svg+xml");
         const sourceSvg = sourceDoc.documentElement;
         const svgEl = document.importNode(sourceSvg, true);
+        // Follow the supplied road's centerline with the same stroke as other routes.
+        const farmRoad = document.querySelector('.map-site-svg #janpath_farm_road');
+        if (farmRoad) {
+            const route = farmRoad.cloneNode(true);
+            route.id = 'Janpath_farm';
+            route.removeAttribute('class');
+            route.setAttribute('d', 'M3190.11 1784.67 L1094.56 1781.34 L1031.89 1974.56');
+            svgEl.appendChild(route);
+        }
         svgEl.removeAttribute("id");
         svgEl.classList.add("dot-pin-selected-overlay__svg");
         svgEl.setAttribute("viewBox", "0 0 8192 4176");
@@ -625,7 +644,7 @@
         window.__dotPinPendingPathId = pathId;
 
         // Site boundaries and route lines use different IDs for these two places.
-        const siteId = ({ Sunveiw: "Sunview", Sri_Ram_Public_School: "Sri_Public_Ram_School" })[pathId] || pathId;
+        const siteId = ({ Sunveiw: "Sunview", Sri_Ram_Public_School: "Sri_Public_Ram_School", "Atam Vallabh": "Janpath" })[pathId] || pathId;
         document.querySelectorAll(".map-site-svg .map-site-fill").forEach(path => {
             path.classList.toggle("is-pin-selected", path.id === siteId);
         });
@@ -736,6 +755,7 @@
         logo.src = logoSettings.src || CONFIG.defaults.logo.src;
         logo.alt = "";
         logo.draggable = false;
+        if (logoSettings.hidden) logo.style.display = "none";
         // The logo itself is clickable too. This is important when the logo is
         // visually offset from the dot; its own pixels should still select the pin.
         logo.style.pointerEvents = "auto";
