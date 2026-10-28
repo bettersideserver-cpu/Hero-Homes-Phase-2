@@ -2,10 +2,10 @@
 (() => {
     'use strict';
     const TYPES = {
-        '3': { label: '3 BHK', area: '1,412 – 2,131 sq ft', towers: ['10', '12'] },
-        '4': { label: '4 BHK', area: '1,412 – 2,595 sq ft', towers: ['9', '11', '12A'] }
+        '3': { label: '3 BHK', area: '1,412 sq ft', towers: ['10', '12'] },
+        '4': { label: '4 BHK', area: '2,131 – 2,595 sq ft', towers: ['9', '11', '12A'] }
     };
-    const TOWER_AREAS = { '9': '1,412 – 2,131', '10': '1,412 – 2,131', '11': '2,595', '12': '1,412 – 2,131', '12A': '1,412 – 2,131' };
+    const TOWER_AREAS = { '9': '2,131', '10': '1,412', '11': '2,595', '12': '1,412', '12A': '2,131' };
     const scriptBase = new URL('../', document.currentScript.src);
 
     function init() {
@@ -17,6 +17,12 @@
         const floorTower = path => path.dataset.name.match(/^(9|10|11|12|12A)_Floor_/)?.[1]
             || path.dataset.link.match(/Tower-(?:C-)?(9|10|11|12|12A)\.html(?:$|[?#])/)?.[1];
         if (!towerPaths.length && !floorPaths.length) return;
+        // History navigation can restore focus to the SVG that opened the next page.
+        // Clear that stale focus so returning does not draw a box around the tower.
+        window.addEventListener('pageshow', () => {
+            const focused = document.activeElement;
+            if (paths.includes(focused)) focused.blur();
+        });
         const css = document.createElement('link');
         css.rel = 'stylesheet';
         css.href = new URL('JS/CSS/HeroHomesResidenceSelector.css', scriptBase).href;

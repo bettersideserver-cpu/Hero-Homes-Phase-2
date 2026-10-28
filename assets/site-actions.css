@@ -108,7 +108,17 @@ body:has(#enquiryOverlay.is-open) #hhSiteActions { visibility: hidden; }
 #hhCommentDialog .hh-comment-keep { display: block; width: 100%; min-height: 44px; margin-top: 18px; padding: 10px 16px; border: 0; border-radius: 7px; background: #b5121b; color: #fff; font: 600 14px/1.5 Arial, sans-serif; cursor: pointer; }
 #hhCommentDialog #hhCommentStatus { margin: 14px 0 0; font-size: 12px; }
 @media (max-width: 768px) {
-    #hhSiteActions { --hh-actions-edge: 14px; }
+    #hhSiteActions {
+        --hh-actions-edge: 14px;
+        right: calc(var(--hh-actions-edge) + env(safe-area-inset-right, 0px));
+    }
+    #hhSiteActions:not(:has(> .hh-site-enquiry)) > .hh-site-action + .hh-site-action {
+        border-left: 0 !important;
+        border-top: 1px solid #eeeee9 !important;
+    }
+    #hhSiteActions:not(:has(> .hh-site-enquiry)) > .hh-site-action:first-child { border-radius: 24px 24px 0 0 !important; }
+    #hhSiteActions:not(:has(> .hh-site-enquiry)) > .hh-site-action:nth-last-child(2) { border-radius: 0 0 24px 24px !important; }
+    #hhSiteActions:not(:has(> .hh-site-enquiry)) { flex-direction: column; border-radius: 24px; }
     #hhSiteActions > .hh-site-enquiry { width: auto !important; padding: 0 18px !important; font-size: 10px !important; }
     #hhCommentDialog { padding: 22px; }
 }

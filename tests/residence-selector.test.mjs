@@ -19,8 +19,8 @@ async function setup(t, route = 'index.html', query = '', mobile = false) {
 
 test('the project view shows both BHK sizes without selecting towers on load', async t => {
     const w = await setup(t);
-    assert.equal(w.document.querySelector('[data-bhk="3"]').textContent, '3 BHK1,412 – 2,131 sq ft');
-    assert.equal(w.document.querySelector('[data-bhk="4"]').textContent, '4 BHK1,412 – 2,595 sq ft');
+    assert.equal(w.document.querySelector('[data-bhk="3"]').textContent, '3 BHK1,412 sq ft');
+    assert.equal(w.document.querySelector('[data-bhk="4"]').textContent, '4 BHK2,131 – 2,595 sq ft');
     assert.equal(w.document.querySelectorAll('.hh-residence-match').length, 0);
     assert.equal(w.document.querySelectorAll('.hh-residence-towers a').length, 0);
     w.eval(source);
@@ -110,6 +110,20 @@ test('mobile panel opens and Escape closes it with focus restored', async t => {
     w.document.querySelector('[data-bhk="4"]').dispatchEvent(new w.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
     assert.ok(panel.hidden);
     assert.equal(w.document.activeElement, toggle);
+});
+
+test('returning to the page clears restored tower focus without changing the selection', async t => {
+    const w = await setup(t, 'index.html', '?bhk=3');
+    const path = w.document.querySelector('[data-name="Tower_10"]');
+    path.focus();
+    assert.equal(w.document.activeElement, path);
+    w.dispatchEvent(new w.PageTransitionEvent('pageshow', { persisted: true }));
+    assert.notEqual(w.document.activeElement, path);
+    assert.ok(path.classList.contains('hh-residence-match'));
+    const button = w.document.querySelector('[data-bhk="3"]');
+    button.focus();
+    w.dispatchEvent(new w.PageTransitionEvent('pageshow', { persisted: true }));
+    assert.equal(w.document.activeElement, button);
 });
 
 test('invalid URL selections do not highlight an arbitrary tower', async t => {

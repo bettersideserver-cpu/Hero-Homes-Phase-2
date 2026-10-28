@@ -35,6 +35,8 @@
 #hhResidenceSelector .hh-residence-towers .hh-residence-arrow { grid-column: 3; color: #b5121b; font-size: 15px; }
 #hhResidenceSelector :focus-visible, #hhSelectedTower button:focus-visible { outline: 2px solid #b5121b; outline-offset: 3px; }
 #hhResidenceSelector .hh-residence-toggle { display: none; }
+body .Cutout svg path[data-link]:focus:not(:focus-visible) { outline: none; }
+body .Cutout svg path[data-link]:focus-visible { outline: 2px solid #b5121b; outline-offset: 3px; }
 body .Front .Cutout svg path.hh-residence-match,
 body .Cutout svg path.hh-residence-match { fill: rgba(46, 125, 80, 0.35) !important; stroke: #246b43 !important; stroke-width: 1px !important; vector-effect: non-scaling-stroke; opacity: 1 !important; }
 body .Cutout svg path.hh-residence-match:hover,

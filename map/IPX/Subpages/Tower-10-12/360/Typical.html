@@ -1891,7 +1891,7 @@ background: rgba(18,35,30,.94);
                 <path d="M3 12V8H21V12" stroke="currentColor" stroke-width="1.8" />
                 <path d="M3 12H21V20H3V12Z" stroke="currentColor" stroke-width="1.8" />
             </svg>
-            <span>Bathroom 1</span>
+            <span>Bathroom 1 (Kids Room)</span>
         </button>
 
 
@@ -1900,7 +1900,7 @@ background: rgba(18,35,30,.94);
                 <path d="M3 12V8H21V12" stroke="currentColor" stroke-width="1.8" />
                 <path d="M3 12H21V20H3V12Z" stroke="currentColor" stroke-width="1.8" />
             </svg>
-            <span>Bathroom 2</span>
+            <span>Bathroom 2 (Master Bedroom)</span>
         </button>
 
                            <button class="tour-pill" onclick="goToRoom('bathroom_3', this)">
@@ -1908,7 +1908,7 @@ background: rgba(18,35,30,.94);
                 <path d="M3 12V8H21V12" stroke="currentColor" stroke-width="1.8" />
                 <path d="M3 12H21V20H3V12Z" stroke="currentColor" stroke-width="1.8" />
             </svg>
-            <span>Bathroom 3</span>
+            <span>Bathroom 3 (Guest Room)</span>
         </button>
 
      
@@ -2351,15 +2351,15 @@ const rooms = {
 
        const roomData = {
             lobby: { name: "Lobby", L: 12.6, W: 18.1 },
-            dinning: { name: "Dining Room", L: 9.2, W: 12.4 },
+            dinning: { name: "Dinning & Bar", L: 9.2, W: 12.4 },
             kitchen: { name: "Kitchen", L: 8.2, W: 12 },
-            room_1: { name: "Bedroom 1", L: 11.8, W: 14.2 },
-            room_2: { name: "Bedroom 2", L: 12, W: 14.2},
-            room_3: { name: "Bedroom 3", L: 13, W: 14.2 },
+            room_1: { name: "Master Bedroom", L: 11.8, W: 14.2 },
+            room_2: { name: "Guest Room", L: 12, W: 14.2},
+            room_3: { name: "Kids Room", L: 13, W: 14.2 },
            
-            bathroom_1: { name: "Bathroom 1", L: 5.2, W: 8.10 },
-            bathroom_2: { name: "Bathroom 2", L: 8.2, W: 6.8 },
-            bathroom_3: { name: "Bathroom 2", L: 8.2, W: 6.8 },
+            bathroom_1: { name: "Bathroom 1 (Kids Room)", L: 5.2, W: 8.10 },
+            bathroom_2: { name: "Bathroom 2 (Master Bedroom)", L: 8.2, W: 6.8 },
+            bathroom_3: { name: "Bathroom 3 (Guest Room)", L: 8.2, W: 6.8 },
         pool: { name: "Pool", L: 6.10, W: 6 },
         };
         function showInfoCard(roomKey) {

@@ -2043,21 +2043,21 @@ background: rgba(18,35,30,.94);
                 <path d="M3 12V8H21V12" stroke="currentColor" stroke-width="1.8" />
                 <path d="M3 12H21V20H3V12Z" stroke="currentColor" stroke-width="1.8" />
             </svg>
-            <span>Bathroom 1</span>
+            <span>Bathroom 1 (Guest Room)</span>
         </button>        
            <button class="tour-pill" onclick="goToRoom('bathroom_2', this)">
             <svg viewBox="0 0 24 24" fill="none">
                 <path d="M3 12V8H21V12" stroke="currentColor" stroke-width="1.8" />
                 <path d="M3 12H21V20H3V12Z" stroke="currentColor" stroke-width="1.8" />
             </svg>
-            <span>Bathroom 2</span>
+            <span>Bathroom 2 (Kids Room)</span>
         </button>      
              <button class="tour-pill" onclick="goToRoom('bathroom_3', this)">
             <svg viewBox="0 0 24 24" fill="none">
                 <path d="M3 12V8H21V12" stroke="currentColor" stroke-width="1.8" />
                 <path d="M3 12H21V20H3V12Z" stroke="currentColor" stroke-width="1.8" />
             </svg> 
-            <span>Bathroom 3</span>
+            <span>Bathroom 3 (Grandparent's Room)</span>
         </button>     
         
         <button class="tour-pill" onclick="goToRoom('bathroom_4', this)">
@@ -2065,7 +2065,7 @@ background: rgba(18,35,30,.94);
                 <path d="M3 12V8H21V12" stroke="currentColor" stroke-width="1.8" />
                 <path d="M3 12H21V20H3V12Z" stroke="currentColor" stroke-width="1.8" />
             </svg>
-            <span>Bathroom 4</span>
+            <span>Bathroom 4 (Master Bedroom)</span>
         </button>
                 <button class="tour-pill" onclick="goToRoom('pool', this)">
             <svg viewBox="0 0 24 24" fill="none">
@@ -2635,16 +2635,16 @@ function createRoomPanorama(webpFile, jpgFile) {
         // ── Room data ──
         const roomData = {
             lobby: { name: "Lobby", L: 21.10, W: 20 },
-            dinning: { name: "Dining Room", L: 11.10, W: 14.6 },
+            dinning: { name: "Dinning & Bar", L: 11.10, W: 14.6 },
             kitchen: { name: "Kitchen", L: 10.2, W: 14.2 },
-            room_1: { name: "Bedroom 1", L:12, W: 15.1 },
-            room_2: { name: "Bedroom 2", L: 12, W: 15.2 },
-            room_3: { name: "Bedroom 3", L: 13.8, W: 13.2 },
-            room_4: { name: "Bedroom 4", L: 14.2, W: 18.6},
-            bathroom_1: { name: "Bathroom 1", L: 6.2, W: 9.2 },
-            bathroom_2: { name: "Bathroom 2", L: 6.2, W: 9.2 },
-            bathroom_3: { name: "Bathroom 3", L: 8.2, W: 6.2 },
-            bathroom_4: { name: "Bathroom 4", L: 11.2, W: 7.6 },
+            room_1: { name: "Guest Room", L:12, W: 15.1 },
+            room_2: { name: "Kids Room", L: 12, W: 15.2 },
+            room_3: { name: "Grandparent's Room", L: 13.8, W: 13.2 },
+            room_4: { name: "Master Bedroom", L: 14.2, W: 18.6},
+            bathroom_1: { name: "Bathroom 1 (Guest Room)", L: 6.2, W: 9.2 },
+            bathroom_2: { name: "Bathroom 2 (Kids Room)", L: 6.2, W: 9.2 },
+            bathroom_3: { name: "Bathroom 3 (Grandparent's Room)", L: 8.2, W: 6.2 },
+            bathroom_4: { name: "Bathroom 4 (Master Bedroom)", L: 11.2, W: 7.6 },
               pool: { name: "Pool", L: 6, W: 8 },
         };
         function showInfoCard(roomKey) {
