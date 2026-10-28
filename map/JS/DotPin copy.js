@@ -624,13 +624,11 @@
     function showSelectedPath(pathId, settings) {
         window.__dotPinPendingPathId = pathId;
 
-        // This map now renders the supplied filled shapes permanently in HTML.
-        // Keep pin selection/info cards, but do not paint obsolete route lines
-        // over the new geometry. Other pages retain their existing overlays.
-        if (document.querySelector(".Cutout .map-site-svg")) {
-            if (selectedOverlay) selectedOverlay.style.display = "none";
-            return;
-        }
+        // Site boundaries and route lines use different IDs for these two places.
+        const siteId = ({ Sunveiw: "Sunview", Sri_Ram_Public_School: "Sri_Public_Ram_School" })[pathId] || pathId;
+        document.querySelectorAll(".map-site-svg .map-site-fill").forEach(path => {
+            path.classList.toggle("is-pin-selected", path.id === siteId);
+        });
 
         const holder = ensureSelectedOverlay();
         if (!holder) return;
@@ -674,6 +672,9 @@
     }
 
     function hideSelectedPlace() {
+        document.querySelectorAll(".map-site-svg .is-pin-selected").forEach(path => {
+            path.classList.remove("is-pin-selected");
+        });
         if (selectedOverlay) {
             selectedOverlay.style.display = "none";
         }
